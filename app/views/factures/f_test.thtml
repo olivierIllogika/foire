@@ -1,0 +1,4 @@
+<pre><?=print_r($lignes,true)?></pre>
+
+
+

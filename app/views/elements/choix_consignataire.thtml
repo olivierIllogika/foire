@@ -1,0 +1,38 @@
+    <p id="etChoixAide"><?=htmlentities("Pour vendre des livres, vous devez d'abord vous inscrire.") ?><br /><?=htmlentities("Cliquez sur la catégorie qui correspond à votre profil:") ?></p>
+
+  <div id="etChoix">
+
+    <?php $eLink = '
+    <div id="etPoly">
+      <h4>&Eacute;tudiant</h4>
+      <ul>Pr&eacute;requis:
+        <li>Carte &eacute;tudiante</li>
+        <li>Code barre en &eacute;tat</li>
+        <li>Adresse courriel Poly</li>
+      </ul>
+    </div>
+    ';
+
+/*
+    <a href="inscription_etudiant"></a>
+    <a href="inscription_autre"></a>
+*/
+    $aLink = '
+    <div id="etAutre">
+      <h4>Autre</h4>
+      <ul>Pr&eacute;requis:
+        <li>Livres <b>d\'int&eacute;r&ecirc;t</b> &agrave; vendre</li>
+        <li>Adresse courriel valide</li>
+        <ul>Qui?
+          <li>Professeurs</li>
+          <li>Personnel de Poly</li>
+          <li>Parents / amis</li>
+        </ul>
+      </ul>
+    </div>';
+    ?>
+    <?=$html->linkTo($eLink,'/etudiants/inscription_etudiant')?>
+    <?=$html->linkTo($aLink,'/etudiants/inscription_autre') ?>
+
+
+  </div><!-- etChoix -->

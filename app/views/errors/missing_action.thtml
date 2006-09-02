@@ -1,0 +1,6 @@
+<h2>Action inconnue</h2>
+
+<p class="error"><em><?=(!empty($this->missingAction) ? 'Action '.$this->missingAction.' inconnue dans ' : 'Action nulle pour ')?></em> <em><?=Inflector::camelize($this->name);?></em>
+</p>  
+
+<br />

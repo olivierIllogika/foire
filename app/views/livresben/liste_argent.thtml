@@ -1,0 +1,52 @@
+<h2 id="livresTitre"><?=htmlentities("Liste de montants à préparer")?></h2>
+
+<table>
+<tr ">
+<td style="font-weight:bold">Nom, prenom</td>
+<td style="font-weight:bold">Argent</td>
+
+</tr>
+<?php
+
+$totaux['20'] = 0;
+$totaux['10'] = 0;
+$totaux['5'] = 0;
+$totaux['2'] = 0;
+$totaux['1'] = 0;
+
+$billets = array (20,10,5,2,1);
+$grand_total=0;
+
+foreach($data as $info)
+{
+
+  echo "<tr>";
+  echo "<td>{$info['nom']}, {$info['prenom']} ({$info['codebar']})</td>";
+  
+  $argent = '';
+  $reste = $info['s'];
+  
+  foreach($billets as $billet)
+  {
+    $local = floor($reste/$billet);
+    $reste = $reste % $billet;
+
+    if ($local)
+    {
+      $argent .= ($argent == '' ? '' : ', ').$local.'x'.$billet.'$';
+    }
+
+    $totaux[$billet] += $local;
+  }
+  
+  echo "<td>{$info['s']}$ => $argent </td>";
+  echo "</tr>";
+
+
+}
+?>
+<tr>
+<td>Total</td>
+<td><?php foreach($billets as $billet) { echo $totaux[$billet].'x'.$billet.'$, '; $grand_total+=$totaux[$billet]*$billet; } ?> (<?=$grand_total?>$)</td>
+</tr>
+</table>

@@ -1,0 +1,14 @@
+<h2 id="etTitre">Courriels</h2>
+
+<p>
+<pre>
+<?=$body?>
+</pre>
+</p>
+
+<?php
+if (!empty($megaListe))
+{
+  echo '<pre>'.print_r($megaListe,true).'</pre>';
+}
+?>

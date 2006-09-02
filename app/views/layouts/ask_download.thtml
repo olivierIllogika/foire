@@ -1,0 +1,9 @@
+<?php
+header('Content-Type: application/pdf');
+header('Content-Disposition: attachment; filename="'.$downloadfile.'"');
+if (!empty($redirect))
+{
+  header('Refresh: 1; URL='.$redirect);
+}
+echo $content_for_layout;
+?>

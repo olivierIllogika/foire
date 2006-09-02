@@ -1,0 +1,64 @@
+<!-- <h2 id="livresTitre"><?=htmlentities("Pick board")?></h2> -->
+
+<table width="100%">
+<tr>
+<?php
+$display = 0;
+
+$force_title = array(255300770,276130487,7560076,7560421,47131999,276130041,47115496,280411594);
+
+$display_color = array( '#6ff','#f99','#ff5',);
+
+echo "<td width=\"33%\" id=\"d$display\" style=\"background-color:{$display_color[$display]}\"><table class=\"subTable\" >";
+
+function showName($nom, $codebar)
+{
+  if (substr($nom, 0, 1) == '*')
+  {
+    $nom = '( '.substr($nom, 1).' )';
+    echo "<tr><td colspan=\"4\"><b>$codebar</b></td></tr>";
+  }
+
+  if (substr($nom, 0, 1) == '!')
+  {
+    $nom = '( '.substr($nom, 1).' )';
+    echo "<tr><td colspan=\"4\"><blink>sac!</blink> <b>$codebar</b></td></tr>";
+  }
+
+  echo "<tr><td colspan=\"4\">{$nom}</td></tr>";
+
+}
+
+foreach($data as $livre)
+{
+  if (empty($codebar))
+  {
+    $codebar = $livre['codebar'];
+    showName($livre['nom'], $codebar);
+  }
+
+  if ($livre['codebar'] != $codebar)
+  {
+    $display++;
+    echo "</table></td><td width=\"33%\" id=\"d$display\" style=\"background-color:{$display_color[$display]}\"><table class=\"subTable\" >";
+    $codebar = $livre['codebar'];
+    showName($livre['nom'], $codebar);
+  }
+
+  {
+    $code = sprintf("%s-%d",substr($livre['id'],-4),$livre['genie']);
+    $type = $livre['isbn'] == 0 ? '' : ($livre['isbn'] < 10000 ? 'P' : 'M');
+    $titre = $livre['genie'] == (substr($livre['id'], 5,1) || in_array($livre['isbn'],$force_title)) ? '' : substr($livre['titre'], 0, 10);
+    
+    echo '<tr>'.
+    "<td>$code</td>".
+    "<td>{$livre['prix']}$</td>".
+    "<td>$type</td>".
+    "<td>$titre</td>".
+    '</tr>';
+  }
+}
+?>
+</td>
+</tr>
+</table>

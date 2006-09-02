@@ -1,0 +1,17 @@
+
+  <div id="isbnModjFormulaire">
+
+    <?php echo $html->formTag('/isbns/modifier') ?>
+    
+            <?=$html->hiddenTag('id')?>
+            <p id="AjISBN"><?php
+               
+               echo $html->submitTag('Modifier');
+
+               ?></p>
+               <br />
+    </form>
+    
+
+  </div><!-- isbnAjFormulaire -->
+

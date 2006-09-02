@@ -1,0 +1,26 @@
+  <h2 id="etTitre"><?=htmlentities("Récupération de vos informations")?></h2>
+
+  <?=$html->tagErrorMsg('etudiant/courriel', htmlentities('L\'adresse entrée est inconnue'))?>
+  <?=($this->etudiant->validationErrors ? '<p>'.htmlentities('Êtes-vous déjà inscrit ? Si non, passez à ').$html->linkTo('l\'inscription',"/etudiants/inscription_choix").'. '.htmlentities('Si oui, l\'avez-vous confirmée en lisant votre courriel ? ').'</p>' :'')?>
+
+  <?=(!empty($email_sent) ? htmlentities('Courriel envoyé'):'')?>
+
+  <div id="etInfoForm">
+
+
+    <?=$html->formTag('/etudiants/perdu_infos') ?>
+    
+            <p id="etInfoCourriel">
+              <label for="InfoChampCourriel">Courriel:&nbsp;</label>
+              <?=$html->inputTag('etudiant/courriel', 50, array('id'=>'InfoChampCourriel','maxlength'=>'150'))?></p>
+
+            <p id="etSubmit"><?=$html->submitTag('Obtenir mes informations')?></p>
+    </form>
+    
+
+  </div><!-- etInfoForm -->
+  <br />
+  
+
+
+

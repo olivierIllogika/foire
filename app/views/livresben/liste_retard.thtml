@@ -1,0 +1,52 @@
+<h2 id="livresTitre"><?=htmlentities("Liste de retardataires")?></h2>
+<h3><?=htmlentities("Sur présentation d'une carte d'identité seulement")?></h3>
+<h3><?=htmlentities("Rayez une fois passé, mais le nom doit être encore lisible!")?></h3>
+<pre><?/*print_r($data,true)*/?></pre>
+
+<table>
+<tr ">
+<td style="font-weight:bold">Nom, prenom</td>
+<td style="font-weight:bold">Argent</td>
+<td style="font-weight:bold">Livres</td>
+</tr>
+<?php
+
+$count = 0;
+
+foreach($data as $info)
+{
+
+  if (empty($codebar) || $info['codebar'] != $codebar)
+  {
+    if ($count == 1) echo "<td>aucun livre</td>";
+    
+    // premier
+    if (!empty($codebar)) echo '</tr>';
+    
+    // changement
+    $codebar = $info['codebar'];
+    echo "\n<tr class=\"follow-line-row\"><td>{$info['nom']}, {$info['prenom']}</td>";
+    
+    $count = 0;
+  }
+
+  if ($info['unsold'] == 0)
+  {
+    echo "<td>{$info['s']}$</td>";
+    $count = 1;
+  }
+
+  
+  if ($info['unsold'] == 1)
+  {
+    if ($count == 0) echo "<td>-</td>";
+    
+    echo "<td>{$info['c']} livres</td>";
+
+    $count = 2;
+  }
+
+}
+?>
+
+</table>

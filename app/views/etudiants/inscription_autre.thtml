@@ -1,0 +1,94 @@
+  <h2 id="etTitre">Inscription des autres participants</h2>
+
+  <?=(!empty($duplicate) ? '<span class="error_message">'.$duplicate.htmlentities(' existe déjà parmis les consignataires. Si vous êtes déjà inscrit, essayer de ').$html->linkTo(htmlentities("récupérer vos informations"),"/etudiants/perdu_infos/$courriel").htmlentities(". Si non, vérifiez vos informations et écrivez à ").$html->linkEmail('foire@step.polymtl.ca').'</span>' :'')?>
+
+  <?=($this->etudiant->validationErrors ? '<span class="error_message">'.htmlentities('** Vérifier le formulaire et corrigez les erreurs **').'</span>' :'')?>
+
+  <div id="etRegFormulaire">
+
+    <?php $email_help = 'Entrez une adresse de courrier &eacute;lectronique valide';
+          $option1 =htmlentities(" J'ai une carte d'identité de Polytechnique ");
+          $option2 = htmlentities(" Je veux utiliser mon permis de conduire ");
+          $option3 = htmlentities(" Donnez-moi un numéro que je mémoriserai et mentionnerai aux bénévoles ");
+/* <pre><?=print_r($_SERVER)></pre>
+*/
+     ?>
+    <?php echo $html->formTag('/etudiants/inscription') ?>
+            <?=$html->hiddenTag('source','autre')?>
+            
+            <p id="etPolySet"><fieldset>
+            <legend>1- <?=$html->radioTags('mode',array(1 => $option1), null, array())?></legend>
+              <label for="RegChampPoly" title="Code barre de la carte de Poly">Code barre: </label>
+            <?php
+
+               echo $html->inputTag('etudiant/id_poly', 15, array('id'=>'RegChampPoly','maxlength'=>'17', 'title'=>'Code barre de la carte de Poly', 'value'=>($html->tagValue('id_poly') ? $html->tagValue('id_poly') : '2 9334 ')))
+               ?>&nbsp;(avec ou sans espaces)<?php
+
+               echo $html->tagErrorMsg('etudiant/id_poly', htmlentities('Le numéro de code barre contient 14 chiffres'))
+            ?>
+            </fieldset></p>
+
+            <p id="etPermisSet"><fieldset>
+            <legend>2- <?=$html->radioTags('mode',array(2 => $option2), null, array())?></legend>
+              <label for="RegChampPermis" title="Num&eacute;ro de permis de conduire">Num&eacute;ro de permis: </label>
+            <?php
+
+               echo $html->inputTag('etudiant/id_permis', 15, array('id'=>'RegChampPermis','maxlength'=>'15', 'title'=>'Num&eacute;ro de permis de conduire', 'value'=>$html->tagValue('id_permis')))
+               ?>&nbsp;(avec ou sans '-')<?php
+
+               echo $html->tagErrorMsg('etudiant/id_permis', htmlentities('Le numéro de permis contient 12 chiffres'))
+            ?>
+            </fieldset></p>
+
+            <p id="etAucunSet"><fieldset>
+            <legend>3- <?=$html->radioTags('mode',array(3 => $option3), null, array())?></legend>
+            <?=htmlentities("Vous recevrez un numéro d'identité par courriel une fois votre inscription terminée.")?>
+            </fieldset></p>
+
+            <p id="etRegPrenom"><label for="RegChampPrenom" title="Pr&eacute;nom">Pr&eacute;nom:&nbsp;</label><?php
+
+               echo $html->inputTag('etudiant/prenom', 30, array('id'=>'RegChampPrenom','maxlength'=>'70', 'title'=>'Pr&eacute;nom'))
+               ?><?php
+
+               echo $html->tagErrorMsg('etudiant/prenom', htmlentities('Un prénom est requis')) ?></p>
+            <p id="etRegNom"><label for="RegChampNom" title="Nom de famille">Nom: </label><?php
+
+                echo $html->inputTag('etudiant/nom', 30, array('id'=>'RegChampNom','maxlength'=>'70', 'title'=>'Nom de famille'))
+            ?><?php
+
+                echo $html->tagErrorMsg('etudiant/nom', 'Un nom de famille est requis')
+            ?></p>
+            <p id="etRegCourriel"><?php
+               echo '<label for="RegChampCourriel" title="'.$email_help.'">Courriel:&nbsp;</label>'.
+                    $html->inputTag('etudiant/courriel', 50, array('id'=>'RegChampCourriel','maxlength'=>'150', 'title'=>$email_help));
+               echo $html->tagErrorMsg('etudiant/courriel', $email_help)
+               ?></p>
+
+
+            <p id="etRegP1"><label for="RegChampP1" title="Mot de passe">Mot de passe: </label><?php
+
+                echo $html->passwordTag('motpasse', 30, array('id'=>'RegChampP1','maxlength'=>'20', 'title'=>'Mot de passe'))
+            ?><?php
+
+                echo $html->tagErrorMsg('etudiant/motpasse', 'Un mot de passe est requis')
+            ?></p>
+
+            <p id="etRegP2"><label for="RegChampP2" title="Retappez le mot de passe">R&eacute;p&eacute;tez: </label><?php
+
+                echo $html->passwordTag('motpasse2', 30, array('id'=>'RegChampP2','maxlength'=>'20', 'title'=>'Retappez le mot de passe'))
+            ?><?php
+
+                echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent &ecirc;tre identiques')
+            ?></p>
+            
+            <p id="AjSubmit"><?php
+            
+              echo $html->submitTag('Terminer mon inscription')
+              ?></p>
+    </form>
+
+  </div><!-- etRegFormulaire -->
+
+  <?php /* echo  $this->renderElement('choix_consignataire')*/ ?>
+
+

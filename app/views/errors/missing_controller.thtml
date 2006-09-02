@@ -1,0 +1,6 @@
+<h2>Contr&ocirc;leur manquant</h2>
+
+<p class="error">Contr&ocirc;leur <em><?=(!empty($this->missingController) ? $this->missingController : 'nul')?></em> manquant
+</p> 
+
+<br />

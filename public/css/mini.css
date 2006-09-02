@@ -1,0 +1,18 @@
+BODY {
+
+}
+
+table td {
+vertical-align:top;
+font-weight:500;
+padding:6px;
+}
+
+tr.follow-line-row td {
+
+padding:5px 50px 0px 50px;
+border-width:0px;
+border-bottom-width:1px;
+border-style:solid;
+border-color:#ccc;
+}

@@ -1,0 +1,67 @@
+<h2><?=htmlentities("Foire aux Questions")?></h2>
+
+<?=(!empty($canMod) ? ' ['.$html->linkTo('Ajouter','/faqs/creer', array('class'=>'godLink', 'title'=>'Ajouter une entr&eacute;e')).']' :'')?>
+<?=(!empty($canMod) ? '[<a class="godLink" href="#qaCachees">'.htmlentities("Questions cachées").'</a>]' : '')?>
+
+<a name="faqTop" id="faqTop"></a>
+<div id="faqSections">
+  <ul><?php foreach ($sections as $section): 
+  
+  ?><li><?=htmlentities(preg_replace('/^[0-9]*/', '', $section['section'])) ?>
+        <ul>
+<?/*=current($data).' = '.$section['section'].'<br />'*/?>
+          <?php while(($qa = current($data)) && $qa['section']==$section['section']) { ?>
+
+            <li><a href="#qa<?=$qa['id']?>"><?=htmlentities($qa['question'])?></a></li>
+
+            <?php next($data);
+                }?>
+        </ul></li>
+      <?php endforeach; ?>
+    
+  </ul>
+  <?php if (!empty($_SESSION['etudiant']['id'])) : ?>
+  &nbsp;<?=$html->linkTo('Poser votre question', '/faqs/poser', array('class' => 'userLink'))?>&nbsp;si elle est toujours sans r&eacute;ponse
+  <?php endif; ?>
+</div>
+
+<div id="faqQA">
+
+    <?php $currentSection = '';
+          $questionCachees = false;
+    ?>
+    <?php foreach ($data as $qa):
+
+      if (empty($canMod) && $qa['afficher'] == 0 ) continue;
+
+      $qClass = 'question';
+      $rClass = 'reponse';
+      if (!empty($canMod) && $qa['afficher'] == 0 )
+      {
+        $qClass .= ' godQuestion';
+        $rClass .= ' godReponse';
+        
+        if (!$questionCachees)
+        {
+          echo '<a name="qaCachees" id="qaCachees"></a><hr /><span class="question godQuestion">'.htmlentities("** Les questions cachées : **").'</span><hr />';
+          $questionCachees = true;
+        }
+      }
+
+    ?>
+
+
+      <?php if ($currentSection != $qa['section']) { ?>
+        <h3><?=htmlentities(preg_replace('/^[0-9]*/', '', $qa['section']))?></h3>
+      <?php }
+      $currentSection = $qa['section'];
+      ?>
+
+      <a name="qa<?=htmlentities($qa['id'])?>" id="qa<?=htmlentities($qa['id'])?>"></a>
+      <p class="<?=$qClass?>"><?=htmlentities($qa['question'])?></p>
+      <p class="<?=$rClass?>"><?=htmlentities($qa['reponse']).' [<a href="#faqTop" title="Retour &agrave; la liste">^</a>] '.(!empty($canMod) ? ' ['.$html->linkTo('modifier','/faqs/modifier/'.$qa['id'], array('class'=>'godLink', 'title'=>'Modifier cette entr&eacute;e')).']' :'')?></p>
+
+
+    <?php endforeach; ?>
+</div> <!-- faqQA -->
+

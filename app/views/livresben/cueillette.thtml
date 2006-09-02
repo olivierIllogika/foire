@@ -1,0 +1,143 @@
+  <?=$html->javascriptIncludeTag('/js/prototype.js')?>
+  <h2 id="livresTitre">Cueillette</h2>
+  <span><?=$_SESSION['etudiant']['prenom']?></span>
+
+  <div id="livresCueilletteDiv">
+
+  <?=$html->javascriptTag("
+
+  function commandes()
+  {
+    window.location = '".$html->urlFor("/livresben/commandes")."';
+  }
+
+  function vider()
+  {
+    window.location = '".$html->urlFor("/livresben/cueillette")."';
+  }
+
+  function recu()
+  {
+    window.location = '".$html->urlFor("/livresben/recu/imprimer")."';
+  }
+
+  function localHook(input)
+  {
+    if (input == '') return true; // do nothing if input is empty
+    if ('' + parseInt(input[0]) == input[0]) return false; // no local command if starts with number
+    
+    input = input.toLowerCase();
+    
+    if ( eval('window.'+input) )
+    {
+      eval(input)();
+      return true;
+    }
+    return false;
+  }
+
+  var last_row_added = null;
+  function addRow(tableId, rowId, rowSpan)
+  {
+    
+    if (document.getElementById('row'+rowId))
+    {
+      return true;
+    }
+    var row = document.createElement('tr');
+    row.id = 'row'+rowId;
+    row.setAttribute('class', 'rowLoading');
+
+//    var img = document.createElement('img');
+//    img.setAttribute('src', '../img/spinner.gif')
+
+    var content = document.createElement('td');
+    content.setAttribute('colspan', rowSpan);
+
+    content.appendChild (document.createTextNode(rowId));
+//    content.appendChild (img);
+    row.appendChild(content);
+
+    var table = document.getElementById(tableId);
+    
+    if (last_row_added == null)
+    {
+      table.appendChild(row);
+    }
+    else
+    {
+      table.insertBefore(row,last_row_added);
+    }
+      
+    last_row_added = row;
+
+  }
+  
+  function updateRow(rowId, contentId)
+  {
+    var row = document.getElementById('row'+rowId);
+    var content = document.getElementById(contentId);
+/*    var frag = document.createDocumentFragment();*/
+
+    var range = document.createRange();
+    range.selectNodeContents(content);
+
+    var frag = range.extractContents();
+
+    range.selectNodeContents(row);
+    range.deleteContents();
+
+    row.appendChild(frag);
+  }
+  ")?>
+
+
+
+  <?=$htmlajax->formRemoteTag(array('url'=>"/livresben/pickup_scan", 'loading'=>"var box = document.getElementById('pickup_scanbox'); box.value=''; box.focus();",'update'=>/* don't change this odd syntax: */"row'+document.getElementById('pickup_scanbox').value+'" /* :ne changez pas cette syntaxe bizarre */, 'complete'=>"", 'html'=>array('id'=>'pickup_form', 'name'=>'pickup_form'))) ?>
+
+    <?=$html->inputTag('livre/scan_box', 40, array('id' => 'pickup_scanbox')) ?>
+
+    <?=$html->submitTag('Cueillir', array('onclick'=>"var box = document.getElementById('pickup_scanbox'); if (localHook(box.value)) return false; addRow('livresListe', box.value, 4)")) ?>
+    <?=$html->javascriptTag("document.getElementById('pickup_scanbox').focus()")?>
+    </form>
+<div id ="receive" style="display:none">
+</div>
+    <table id="livresListe">
+
+      <tr id="livresHeadRow">
+        <th id="livresHID">id</th>
+        <th id="livresHTitre">Titre</th>
+        <th id="livresHPrix">Prix</th>
+        <th id="livresHISBN"><?php echo $this->livre->isbn10_code4_Html() ?></th>
+      </tr>
+
+      <?php
+      if ($this->livre->validationErrors)
+      {
+        echo "<tr class=\"rowCommand\"><td colspan=\"4\">";
+        echo strip_tags($html->tagErrorMsg('livre/methode_inconnue', htmlentities('Méthode de sortie du reçu inconnue')));
+        echo strip_tags($html->tagErrorMsg('livre/methode', htmlentities('Méthode de sortie du reçu non spécifiée')));
+        echo strip_tags($html->tagErrorMsg('livre/recu', htmlentities('Aucun livres à imprimer sur le reçu')));
+        echo strip_tags($html->tagErrorMsg('livre/codebar', htmlentities('Consignataire inconnu')));
+        echo "</td></tr>";
+      }
+      ?>
+
+    </table>
+
+  </div><!-- livresCueilletteDiv -->
+  <hr>
+  
+  <div id="cueilLegende">
+  L&eacute;gende:
+  <table>
+    <tr>
+      <td class="rowLoading">Chargement</td>
+      <td class="rowConsigne">Livre consign&eacute;</td>
+      <td class="rowUsager">Livre NON consign&eacute;</td>
+      <td class="rowCommand">Commande</td>
+      <td class="rowInvalid">Entr&eacute;e non valide</td>
+    </tr>
+  </table>
+  Pour une liste des commandes, tapez "commandes"
+  </div>

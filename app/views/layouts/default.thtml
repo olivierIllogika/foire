@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<head>
+	<title><?=$title_for_layout?></title>
+	<?=$html->charsetTag('iso-8859-1')?>
+  <meta name="author" content="Olivier-2.Martin" />
+  <meta name="keywords" content="foire livres usage consigne aep association etudiants polytechnique" />
+  <meta name="description" content="Vente de livres sous consigne, un service de l'AEP (Association des Etudiants de Polytechnique)" />
+  <meta name="robots" content="all" />
+
+  <script type="text/javascript"></script>
+	<?=$html->cssTag('foire')?>
+
+</head>
+<body onload="if (top!=self) top.location=self.location;">
+<div id="container">
+
+<?php if (empty($compact_header) || !$compact_header): ?>
+  <div id="mainTitle">
+    <?php 
+					echo isset($_SESSION['etudiant']['id']) ? '<div id="sessionMenu"><p>'.$html->linkTo('Terminer la session', '/etudiants/logout').'</p><p>'.$html->linkTo('Modifier profil', '/etudiants/profil').'</p></div>' : null; ?>
+    <h1><span id="l1">F</span>oire aux <span id="l2">L</span>ivres</h1>
+  </div>
+  
+  <div id="subTitle">
+    <h2>Vente de livres usag&eacute;s sous consigne</h2>
+    <h3>Un service de l'<?=(empty($kiosk) || !$kiosk ? $html->linkOut("AEP", "http://www.aep.polymtl.ca", array('title'=>'Association des &Eacute;tudiants de Polytechnique')) : 'AEP' ) ?>, votre association &eacute;tudiante</h3>
+  </div>
+
+<?php else: ?>
+    <?php echo isset($_SESSION['etudiant']['id']) ? $html->linkTo('Terminer la session', '/etudiants/logout') : null; ?>
+<?php endif; ?>
+
+  <?php if (empty($kiosk) || $kiosk == false): ?>
+  <div id="menu">
+    <?=$html->linkTo('Horaire', "/") ?>
+    <?=$html->linkTo('Inscription', "/etudiants/inscription_choix") ?>
+    <?=$html->linkTo('Mes livres', "/livres") ?>
+    <?=$html->linkTo('Recherche', "/livres/recherche") ?>
+    <?=$html->linkTo('FAQ', "/faqs") ?>
+    <?=$html->linkTo('Factures', "/factures") ?>
+    <?=(!empty($_SESSION['etudiant']) && $_SESSION['etudiant']['niveau'] > 1 ?
+          $html->linkTo(htmlentities("BÉNÉVOLES"), "/pages/menu_ben", array('class' => 'benLink'))
+        : $html->linkTo('&Agrave; propos...', "/pages/apropos")) ?>
+  </div>
+  <?php endif; ?>
+
+<?php
+
+  if (empty($_SESSION['persistent']['firefox']))
+  {
+    @include_once ROOT.'modules/browser_detection.php';
+
+    if (function_exists('browser_detection'))
+    {
+      $browser = browser_detection('browser');
+      if (substr($browser,0,2) == 'ie')
+      {
+        echo $this->renderElement('firefox_push');
+        $_SESSION['persistent']['firefox'] = 'pushed';
+      }
+      else
+        $_SESSION['persistent']['firefox'] = 'not pushed';
+    }
+    else
+      $_SESSION['persistent']['firefox'] = 'could not push';
+
+  }
+?>
+
+<?php if (empty($_SESSION['persistent']['v2'])) : ?>
+
+<!--
+<div id="v2Temp">
+<p><?=htmlentities("Vous naviguez sur la version 2 du site de la Foire, la version officielle de l'automne 2005.  Vos commentaires sont appréciés (foire@step.polymtl.ca).")?></p>
+</div> -->
+
+<?php $_SESSION['persistent']['v2'] = 'done'; endif; ?>
+
+  <div id="content">
+    <?=$content_for_layout?>
+  </div>
+  
+  <div id="liensValidation">
+  </div>
+</div> <!-- container -->
+</body>
+</html>

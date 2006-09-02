@@ -1,0 +1,85 @@
+  <h2 id="etRecherche">Recherche &eacute;tudiant</h2>
+
+  <?=($this->etudiant->validationErrors ? '<span class="error_message">'.htmlentities('** Vérifier le formulaire et corrigez les erreurs **').'</span>' :'')?>
+
+  <div id="etRechFormulaire">
+
+    <?php echo $html->formTag('/etudiants/mod_etudiants', 'post', array('name' => 'etRechForm')) ?>
+            
+            <p id="etPolySet">
+              <label for="RechChampId" title="Num&eacute;ro d'identification">ID: </label>
+            <?php
+
+               echo $html->inputTag('etudiant/id', 15, array('id'=>'RechChampId','maxlength'=>'20', 'title'=>'Num&eacute;ro d\'identification'))
+               ?>
+						</p>
+
+            <p id="etRechPrenom"><label for="RechChampPrenom" title="Pr&eacute;nom">Pr&eacute;nom:&nbsp;</label><?php
+
+               echo $html->inputTag('etudiant/prenom', 30, array('id'=>'RechChampPrenom','maxlength'=>'70', 'title'=>'Pr&eacute;nom'))
+               ?></p>
+               
+            <p id="etRechNom"><label for="RechChampNom" title="Nom de famille">Nom: </label><?php
+
+                echo $html->inputTag('etudiant/nom', 30, array('id'=>'RechChampNom','maxlength'=>'70', 'title'=>'Nom de famille'))
+            ?></p>
+            
+            <p id="etRechCourriel"><?php
+               echo '<label for="RechCourriel" title="Courrier &eacute;lectronique">Courriel:&nbsp;</label>'.
+                    $html->inputTag('etudiant/courriel', 50, array('id'=>'RechCourriel','maxlength'=>'150', 'title'=>'Courrier &eacute;lectronique'));
+               echo $html->tagErrorMsg('etudiant/courriel', 'Courrier &eacute;lectronique')
+               ?></p>
+
+            <p id="etRechConfirm"><!-- <label for="RechConfirm" title="Inscription confirm&eacute;">Confirm&eacute;: </label> --><?php
+
+                echo $html->checkboxTag('etudiant/confirme', 'Confirm&eacute;', array('id'=>'RechConfirm', 'title'=>'Inscription confirm&eacute;'))
+            ?></p>
+
+            <p id="etRechP1"><label for="RechChampP1" title="Mot de passe">Mot de passe: </label><?php
+
+                echo $html->passwordTag('motpasse1', 30, array('id'=>'RechChampP1','maxlength'=>'20', 'title'=>'Mot de passe'))
+            ?></p>
+
+            <p id="etRechP2"><label for="RechChampP2" title="Retappez le mot de passe">R&eacute;p&eacute;tez: </label><?php
+
+                echo $html->passwordTag('motpasse2', 30, array('id'=>'RechChampP2','maxlength'=>'20', 'title'=>'Retappez le mot de passe'))
+            ?><?php
+
+                echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent &ecirc;tre identiques')
+            ?></p>
+            
+            <p id="RechSubmit"><?php
+            
+              echo $html->submitTag('Rechercher')
+              ?>
+<!--              <input type="button" id="cleanFormButton" name="cleanFormButton" value="Vider" onClick="javascript:document.forms['etRechForm'].reset();" />-->
+							</p>
+    </form>
+
+  </div><!-- etRechFormulaire -->
+  
+  <div id="etudiantsListeDiv">
+   <?php if ($this->etudiant->countLastFind) { ?>
+    <table id="etudiantsListe">
+
+      <tr id="etudiantsHeadRow">
+        <th id="etudiantsNom">Nom<?=($this->etudiant->countLastFind > 3 ? '&nbsp;&nbsp;('.$this->etudiant->countLastFind.' trouv&eacute;s)' : '')?></th>
+        <th id="etudiantsPrenom">Prenom</th>
+        <th id="etudiantsCourriel">Courriel</th>
+        <th id="etudiantsConfirme">Confirm&eacute;</th>
+      </tr>
+			<?php	foreach ($listeEtudiants as $etudiant): ?>
+
+      <tr>
+        <td class="etudiantsNomRow"><?=$etudiant['nom']?></td>
+        <td class="etudiantsprenomRow"><?=$etudiant['prenom']?></td>
+        <td class="etudiantsCourrielRow"><?=$etudiant['courriel']?></td>
+        <td class="etudiantsConfirmeRow"><?=($etudiant['confirme'] ? 'X' : '')?></td>
+      </tr>
+
+  		<?php endforeach; ?>
+    </table>
+    <?php } else { // countLastFind ?>
+    <p id="etudiantsAucun">Aucun &eacute;tudiant &agrave; afficher</p>
+    <?php } //if countLastFind ?>
+  </div><!-- livresListeDiv -->

@@ -1,0 +1,35 @@
+<h2 id="livresTitre"><?=htmlentities("Liste de livres")?></h2>
+<h3><?=htmlentities("Sur présentation d'une carte d'identité seulement")?></h3>
+<h3><?=htmlentities("Rayez une fois passé, mais le nom doit être encore lisible!")?></h3>
+<pre><?/*print_r($data,true)*/?></pre>
+
+<table>
+<!--
+<tr ">
+<td style="font-weight:bold">Nom, prenom</td>
+<td style="font-weight:bold">Argent</td>
+<td style="font-weight:bold">Livres</td>
+</tr>
+-->
+<?php
+
+//$count = 0;
+
+foreach($data as $info)
+{
+
+  if (empty($codebar) || $info['codebar'] != $codebar)
+  {
+    // changement
+    $codebar = $info['codebar'];
+    echo "\n<tr ><td colspan=\"2\" ><b>{$info['nom']}, {$info['prenom']} ($codebar)</b></td></tr>";
+    
+//    $count = 0;
+  }
+
+  echo "\n<tr ><td>{$info['titre']}</td><td>{$info['prix']}$</td></tr>";
+
+}
+?>
+
+</table>

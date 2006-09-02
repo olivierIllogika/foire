@@ -1,0 +1,21 @@
+<?php
+
+$pdf=new PDF_Label3of9('5162');
+
+$pdf->SetAutoPageBreak(true);
+
+$pdf->Open();
+$pdf->SetMargins(15, 20);
+
+$pdf->AddPage();
+
+$pdf->SetFontSize(14);
+
+$dim = $pdf->Code39($pdf->GetX(), $pdf->GetY(), $codebar,false,0.8,6);
+$pdf->Ln(6);
+$pdf->Cell(0,0,$this->livre->db->numRows.' livre'.($this->livre->db->numRows > 1 ? 's':'').':','',0,'L');
+$pdf->Ln(3);
+
+echo $pdf->Output($filename,'F');
+?>
+

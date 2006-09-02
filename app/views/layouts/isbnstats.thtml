@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<head>
+<title><?=$page_title?></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<style><!--
+P { text-align:left; font:1.1em sans-serif; color:#383; }
+A { color:#444; text-decoration:none }
+A:HOVER { text-decoration: underline; color:#44E }
+#divStats {
+width:250px;
+margin:10px 4px 10px 4px;
+border: #383 2px ridge;
+background-color:#bfb;
+padding:0px 10px 0px 10px;
+}
+--></style>
+</head>
+
+<body>
+
+ <?=$content_for_layout?>
+
+</body>
+</html>

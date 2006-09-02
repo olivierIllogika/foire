@@ -1,0 +1,53 @@
+<?php
+
+//$pdf=new PDF_Facture();
+$pdf=new PDF_Label3of9('5162');
+
+//$pdf->SetProtection(array('print'));
+//$pdf->SetProtection(array('print'),'','olivier-2');
+$pdf->AliasNbPages();
+$pdf->SetAutoPageBreak(true);
+$pdf->Open();
+//$pdf->SetMargins(30, 20, 30);
+$pdf->AddPage();
+
+$pdf->SetFillColor(220,220,220);
+$pdf->SetFont('Courier','',12);
+$fill=0;
+/*
+foreach($lignes as $row) {
+
+    $pdf->Cell(140,6,strtolower(stripslashes($row['titre'])),'',0,'L',$fill);
+    $pdf->Cell( 20,6,$row['prix'].' $','',0,'R',$fill);
+    $pdf->Ln();
+    $fill = !$fill;
+}
+
+$pdf->Ln(5);
+$pdf->SetFillColor(0,0,0);
+$pdf->SetX(50);
+$pdf->Cell(120,1,'',1,1,'L',1);
+
+$pdf->Ln(5);
+$pdf->Cell( 35,1,'Total',0,0,'R');
+$pdf->Cell( 20,1,$lignes[0]['total'].' $',0,1,'R');
+
+if ($lignes[0]['carte'] == 'aucune')
+{
+  $pdf->Ln(5);
+  $pdf->Cell(140,1,'Donné',0,0,'R');
+  $pdf->Cell( 20,1,$lignes[0]['comptant'].' $',0,1,'R');
+
+  $pdf->Ln(5);
+  $pdf->Cell(140,1,'Remis',0,0,'R');
+  $pdf->Cell( 20,1,$lignes[0]['remis'].' $',0,1,'R');
+}
+else
+{
+  $pdf->Ln(5);
+  $pdf->Cell(140,1,'Payé par carte '.$lignes[0]['carte'],0,0,'R');
+
+}
+*/
+echo $pdf->Output($filename,'S');
+?>

@@ -1,0 +1,15 @@
+<?php if (!empty($redirect)) : ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+
+<!--  header('Refresh: 1;URL='.$redirect); -->
+<frameset rows="*, 100%">
+  <frame src ="<?=$downloadfile?>" frameborder="0" noresize="noresize" scrolling="no" />
+  <frame src ="<?=$redirect?>" frameborder="0" noresize="noresize" scrolling="no" />
+</frameset>
+</html>
+<?php else: 
+  header('Location: '.$downloadfile);
+endif;
+?>
+

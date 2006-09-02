@@ -1,0 +1,84 @@
+<!--
+<div id="optionsEtudiant">
+<?=$html->linkTo('Modifier mon profil', '/etudiants/profile')?>
+</div> -->
+
+  <h2 id="livresTitre">Vos livres</h2>
+
+<!-- <div id="v2Temp">
+<p><?/*=htmlentities("'Modifier' et 'Supprimer' ne fonctionnent pas;  patience, j'y travaille")*/?></p>
+</div> -->
+
+  <?php echo $html->linkTo('<div id="livresAjoutNeuf"><h4>Ajouter un livre</h4></div>', '/livres/ajouter_nouveau') ?>
+
+  <div id="livresListeDiv">
+   <?php if ($this->livre->countLastFind) { ?>
+    <table id="livresListe">
+
+      <tr id="livresHeadRow">
+        <th id="livresHTitre">Titre<?=($this->livre->countLastFind > 3 ? '&nbsp;&nbsp;('.$this->livre->countLastFind.' livres)' : '')?></th>
+        <th id="livresHPrix">Prix</th>
+        <th id="livresHISBN"><?php echo $this->livre->isbn10_code4_Html() ?></th>
+        <th id="livresActions" colspan="2">Actions</th>
+      </tr>
+
+        <?php
+          $rowClasses = array('rowOne','rowTwo');
+
+          foreach ($data as $livre):
+        
+          $realTitle = $livre['titre'];
+          $fullTitle = htmlentities( $realTitle );
+          $lenLimit = 36;
+          $shortTitle = strlen($realTitle) < $lenLimit ? $fullTitle : htmlentities(substr($realTitle,0,$lenLimit)).'...';
+          
+          ?>
+        <tr class="<?=$rowClasses[] = array_shift($rowClasses)?>">
+          <td class="livreTitre"><span title="<?=$fullTitle?>"><?=$shortTitle?></span></td>
+          <td class="livrePrix"><?php echo $livre['prix'] ?>&nbsp;$</td>
+          <?php if ($livre['count']): /*<?=$html->imageTag('window_383.gif')*/ ?>
+          <?php
+            $statsClick = "window.open('".$html->urlFor("/isbnstats/afficher/{$livre['isbn']}")."','Statistiques de livre','width=300,height=350,screenX=300,screenY=300,top=300,left=300'); return false;";
+            /* status=no,menubar=no,resizable=no,scrollbars=no */
+          ?>
+          <td class="livreISBN "><?=$html->linkTo($this->isbn->isbn2formated($livre['isbn']),"/isbnstats/afficher/{$livre['isbn']}", array('class'=>"isbnStats", 'title'=>"Statistiques disponibles", 'target'=>'stats', 'onclick'=>$statsClick))?></td>
+          <?php else: ?>
+          <td class="livreISBN "><?=$this->isbn->isbn2formated($livre['isbn'], '-') ?></td>
+          <?php endif; ?>
+          <?php if ($livre['livre_id']) { ?>
+            <td colspan="2"><em>Livre vendu</em></td>
+          <?php } elseif ($livre['en_consigne']) { ?>
+            <?php $help = htmlentities("Le livre ne peut pas être modifié/supprimé car il est en consigne") ?>
+            <td class="livreMod disabled"><?=$html->linkTo('Modifier', '#', array('title'=>$help)) ?></td>
+            <td class="livreSup disabled"><?=$html->linkTo('Supprimer', '#', array('title'=>$help)) ?></td>
+          <?php } else { ?>
+
+            <?php $help = htmlentities("Cliquez pour modifier les données du livre") ?>
+            <td class="livreMod"><?=$html->linkTo('Modifier', "/livres/modifier/{$livre[0]}", array('title'=>$help)) ?></td>
+            <?php $help = htmlentities("Cliquez pour supprimer ce livre") ?>
+            <td class="livreSup"><?=$html->linkTo('Supprimer', "/livres/supprimer/{$livre[0]}", array('title'=>$help), "Voulez-vous vraiment supprimer ce livre ?") ?></td>
+          <?php } ?>
+
+        </tr>
+        <?php endforeach; ?>
+    </table>
+    <?php } else { // countLastFind ?>
+    <p id="livresAucun">Aucun livres &agrave; afficher</p>
+    <?php } //if countLastFind ?>
+  </div><!-- livresListeDiv -->
+
+  <div id="livresAvis">
+    <?php $avis = "Si vous ne pouvez pas vous présenter à la récupération, vous devez donner vos reçus à une personne qui pourra venir à votre place au lieu de récupération." ?>
+
+    <p id="livresRecup"><?php echo preg_replace('/'.htmlentities('récupération').'/', $html->linkTo(htmlentities('récupération'), '/faqs#qa12'), htmlentities($avis) ) ?></p>
+
+    <?php $avis = "Nous ne gardons que {$foire['taux_comission']}% de commission sur le montant de vos livres vendus.  Si la date de récupération n'est pas respectée, vous pouvez toujours vous présenter à l'AEP dans la semaine suivant la journée de récupération.  Nous garderons alors une commission de {$foire['taux_retard']}% pour couvrir le supplément de gestion."; ?>
+
+    <p id="livresComission"><?php echo preg_replace('/[0-9]{1,2}[ ]{0,1}%/', '<span class="livresPourcent">$0</span>', preg_replace('/'.htmlentities('récupération').'/', $html->linkTo(htmlentities('récupération'), '/faqs#qa12'), htmlentities($avis) )) ?></p>
+
+    <?php $avis = "Aucune excuse de retard n'est acceptée. Après la dernière journée de récupération, vous perdrez livres et/ou argent qui vous est dû." ?>
+
+    <p id="livresRetard"><?php echo preg_replace('/'.htmlentities('récupération').'/', $html->linkTo(htmlentities('récupération'), '/faqs#qa12'), htmlentities($avis) )?></p>
+
+  </div><!-- livresAvis -->
+

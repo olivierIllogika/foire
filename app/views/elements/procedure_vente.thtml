@@ -1,0 +1,24 @@
+  <h2><?=htmlentities("Procédure à suivre pour la vente de livres") ?></h2>
+
+  <div id="venteProcedure">
+
+    <ol>
+      <li>Inscrivez-vous en tant que consignataire
+      <ol>
+        <li>Remplissez le formulaire</li>
+        <li>Attendez le courriel de confirmation</li>
+        <li>Cliquez sur le lien du courriel</li>
+      </ol></li>
+      <li>Inscrivez vos livres
+      <ol>
+        <li>Entrez par la section &lt;&lt;Mes livres&gt;&gt;</li>
+        <li>Ajoutez vos livres en fixant votre prix de vente</li>
+      </ol></li>
+      <li>Venez d&eacute;poser vos livres &agrave; la cueillette
+      <ol>
+        <li>Imprimez et collez vos &eacute;tiquettes au poste d'impression</li>
+        <li>Faites valider vos livres identifi&eacute;s par un b&eacute;n&eacute;vole</li>
+      </ol></li>
+    </ol>
+  </div><!-- venteProcedure -->
+  <br />

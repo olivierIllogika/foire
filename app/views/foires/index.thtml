@@ -1,0 +1,52 @@
+<h2><?=htmlentities("Foire aux Questions")?></h2>
+
+<div id="faqSections">
+  <ul><?php foreach ($sections as $section): 
+  ?><li><?=$section['section'] ?><ul>
+          <?php while(($qa = current($data)) && $qa['section']==$section['section']) { ?>
+
+            <li><a href="#qa<?=$qa['id']?>"><?=htmlentities($qa['question'])?></a></li>
+
+            <?php next($data);
+                }?>
+        </ul>
+      <?php endforeach; ?>
+    </li>
+  </ul>
+</div>
+
+<div id="faqQA">
+
+    <?php $currentSection = ''; ?>
+    <?php foreach ($data as $qa): ?>
+
+      <?php if ($currentSection != $qa['section']) { ?>
+        <h3><?=$qa['section']?></h3>
+      <?php }
+      $currentSection = $qa['section'];
+      ?>
+
+      <a name="qa<?=htmlentities($qa['id'])?>" id="qa<?=htmlentities($qa['id'])?>"></a>
+      <span class="question"><?=htmlentities($qa['question'])?></span>
+      <span class="reponse"><?=htmlentities($qa['reponse'])?></span>
+
+
+    <?php endforeach; ?>
+</div> <!-- faqQA -->
+
+<!--
+        <php foreach ($data as $post): ?>
+        <tr>
+                <td><php echo $post['id']?></td>
+                <td>
+                        <php echo $html->linkTo($post['title'], "/posts/view/{$post['id']}")?>
+                        <php echo $html->linkTo('Delete',"/posts/delete/{$post['id']}", null, "Are you sure you want to delete post entitled \'{$post['title']}\'?")?>
+                        <php echo $html->linkTo('Edit',"/posts/edit/{$post['id']}")?>
+                </td>
+                <td><php echo $post['created']?></td>
+        </tr>
+        <php endforeach; ?>
+</table>
+
+<php echo $html->linkTo('Add new post', '/posts/add_new') ?>
+-->

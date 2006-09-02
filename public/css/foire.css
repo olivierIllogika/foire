@@ -1,0 +1,580 @@
+/* tag */
+#v2Temp{
+font-size:x-small;
+color:#600;
+text-align:justify;
+}
+
+html {
+margin: 0px;
+padding: 0px;
+}
+
+BODY {
+font-size: 76%;
+background-color: #69c;
+margin: 0px;
+padding: 0px;
+}
+
+BODY, INPUT, TEXTAREA {
+font-family:sans-serif;
+}
+
+
+H1 {
+font-size:2.1em;
+color: #69c;
+/* This causes some big problems in FF.
+color: #fff;
+text-align: left;
+position: absolute;
+padding-left: 15%;
+top: 0.35em;
+left: 0;
+height: 4em;*/
+}
+
+H2 {
+font-size:1.7em;
+color: #383;
+}
+
+H3 {
+font-size:1.4em;
+color: #553;
+}
+
+H4 {
+font-size:1.15em;
+color: #338;
+}
+
+P {
+font-size:1em;
+margin-bottom:.5em;
+}
+
+A {
+white-space:nowrap;
+text-decoration:underline;
+}
+
+A:HOVER {
+background-color:#EEE;
+}
+
+A:visited{
+color:#33f;
+}
+
+CODE, PRE {
+font-family:monospace;
+font-size:1.1em !important;
+font-size:.95em;
+color:#44A;
+margin:0;
+}
+
+CODE {
+color:#227;
+white-space:nowrap;
+margin:0 .2em;
+}
+
+PRE {
+margin-left:1em;
+}
+
+ACRONYM,ABBR {
+border-bottom:1px dotted;
+}
+
+HR {
+height:0;
+border-top:1px solid #AAA;
+}
+
+/* id / specific */
+
+
+#container {
+margin: 0 auto;
+/* This causes some big problems in FF.*/
+/*border-top: solid 5em #69c;*/
+color: #333;
+font: normal 1.1em Verdana;
+width: 640px;
+padding: 0 20px 10px;
+background-color: #fff;
+}
+
+#mainTitle a {
+color:#383;
+font-size:0.9em;
+float:left;
+margin:-5px 0 8px 0;
+}
+
+#mainTitle h1 {
+font-size: 2.5em;
+margin: 0px 0px 0px -15px;
+}
+
+#mainTitle #l1 {
+/*font-family:cursive;*/
+font-size: 1.6em;
+margin-right:-15px;
+vertical-align:text-bottom;
+}
+
+#mainTitle #l2 {
+/*font-family:cursive;*/
+font-size: 1.6em;
+margin: 0px -15px 0px 0px;
+vertical-align:-10px;
+}
+
+#sessionMenu {
+float:right;
+width:20%;
+}
+
+#subTitle h2 {
+font-size: 1.2em;
+text-align:right;
+margin: -15px 60px;
+}
+
+#subTitle h3 {
+font-size: 0.75em;
+text-align:right;
+margin: 15px 50px;
+}
+
+#subTitle a, #subTitle a:visited {
+text-decoration:none;
+}
+
+#ff_push {
+margin:10px 0 0 0;
+border: #CE510D 2px ridge;
+background-color:#f8f8f8;
+padding:5px;
+}
+
+#ff_push p {
+margin:5px 0 0 0;
+color:#008;
+}
+
+#ff_push a:link,#ff_push a:visited, #ff_push a:hover {
+color:#CE510D;
+font-weight:bold;
+background-color:inherit;
+}
+
+#ff_push_left {
+
+}
+
+#ff_push_right {
+float:right;
+position:relative;
+left:-60px;
+top:25px;
+}
+
+#menu {
+margin: 15px 0 0 0;
+padding:6px;
+text-align:center;
+border:1px dotted #999;
+}
+
+#menu a, #menu a:visited {
+text-decoration:none;
+margin: 1px;
+padding: 5px 10px 5px 10px;
+}
+
+#menu a:hover {
+color: #00f;
+}
+
+#content {
+padding-top: 1em;
+width: 100%;
+text-align: left;
+padding:0 0 0 0;
+/*line-height: 170%;*/
+}
+
+#factures p
+{
+text-align:justify;
+}
+
+#factures dt
+{
+color:#00c;
+margin:5px 0 5px 0;
+}
+
+#faqQA h3 {
+border-width: 0px 0px 1px 1px;
+padding:0 0 2px 5px;
+border-style:solid;
+}
+
+#optionsEtudiant{
+float:right;
+}
+
+#livresListeDiv a {
+padding: 0 0 0 0;
+}
+
+#livresAjoutNeuf {
+width:160px;
+height:43px;
+color:#fff;
+text-decoration:none;
+cursor:pointer;
+background: #69c url('../img/rounded_bottom_160.gif') bottom no-repeat;
+/*border: 1px solid #000;*/
+}
+
+#livresAjoutNeuf h4{
+color:#fff;
+margin: 0 0 0 0;
+background: url('../img/rounded_top_160.gif') top no-repeat;
+text-align:center;
+padding:10px 0 10px 0;
+}
+
+#livresListeDiv table {
+table-layout:fixed;
+width:640px;
+overflow:hidden;
+}
+
+.livreTitre  {
+font-family:monospace;
+font-size:small;
+}
+
+#livresHPrix, .livrePrix {
+width:35px;
+text-align:right;
+}
+
+#livresHISBN, .livreISBN {
+width:120px;
+text-align:center;
+}
+
+#livresActions {
+text-align:center;
+width:140px;
+border-bottom: 1px solid;
+}
+
+#livresAvis {
+border-top: 1px solid;
+margin-top: 15px;
+text-align:justify;
+}
+
+.livresPourcent {
+color:#b00;
+font-weight:bold;
+}
+
+#coopPub {
+text-align:center;
+margin:10px;
+}
+
+#etLoginSupport{
+float:right;
+margin:0 0 0 0;
+}
+
+#etLoginSupport p{
+margin:0 0 -1px 0;
+}
+
+#etSubmit {
+margin:10px 0 15px 30px;
+}
+
+#loginSupport {
+/*float:right;
+margin:0px 100px 10px 0;*/
+}
+
+#loginSupport p {
+margin:-5px;
+}
+
+#etRegImgCarte {
+float:right;
+margin-right:50px;
+}
+
+#etChoixAide{
+margin-top:10px;
+}
+
+#etRegFormulaire, #etLoginForm {
+border: #383 2px ridge;
+padding:0 5px 0 10px;
+}
+
+#etChoix a:link, #etChoix a:visited{
+text-decoration:none;
+color:#fff;
+}
+
+#etChoix {
+margin-top:15px;
+height:300px;
+text-decoration:none;
+}
+
+#etChoix div {
+width:250px;
+color:#fff;
+overflow:visible;
+padding: 0 0 0 0;
+text-decoration:none;
+cursor:pointer;
+background: #69c url('../img/rounded_bottom_250.gif') bottom no-repeat;
+}
+
+#etChoix #etPoly {
+float:left;
+margin-left:10px;
+}
+
+#etChoix #etAutre {
+float:right;
+margin-right:10px;
+}
+
+#etChoix h4 {
+margin-top:0px;
+padding-top:15px;
+text-align:center;
+color:#fff;
+background: url('../img/rounded_top_250.gif') top no-repeat;
+}
+
+#tbHoraire {
+border: #383 2px ridge;
+margin-bottom:10px;
+width:100%;
+}
+
+#tbHoraire td {
+border: #bbb 1px solid;
+}
+
+#nb_etiquettes{
+width:0px;
+border:1px solid #f8f8f8;
+}
+
+.horBlank {
+border: #f00 1px solid;
+height:15px;
+}
+
+#headAct, #headLieu, .horAct, .horLieu {
+padding-left:10px;
+}
+
+#headDate, #headHeure, .horDate, .horHeure {
+text-align:center;
+}
+
+#venteProcedure ol ol
+{
+list-style-type:lower-roman;
+}
+/* classes */
+
+.rowLoading {
+background-color:#8be;
+font-weight:bold;
+}
+
+.rowConsigne, .rowVendu {
+background-color:#6b6;
+}
+
+.rowUsager, .rowNonVendu {
+background-color:#ff3;
+}
+
+.rowCommand {
+background-color:#f73;
+}
+
+.rowInvalid {
+background-color:#e44;
+}
+
+.isbnInfo {
+color:#14c;
+}
+
+.isbnWarn {
+color:#800;
+}
+
+.isbnStats, a.isbnStats{
+color:#383;
+border-bottom:1px dotted;
+background-color:inherit;
+text-decoration:none;
+}
+
+.rowTwo {
+background-color:#f3fafa;
+}
+
+
+.disabled a:link, .disabled a:active, .disabled a:visited, .disabled a:hover{
+color:#555;
+text-decoration:none;
+background-color:inherit;
+cursor:default;
+}
+
+.question {
+font-size: 1.1em;
+margin-left:5px;
+color:#00f;
+}
+.reponse {
+font-size: 0.9em;
+margin-left:8px;
+text-align:justify;
+}
+
+a.userLink {
+color:#383;
+}
+
+a.benLink {
+color:#494;
+}
+
+a.godLink {
+color:#c00;
+}
+
+.godQuestion, .godReponse {
+font-style:italic;
+}
+
+.godQuestion {
+color:#c00;
+}
+
+.notice {
+padding: 1em;
+background: #ffd;
+border: solid 2px #eeb;
+display: block;
+font-family: Verdana;
+}
+
+.tip {
+background: #efe;
+padding: 1em;
+border: solid 2px #cdc;
+}
+
+.error {
+background: #fdd;
+padding: 1em;
+border: solid 2px #dcc;
+}
+
+.error_message{
+color:#a00;
+}
+
+/* Forms */
+
+
+input, textarea, select 
+{ margin: 2px }
+
+input, select 
+{ vertical-align: middle }
+
+input[type=button], 
+input[type=submit], 
+input[type=reset] 
+{
+ background: #eee;
+ color: #222;
+ border: 1px outset #ccc;
+ padding: .1em .5em;
+}
+input[type=button]:hover, 
+input[type=submit]:hover,
+input[type=reset]:hover {
+ background: #ccb;
+}
+input[type=text], 
+input[type=password], 
+input.textwidget, 
+textarea 
+{ border: 1px solid #d7d7d7 }
+
+input[type=text], 
+input[type=password], 
+input.textwidget 
+{ padding: .25em .5em }
+
+input[type=text]:focus, 
+input[type=password]:focus, 
+textarea:focus 
+{ border: 1px solid #383 }
+
+option 
+{ border-bottom: 1px dotted #d7d7d7 }
+
+fieldset 
+{ border: 1px solid #3a3; padding: .5em; margin: 0 }
+
+fieldset.iefix 
+{ background: transparent; border: none; padding: 0; margin: 0 }
+
+/* html fieldset.iefix { width: 98% }*/
+
+fieldset.iefix p { margin: 0 }
+
+legend { color: #777; padding: 0 .25em; font-size: 90%; font-weight: bold }
+
+label.disabled { color: #d7d7d7 }
+
+.buttons { margin: .5em .5em .5em 0 }
+
+.buttons form, .buttons form div { display: inline }
+
+.buttons input { margin: 1em .5em .1em 0 }
+/**/
+
+.textNumberOutput {
+border:none;
+width:30px;
+text-align:right;
+margin:0;
+padding:0;
+}

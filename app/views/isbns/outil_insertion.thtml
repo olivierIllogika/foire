@@ -1,0 +1,24 @@
+  <h2 id="isbnTitre">Ajouter un nouvel ISBN</h2>
+
+
+  <div id="isbnAjFormulaire">
+
+    <?php echo $html->formTag('/isbns/outil_insertion') ?>
+    
+            <?=$html->tagErrorMsg('isbn/id', "ISBN non valide")?>
+            <p id="AjISBN"><?php
+               echo '<label for="AjChampISBN">ISBN (ou GTIN/EAN/UPC): [format libre]</label>'.
+//               '<input type="text" name="data[id]" id="AjChampISBN" maxlength="14" size="15" value="'.$html->tagValue('id').'"  />';
+               '<input type="text" name="data[id]" id="AjChampISBN" maxlength="14" size="15" value="'.$this->isbn->isbn2formated($html->tagValue('id')).'"  />';
+
+                    $html->inputTag('isbn/id', 15, array('id'=>'AjChampISBN','maxlength'=>'14'));
+               
+               echo $html->submitTag('Chercher');
+
+               ?></p>
+               <br />
+    </form>
+    
+
+  </div><!-- isbnAjFormulaire -->
+

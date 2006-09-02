@@ -1,0 +1,55 @@
+  <h2 id="livresModTitre">Modifier un livre</h2>
+
+
+  <div id="livresModFormulaire">
+
+    <?php $isbn_help = 'Ce champ doit contenir 4 ou 10 caract&egrave;res<br />(Le dernier caract&egrave;re d\'un ISBN peut &ecirc;tre "X")' ?>
+    <?php $prix_help = 'Le prix auquel VOUS estimez la valeur de revente du livre' ?>
+
+    <?php echo $html->formTag('/livres/modifier/'.$html->tagValue('id')) ?>
+
+            <?php echo $html->hiddenTag('id') ?>
+            <?php echo $html->hiddenTag('isbn') ?>
+
+            <p id="ModISBN"><?php
+               echo $this->livre->isbn10_code4_Html().':&nbsp;'.
+                    '<span id="ModChampISBN" title="Impossible de modifier l\'ISBN">'.$this->isbn->isbn2formated($html->tagValue('isbn'), '-').'</span>';
+               ?></p>
+            <p id="ModPrix"><label for="ModChampPrix">Prix:&nbsp;</label><?php
+            
+                echo $html->inputTag('livre/prix', 3, array('id'=>'ModChampPrix','maxlength'=>'3', 'title'=>$prix_help))
+            ?>&nbsp;$<?php
+            
+                echo $html->tagErrorMsg('livre/prix', 'Le prix est requis (sans d&eacute;cimales)')
+            ?></p>
+            <p id="ModTitre"><label for="ModChampTitre">Titre:&nbsp;</label><?php
+               if ($html->tagValue('isbn'))
+               {
+                 echo '<span id="ModChampTitre" title="Impossible de modifier le titre lorsqu\'un ISBN est d&eacute;fini">'.$html->tagValue('titre').'</span>';
+               }
+               else
+               {
+                 echo $html->inputTag('livre/titre', 50, array('id'=>'ModChampTitre','maxlength'=>'250', 'value'=>$html->tagValue('titre')));
+               }
+               ?><?php
+               
+               echo $html->tagErrorMsg('livre/titre', 'Le titre est requis.') ?></p>
+            <p id="ModCours"><label for="ModChampCours">Cours:&nbsp;</label><?php
+
+               echo $html->inputTag('livre/cours', 10, array('id'=>'ModChampCours','maxlength'=>'10'))
+               ?></p>
+            <p id="ModGenie"><label for="ModChampGenie">G&eacute;nie:&nbsp;</label><?php
+
+               echo $html->selectTag('genie', $genie, $html->tagValue('genie'), array('id'=>'ModChampGenie'))
+               ?></p>
+            <p id="ModSubmit"><?php
+            
+              echo $html->submitTag('Modifier')
+              ?>&nbsp;<?php
+              
+              echo $html->linkTo(htmlentities('Annuler et revenir à la liste'), '/livres', array('id' => 'ModAnnuler'), htmlentities('Voulez-vous vraiment annuler et retourner à la liste de livre ?'))
+              ?></p>
+    </form>
+
+  </div><!-- livresModFormulaire -->
+

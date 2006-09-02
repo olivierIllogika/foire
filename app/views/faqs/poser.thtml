@@ -1,0 +1,47 @@
+<h2>Poser votre question</h2>
+
+  <?=$html->formTag('/faqs/poser') ?>
+
+  <p id="faqSujet">
+      Sujet:
+  </p>
+  <p id="faqSujetRadio">
+    <?php
+      echo $html->tagErrorMsg('faq/sujet', 'Vous devez indiquer un sujet');
+
+      $options['foire'] = htmlentities("Question concernant la Foire aux Livres en général: cueillette, vente, etc.");
+      $options['site'] = htmlentities("Question concernant le site internet de la Foire");
+      echo $html->radioTags('sujet', $options,'<br />',array());
+    ?>
+  </p>
+  
+  <?php if (empty($_SESSION['etudiant']['id'])) : ?>
+    <p id="faqInOrigine">
+
+      <label for="faqOrigine">Votre adresse de courrier &eacute;lectronique: </label><br />
+      <?=$html->inputTag('faq/courriel', 40, array('id'=>'faqOrigine','maxlength'=>'70'))?>
+    </p>
+  <?php endif; ?>
+    
+    
+<!--
+    <p id="faqInSection">
+      <pre><?/*=print_r($options,true)*/?></pre>
+
+      <label for="faqSection">Sujet: </label>
+      <?/*=$html->inputTag('faq/sujet', 20, array('id'=>'faqSection','maxlength'=>'30')) */?>
+    </p>
+-->
+
+    <p id="faqInQuestion">
+
+      <label for="faqQuestion">Question: </label><br />
+      <?=$html->areaTag('question') ?>
+    </p>
+
+    
+    <p>
+      <?=$html->submitTag('Poser la question').' '.$html->linkTo('Annuler', '/faqs',null, 'Retourner aux questions ?') ?>
+    </p>
+    
+  </form>

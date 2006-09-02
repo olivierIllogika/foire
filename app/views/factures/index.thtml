@@ -1,0 +1,47 @@
+<h2><?=htmlentities("Factures")?></h2>
+
+<div id="factures">
+<p><?=htmlentities("De cette section, vous pouvez récupérer un reçu correspondant à vos achats.  Puisque chaque livre acheté est unique, il est possible de retracer chaque transaction grâce aux informations contenues sur les étiquettes des livres.")?></p>
+
+
+<h3><?=htmlentities("Ce que vous devez entrer")?></h3>
+<p><?=htmlentities("Vous devez entrer des références de livre achetés. Le format attendu d'une référence est xxxx-x où chaque 'x' représente un chiffre.  Vous pouvez trouver cette séquence sur chaque étiquette de livre acheté, à gauche du code barre.")?></p>
+<p>
+<dl>
+<dt><?=htmlentities("Vous avez acheté deux livres ou plus")?></dt>
+<dd><?=htmlentities("Entrez deux références, séparées par une virgule. Ex.: \"1234-5, 6789-0\"")?></dd>
+<dt><?=htmlentities("Vous avez acheté un seul livre")?></dt>
+<dd><?=htmlentities("Entrez l'unique référence du livre. Ex.: \"1234-5\"")?></dd>
+<dt><?=htmlentities("Vous avez acheté plus d'une fois à la Foire")?></dt>
+<dd><?=htmlentities("Les achats ne sont pas combinés; vous devez traiter chaque transaction comme une facture différente")?></dd>
+</dl>
+</p>
+
+<div id="FactureForm">
+<?=$html->formTag('/factures/facture') ?>
+
+  <?=$html->tagErrorMsg('facture/references', array(htmlentities("Vous devez entrer au moins une référence"),
+                                                   htmlentities("Vous avez mal entré vos références, respectez le format \"xxxx-x, xxxx-x\""),
+                                                   htmlentities("Aucune facture contenant ces références n'a été trouvée")))?>
+
+  <p id="FactureRef">
+    <label for="FactureChampRef" title="Num&eacute;ro(s) de r&eacute;f&eacute;rence">Num&eacute;ro(s) de r&eacute;f&eacute;rence: </label>
+    <?=$html->inputTag('facture/references', 15, array('id'=>'FactureChampRef','title'=>'Num&eacute;ro(s) de r&eacute;f&eacute;rence')).
+
+    $html->submitTag('Afficher la facture')
+      ?></p>
+</form>
+</div>
+
+<h3><?=htmlentities("Erreurs possibles")?></h3>
+<p>
+<dl>
+<dt><?=htmlentities("Aucune facture n'a été trouvée")?></dt>
+<dd><?=htmlentities("Vérifiez bien vos références.  Si vous avez besoin d'assistance, écrivez à foire@step.polymtl.ca avec un maximum de détails pour nous permettre d'identifier le problème et d'y remédier.")?></dd>
+</dl>
+<dt><?=htmlentities("Ma facture est incorrecte")?></dt>
+<dd><?=htmlentities("Écrivez à foire@step.polymtl.ca avec un maximum de détails pour nous permettre d'identifier le problème et d'y remédier.")?></dd>
+</p>
+
+</div> <!-- factures -->
+

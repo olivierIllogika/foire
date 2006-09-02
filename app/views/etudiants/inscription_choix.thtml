@@ -1,0 +1,5 @@
+  <h2 id="etTitre">Inscription des consignataires</h2>
+
+
+  <?php echo  $this->renderElement('choix_consignataire') ?>
+

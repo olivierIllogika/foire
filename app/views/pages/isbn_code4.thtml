@@ -1,0 +1,40 @@
+<h2><?=htmlentities("Comment trouver l'ISBN ou le code4 d'un livre")?></h2>
+
+<?php $polyc=htmlentities("polycopié")?>
+
+<ul>Code4 (polycopi&eacute;s)
+<li><a href="#code4_cover1">Couverture d'un vieux polycopi&eacute;</a></li>
+<li><a href="#code4_cover2">Couverture int&eacute;rieure d'un vieux polycopi&eacute;</a></li>
+<li><a href="#code4-2_cover1">Couverture d'un nouveau polycopi&eacute;</a></li>
+<li><a href="#code4-2_cover4">Couverture arri&egrave;re d'un nouveau polycopi&eacute;</a></li>
+</ul>
+<ul>ISBN (manuels)
+<li><a href="#isbn_cover1">Couverture d'un livre banal</a></li>
+<li><a href="#isbn_cover4">Couverture arri&egrave;re d'un livre</a></li>
+<li><a href="#isbn_cover2">Couverture int&eacute;rieure d'un livre</a></li>
+</ul>
+<div id="trouvercode4">
+<h3>Trouver le code4</h3>
+<a name="code4_cover1">Couverture d'un vieux polycopi&eacute;</a>
+<?=$html->imageTag('code4_cover1.jpg', '[couverture 1 - vieux polycopi&eacute;]')?>
+<a name="code4_cover2">Couverture int&eacute;rieure d'un vieux polycopi&eacute;</a>
+<?=$html->imageTag('code4_cover2.jpg', '[couverture 2 - vieux polycopi&eacute;]')?>
+<a name="code4-2_cover1">Couverture d'un nouveau polycopi&eacute;</a>
+<?=$html->imageTag('code4-2_cover1.jpg', '[couverture 1 - nouveau polycopi&eacute;]')?>
+<a name="code4-2_cover4">Couverture arri&egrave;re d'un nouveau polycopi&eacute;</a>
+<?=$html->imageTag('code4-2_cover4.jpg', '[couverture 4 - nouveau polycopi&eacute;]')?>
+
+</div><!-- trouvercode4 -->
+
+<div id="trouverISBN">
+<h3>Trouver l'ISBN</h3>
+<a name="isbn_cover1">Couverture d'un livre banal</a>
+<?=$html->imageTag('isbn_cover1.jpg', '[couverture 1 - livre banal]')?>
+<a name="isbn_cover4">Couverture arri&egrave;re d'un livre</a>
+<?=$html->imageTag('isbn_cover4.jpg', '[couverture 4 - livre banal]')?>
+<a name="isbn_cover2">Couverture int&eacute;rieure d'un livre</a>
+<?=$html->imageTag('isbn_cover2.jpg', '[couverture 2 - livre banal]')?>
+</div><!-- trouverISBN -->
+
+
+

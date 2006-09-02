@@ -1,0 +1,220 @@
+  <?=$html->javascriptIncludeTag('/js/prototype.js')?>
+  <h2 id="livresTitre"><?=htmlentities("Récupération")?></h2>
+  <span><?=$_SESSION['etudiant']['prenom']?></span>
+
+
+
+  <?=$html->javascriptTag("
+
+  function commandes()
+  {
+    window.location = '".$html->urlFor("/livresben/commandes")."';
+  }
+
+  function localHook(input)
+  {
+    if (input == '') return true; // do nothing if input is empty
+    if ('' + parseInt(input[0]) == input[0]) return false; // no local command if starts with number
+    
+    input = input.toLowerCase();
+    
+    if ( eval('window.'+input) )
+    {
+      return eval(input)(); // true = no ajax sent ; false = ajax cmd
+    }
+    return false;
+  }
+
+  var last_row_added = null; 
+  function addRow(tableId, rowId, rowSpan)
+  {
+    if (document.getElementById('row'+rowId))
+    {
+      return true;
+    }
+
+    var row = document.createElement('tr');
+    row.id = 'row'+rowId;
+    row.setAttribute('class', 'rowLoading');
+
+    var content = document.createElement('td');
+    content.setAttribute('colspan', rowSpan);
+
+    content.appendChild (document.createTextNode(rowId));
+    row.appendChild(content);
+
+    var table = document.getElementById(tableId);
+
+    var tableContent = table.childNodes.item(1);
+
+    if (tableContent.childNodes.length == 2)
+    {
+      tableContent.appendChild(row);
+    }
+    else
+    {
+      tableContent.insertBefore(row,tableContent.childNodes.item(2));
+    }
+      
+    last_row_added = row;
+
+  }
+
+
+  var last_row_modified_id = null;
+  function post_process(tableFromId,tableToId)
+  {
+    var tableFrom = document.getElementById(tableFromId);
+    var tableTo = document.getElementById(tableToId);
+    var firstRow = last_row_added;
+
+    var latestRow = document.getElementById(last_row_modified_id);
+
+    var rowText = latestRow.innerHTML;
+
+
+    re = /dossier/;
+    if (re.test(rowText))
+    {
+      re = /<!-- (\d+) -->/;
+      var matches = re.exec(rowText);
+
+      window.location = '".$html->urlFor("/livresben/recuperation")."/'+matches[1];
+      return;
+    }
+
+
+    re = /rowConsigne/;
+    if (re.test(rowText))
+    {
+      // déplacement de la ligne
+      tableFrom.childNodes.item(1).removeChild(latestRow);
+      tableTo.childNodes.item(1).appendChild(latestRow);
+    }
+
+
+    re = /rowCommand/;
+    if (re.test(rowText))
+    {
+      var d = new Date();
+      latestRow.id = latestRow.id + d.getTime();
+    }
+
+  }
+
+  ")?>
+
+  <div id="livresRecupDiv">
+
+
+  <?=$htmlajax->formRemoteTag(array(
+  'url'=>"/livresben/back_scan",
+  
+  'loading'=>"var box = document.getElementById('pickup_scanbox');
+              last_row_modified_id = 'row'+box.value;
+              box.value='';
+              box.focus();",
+              
+  'update'=>"row'+document.getElementById('pickup_scanbox').value+'",
+  'complete'=>"post_process('backListe','userListe');",
+  
+  'html'=>array('id'=>'pickup_form', 'name'=>'pickup_form'))) ?>
+
+    <?=$html->inputTag('livre/scan_box', 40, array('id' => 'pickup_scanbox')) ?>
+
+    <?=$html->submitTag('Afficher/Rendre', array(
+      'onclick'=>"var box = document.getElementById('pickup_scanbox');
+                  if (localHook(box.value)) return false;
+                  addRow('backListe', box.value, 4)"))
+                  
+    ?>
+
+    <?=$html->linkTo('Recherche...', '/livresben/recherche_etudiant')?>
+                            
+    <?=$html->javascriptTag("document.getElementById('pickup_scanbox').focus()")?>
+
+    </form>
+    
+    <?php
+    
+      $vendus = $nonvendus_enconsigne = $nonvendus_usager = '';
+
+      $data = empty($data) ? array() : $data;
+      
+      foreach($data as $livre)
+      {
+        if ($livre['livre_id'])
+        {
+          $vendus .= "<tr><td>".substr($livre['lid'],-4).'-'.$livre['genie']."</td><td>{$livre['ltitre']}</td><td>{$livre['prix']}$</td></tr>";
+        }
+        elseif ($livre['en_consigne'])
+        {
+          $code = sprintf("row%s%03d",$livre['lid'],$livre['prix']);
+
+          $nonvendus_enconsigne .= "<tr class=\"rowUsager\" id=\"$code\"><td>".substr($livre['lid'],-4).'-'.$livre['genie']."</td><td>{$livre['ltitre']}</td><td>{$livre['prix']}$</td><td>".($livre['link'] ? $html->linkOut($this->isbn->isbn2formated($livre['isbn'],'-'),"{$livre['link']}", array('target' => '_blank')) : $livre['isbn'])."</td></tr>";
+        }
+        else
+        {
+          $nonvendus_usager .= "<tr class=\"rowConsigne\" id=\"row{$livre['lid']}\"><td>".substr($livre['lid'],-4).'-'.$livre['genie']."</td><td>{$livre['ltitre']}</td><td>{$livre['prix']}$</td><td>".($livre['link'] ? $html->linkOut($this->isbn->isbn2formated($livre['isbn']),"{$livre['link']}", array('target' => '_blank')) : $livre['isbn'])."</td></tr>";
+        }
+      }
+    ?>
+    <p id="remettre">Remettre <b><?=empty($_SESSION['persistent']['remettre']) ? '':$_SESSION['persistent']['remettre']['argent']?></b>$ et <?=empty($_SESSION['persistent']['remettre']) ? '': $_SESSION['persistent']['remettre']['nb_livre']?> livre(s)  <?=(empty($_SESSION['persistent']['etudiant_nom']) ? '' : '&agrave; '.$_SESSION['persistent']['etudiant_nom'])?></p>
+  &Agrave; donner:
+    <table id="backListe">
+
+      <tr id="livresHeadRow">
+        <th id="livresHID">id</th>
+        <th id="livresHTitre">Titre</th>
+        <th id="livresHPrix">Prix</th>
+        <th id="livresHISBN"><?php echo $this->livre->isbn10_code4_Html() ?></th>
+      </tr>
+
+      <?=$nonvendus_enconsigne?>
+
+    </table>
+
+  <hr>
+  Donn&eacute;s:
+    <table id="userListe">
+      <tr id="livresHeadRow">
+        <th id="livresHID">id</th>
+        <th id="livresHTitre">Titre</th>
+        <th id="livresHPrix">Prix</th>
+        <th id="livresHISBN"><?php echo $this->livre->isbn10_code4_Html() ?></th>
+      </tr>
+
+      <?=$nonvendus_usager?>
+
+    </table>
+
+  <hr>
+  Vendus:
+    <table id="soldListe">
+      <tr id="livresHeadRow">
+        <th id="livresHID">id</th>
+        <th id="livresHTitre">Titre</th>
+        <th id="livresHPrix">Prix</th>
+      </tr>
+
+      <?=$vendus?>
+
+    </table>
+  
+  </div><!-- livresRecupDiv -->
+
+  <hr>
+  
+  <div id="cueilLegende">
+  L&eacute;gende:
+  <table>
+    <tr>
+      <td class="rowLoading">Chargement</td>
+      <td class="rowConsigne">Retourn&eacute;</td>
+      <td class="rowUsager">&Agrave; retourner</td>
+      <td class="rowCommand">Commande</td>
+      <td class="rowInvalid">Entr&eacute;e non valide</td>
+    </tr>
+  </table>
+  Pour une liste des commandes, tapez "commandes"
+  </div>

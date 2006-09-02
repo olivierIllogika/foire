@@ -1,0 +1,25 @@
+<?php
+
+class FaqsHelper extends AppController
+{
+  function load_sections()
+  {
+    $sections = $this->models['faq']->findBySql("SELECT DISTINCT section FROM faqs");
+    $html_sections = array_map(create_function('$v', 'return htmlentities(substr($v[0],1));'),$sections);
+    $sql_sections = array_map(create_function('$v', 'return $v[0];'),$sections);
+    $this->set('sections', $html_sections);
+
+    return array('html' => $html_sections, 'sql' => $sql_sections);
+  }
+  
+  function courrielQuestion($question, $provenance='Foire aux Livres <foire-noreply@step.polymtl.ca>', $destination='Foire aux Livres <foire@step.polymtl.ca>')
+  {
+
+    $body = "Voici la question posée:\n\n".$question;
+
+    sendSMTP($destination,'','','[Foire] Question', $body, false,$provenance);
+
+  }
+}
+
+?>
