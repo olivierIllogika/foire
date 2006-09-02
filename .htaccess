@@ -1,0 +1,9 @@
+<IfModule mod_php5.c>
+    php_flag magic_quotes_gpc off
+</IfModule>
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteBase /foire-cake
+    RewriteRule	^$	public/	[L]
+    RewriteRule	(.*)	public/$1	[L]
+</IfModule>
