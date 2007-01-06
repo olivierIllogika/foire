@@ -8,7 +8,7 @@
     <p>(max-min): <?=$data['range']?></p>
     <p>Prix moyen: <?=round($data['avg'],1)?></p>
     <p>D&eacute;v. Std: <?=round($data['stddev'],1)?></p>
-    <p>Derni&egrave;re mise &agrave; jour: <?=preg_replace('/.{8}(.{2})(.{2}).{2}/','\1h\2',$data['created'])?></p>
+    <p>Derni&egrave;re mise &agrave; jour: <?=preg_replace('/.{11}(.{2}).(.{2}).{2}/','\1h\2',$data['created'])?></p>
     
   <?php else: ?>
     <p>Aucune donn&eacute;es disponibles pour ce livre</p>
