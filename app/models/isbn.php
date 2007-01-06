@@ -135,7 +135,7 @@ echo '</pre>';
   function isbn2formated($isbn, $if_blank='')
   {
     $isbn = preg_replace('/[^0-9]/', '', $isbn);
-
+//echo $isbn.'<br />';
     if (empty($isbn) || $isbn === '0')
     {
       return $if_blank;
@@ -146,7 +146,10 @@ echo '</pre>';
       return $isbn; // code4
     }
 
-    $isbn = substr('00000'.$isbn,-9);
+    // first 9 characters
+    // left pad with 0
+    $isbn = substr('00000'.substr($isbn,0,9),-9);
+//echo $isbn.'<br />';
 
     if (strlen($isbn) == 9)
     {
