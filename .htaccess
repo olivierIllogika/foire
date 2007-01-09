@@ -3,7 +3,7 @@
 </IfModule>
 <IfModule mod_rewrite.c>
     RewriteEngine on
-    RewriteBase /foire-cake
+    RewriteBase /
     RewriteRule	^$	public/	[L]
     RewriteRule	(.*)	public/$1	[L]
 </IfModule>
