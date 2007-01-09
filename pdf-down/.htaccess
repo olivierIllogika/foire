@@ -1,10 +1,5 @@
 # Based on Rails 0.10.0 .htaccess (www.rubyonrails.com)
 
-<DirectoryMatch "^/.*/\.svn/">
-    Order deny,allow
-    Deny from all
-</DirectoryMatch>
-
 <IfModule mod_php5.c>
     php_flag magic_quotes_gpc off
 </IfModule>
