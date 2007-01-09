@@ -18,7 +18,8 @@
 <?php if (empty($compact_header) || !$compact_header): ?>
   <div id="mainTitle">
     <?php 
-					echo isset($_SESSION['etudiant']['id']) ? '<div id="sessionMenu"><p>'.$html->linkTo('Terminer la session', '/etudiants/logout').'</p><p>'.$html->linkTo('Modifier profil', '/etudiants/profil').'</p></div>' : null; ?>
+//    echo isset($_SESSION['etudiant']['id']) ? '<div id="sessionMenu"><p>'.$html->linkTo('Terminer la session', '/etudiants/logout').'</p><p>'.$html->linkTo('Modifier profil', '/etudiants/profil').'</p></div>' : null;
+    echo isset($_SESSION['etudiant']['id']) ? '<div id="sessionMenu"><p>'.$html->linkTo('Terminer la session', '/etudiants/logout').'</p></div>' : null; ?>
     <h1><span id="l1">F</span>oire aux <span id="l2">L</span>ivres</h1>
   </div>
   
