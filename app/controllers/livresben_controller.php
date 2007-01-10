@@ -166,17 +166,27 @@ class LivresbenController extends LivresbenHelper
         $_SESSION['persistent']['mode_paiement'] = $facture['carte'] = $modePaiement;
         $facture['total'] = $this->params['data']['totalPrice'];
         $remise = '';
+        $facture['remis'] = 0;
         if ($modePaiement == 'aucune')
         {
           $facture['comptant'] = $this->params['data']['comptant'];
           $facture['remis'] = $this->params['data']['remis'];
           $remise = " - remettre {$this->params['data']['remis']}$ &nbsp;";
         }
-        $this->models['facture']->save($facture,false);
-
-        $this->models['evlivre']->logEvent(203,$fid,$codebar,"mode de paiement '$modePaiement' ({$_SESSION['etudiant']['prenom']})");
-
-        $request_content = "<td class=\"rowCommand\" colspan=\"3\"><!-- mode_paiement -->{$this->mode_paiement[$modePaiement]} $remise</td>";
+        
+        if ($facture['remis'] >= 0)
+        {
+            $this->models['facture']->save($facture,false);
+    
+            $this->models['evlivre']->logEvent(203,$fid,$codebar,"mode de paiement '$modePaiement' ({$_SESSION['etudiant']['prenom']})");
+    
+            $request_content = "<td class=\"rowCommand\" colspan=\"3\"><!-- mode_paiement -->{$this->mode_paiement[$modePaiement]} $remise</td>";
+    
+        }
+        else
+        {
+            $request_content = "<td class=\"rowInvalid\" colspan=\"3\">Entrez un montant et 'aucune'</td>";
+        }
 
         $this->set('request_content', $request_content);
         $this->render('ajax_back','ajax');

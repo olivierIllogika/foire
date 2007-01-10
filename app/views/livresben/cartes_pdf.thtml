@@ -24,7 +24,7 @@ foreach($commandes as $commande)
   {
     $dim = $pdf->Code39($pdf->GetX(), $pdf->GetY(), $commande,false,1,6);
     $pdf->Ln(10);
-    $pdf->Cell(0,0,$commande,'',0,'L');
+    $pdf->Cell(0,0,($commande == 'aucune' ? '$':'').$commande,'',0,'L');
     $pdf->Ln(20);
   }
 }
