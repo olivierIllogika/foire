@@ -13,32 +13,37 @@ $total_livres = (empty($total_livres) ? '0' : $total_livres);
 
   function cartes()
   {
+    //alert('cartes');
     window.location = '".$html->urlFor("/livresben/cartes")."';
     return true;
   }
 
   function visa()
   {
+    //alert('visa');
     mode_paiement = 'visa';
     return false;
   }
   function debit()
   {
+    //alert('debit');
     mode_paiement = 'debit';
     return false;
   }
   function autre()
   {
+    //alert('autre');
     mode_paiement = 'autre carte';
     return false;
   }
-  function aucune()
+  function aucune(comptant)
   {
+    //alert('aucune ' + comptant);
     mode_paiement = 'comptant';
     
     try
     {
-      comptant = prompt('Montant donné par le client :');
+//      comptant = prompt('Montant donné par le client :');
       comptant_int = parseInt(comptant);
 
       if (total_price == null) total_price = 0;
@@ -60,13 +65,23 @@ $total_livres = (empty($total_livres) ? '0' : $total_livres);
   function localHook(input)
   {
     if (input == '') return true; // do nothing if input is empty
-    if ('' + parseInt(input[0]) == input[0]) return false; // no local command if starts with number
     
-    input = input.toLowerCase();
+    var reg = /(\d*)(\w*)/i;
+    var r = reg.exec(input.toLowerCase());
+    //var r1 = reg.exec('20aucune');
+    //var r2 = reg.exec('12412');
     
-    if ( eval('window.'+input) )
+    //alert(r.index + ' ' + r.input + ' ' + r[0] + ' ' + r[1]+ ' ' + r[2]);
+    //alert(r1.index + ' ' + r1.input + ' ' + r1[0] + ' ' + r1[1]+ ' ' + r1[2]);
+    //alert(r2.index + ' ' + r2.input + ' ' + r2[0] + ' ' + r2[1]+ ' ' + r2[2]);
+    
+    functionName = (r[2] || r[1]);
+    argumentValue = (parseInt(r[1][0]) == r[1][0] ? r[1] : 0);
+    if ('' + parseInt(functionName[0]) == functionName[0]) return false; // no local command if starts with number
+
+    if ( eval('window.'+functionName) )
     {
-      return eval(input)(); // true = no ajax sent ; false = ajax cmd
+      return eval(functionName)(argumentValue); // true = no ajax sent ; false = ajax cmd
     }
     return false;
   }

@@ -151,21 +151,22 @@ class LivresbenController extends LivresbenHelper
       }
 
 
-      $input = strtolower($input);
+      $modePaiement = strtolower(preg_replace('/[0-9]/', '', $input));
+      $input = preg_replace('/[^0-9]/', '', $input);
 
 
       // si input est un mode de paiement
       // et qu'un facture existe, on change le mode de paiement
       // mais on ferme la facture et commence une nouvelle seulement
       // lorsque le prochain livre est lu
-      if (array_key_exists($input, $this->mode_paiement) && $facture)
+      if (array_key_exists($modePaiement, $this->mode_paiement) && $facture)
       {
 
         // défini le mode de paiement de la facture
-        $_SESSION['persistent']['mode_paiement'] = $facture['carte'] = $input;
+        $_SESSION['persistent']['mode_paiement'] = $facture['carte'] = $modePaiement;
         $facture['total'] = $this->params['data']['totalPrice'];
         $remise = '';
-        if ($input == 'aucune')
+        if ($modePaiement == 'aucune')
         {
           $facture['comptant'] = $this->params['data']['comptant'];
           $facture['remis'] = $this->params['data']['remis'];
@@ -173,16 +174,15 @@ class LivresbenController extends LivresbenHelper
         }
         $this->models['facture']->save($facture,false);
 
-        $this->models['evlivre']->logEvent(203,$fid,$codebar,"mode de paiement '$input' ({$_SESSION['etudiant']['prenom']})");
+        $this->models['evlivre']->logEvent(203,$fid,$codebar,"mode de paiement '$modePaiement' ({$_SESSION['etudiant']['prenom']})");
 
-        $request_content = "<td class=\"rowCommand\" colspan=\"3\"><!-- mode_paiement -->{$this->mode_paiement[$input]} $remise</td>";
+        $request_content = "<td class=\"rowCommand\" colspan=\"3\"><!-- mode_paiement -->{$this->mode_paiement[$modePaiement]} $remise</td>";
 
         $this->set('request_content', $request_content);
         $this->render('ajax_back','ajax');
         return;
       }
 
-      $input = preg_replace('/[^0-9]/', '', $input);
       
       
       if (strlen($input) > 13)
