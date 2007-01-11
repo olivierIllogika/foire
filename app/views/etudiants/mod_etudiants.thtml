@@ -32,7 +32,12 @@
 
             <p id="etRechConfirm"><!-- <label for="RechConfirm" title="Inscription confirm&eacute;">Confirm&eacute;: </label> --><?php
 
-                echo $html->checkboxTag('etudiant/confirme', 'Confirm&eacute;', array('id'=>'RechConfirm', 'title'=>'Inscription confirm&eacute;'))
+                $confirmeHtmlArray = array('id'=>'RechConfirm', 'title'=>'Inscription confirm&eacute;');
+                if ($html->tagValue('confirme') == 1)
+                {
+                    $confirmeHtmlArray['checked'] = '"checked"';
+                }
+                echo $html->checkboxTag('etudiant/confirme', 'Confirm&eacute;', $confirmeHtmlArray);
             ?></p>
 
             <p id="etRechP1"><label for="RechChampP1" title="Mot de passe">Mot de passe: </label><?php
@@ -49,17 +54,22 @@
             ?></p>
             
             <p id="RechSubmit"><?php
-            
-              echo $html->submitTag('Rechercher')
+              echo $html->submitTag('Rechercher');
               ?>
 <!--              <input type="button" id="cleanFormButton" name="cleanFormButton" value="Vider" onClick="javascript:document.forms['etRechForm'].reset();" />-->
 							</p>
+							
+			<?php if ($canModify): ?>
+			    <p id="ModifSubmit">
+			    <?=$html->submitTag('Modifier'); ?>
+			    </p>
+			<?php endif; ?>
     </form>
 
   </div><!-- etRechFormulaire -->
   
   <div id="etudiantsListeDiv">
-   <?php if ($this->etudiant->countLastFind) { ?>
+   <?php if ($this->etudiant->countLastFind > 0) { ?>
     <table id="etudiantsListe">
 
       <tr id="etudiantsHeadRow">
@@ -67,19 +77,27 @@
         <th id="etudiantsPrenom">Prenom</th>
         <th id="etudiantsCourriel">Courriel</th>
         <th id="etudiantsConfirme">Confirm&eacute;</th>
+        <th id="etudiantsCreation">Cr&eacute;ation</th>
+        <th id="etudiantsLastLogin">Visite</th>
       </tr>
-			<?php	foreach ($listeEtudiants as $etudiant): ?>
+	
+	
+        <?php	
+        $rowClasses = array('rowOne','rowTwo');
+        foreach ($listeEtudiants as $etudiant): ?>
+    
+          <tr class="hoverPointer <?=$rowClasses[] = array_shift($rowClasses)?>" onclick="document.location.href='<?=$html->urlFor("/etudiants/mod_etudiants/".$etudiant['id'])?>';">
+            <td class="etudiantsNomRow"><?=$etudiant['nom']?></td>
+            <td class="etudiantsprenomRow"><?=$etudiant['prenom']?></td>
+            <td class="etudiantsCourrielRow"><?=$etudiant['courriel']?></td>
+            <td class="etudiantsConfirmeRow"><?=($etudiant['confirme'] ? 'X' : '')?></td>
+            <td class="etudiantsCreationRow"><?=$etudiant['created']?></td>
+            <td class="etudiantsLastLoginRow"><?=$etudiant['logdate'] ?></td>
+          </tr>
 
-      <tr>
-        <td class="etudiantsNomRow"><?=$etudiant['nom']?></td>
-        <td class="etudiantsprenomRow"><?=$etudiant['prenom']?></td>
-        <td class="etudiantsCourrielRow"><?=$etudiant['courriel']?></td>
-        <td class="etudiantsConfirmeRow"><?=($etudiant['confirme'] ? 'X' : '')?></td>
-      </tr>
-
-  		<?php endforeach; ?>
+        <?php endforeach; ?>
     </table>
-    <?php } else { // countLastFind ?>
+    <?php } elseif ($this->etudiant->countLastFind == 0) { // countLastFind ?>
     <p id="etudiantsAucun">Aucun &eacute;tudiant &agrave; afficher</p>
     <?php } //if countLastFind ?>
   </div><!-- livresListeDiv -->

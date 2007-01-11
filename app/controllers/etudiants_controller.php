@@ -48,6 +48,9 @@ class EtudiantsController extends EtudiantsHelper
 
       if ($etudiant)
       {
+        // update logdate
+        $this->db->query("update etudiants set logdate=null where id={$etudiant['id']};");
+        
         // removes numeric references (keeps associative info only)
         unset($etudiant[0]);
         unset($etudiant[1]);
@@ -379,46 +382,62 @@ die();
 
   function mod_etudiants($id=null)
   {
-$this->print_pre($this->params)    ;
-
+//$this->print_pre($this->params)    ;
+    $this->models['etudiant']->countLastFind = -1;
+    $this->set('canModify', false);
 
     if ($id)
     {
-			if (empty($this->params['data']))
-			{
-			  // find the data and display it
-	      $this->models['etudiant']->setId($id);
-	      $this->params['data']= $this->models['etudiant']->read();
-	 
-			}
-			else
-			{
-			  // apply modification to the data
-			}//data
+        if (empty($this->params['data']))
+        {
+            // find the data and display it
+            $this->models['etudiant']->setId($id);
+            $this->params['data']= $this->models['etudiant']->read();
+            $this->set('canModify', true);
+        }
+        else
+        {
+            // apply modification to the data
+        }//data
 
     }
     else //id
     {
       if (!empty($this->params['data']))
       {
-	      $condition = '';
-	      
-	      $condition .= $this->params['data']['prenom'] ? ' prenom like \'%'.$this->params['data']['prenom']."%'" : '';
-	      $condition .= $this->params['data']['nom'] ? ($condition ? ' AND ': '').' nom like \'%'.$this->params['data']['nom']."%'" : '';
+        $this->models['etudiant']->countLastFind = 0;
+        $condition = '';
+
+        // id
+        $id = $this->params['data']['id'] ? preg_replace('/[^0-9]/','',$this->params['data']['id']) : 0;
+    
+        if ($id)
+        {
+            unset($this->params['data']);
+            $this->mod_etudiants($id);
+            return;
+        }
+
+        // prenom + nom
+        $condition .= $this->params['data']['prenom'] ? ' prenom like \'%'.$this->params['data']['prenom']."%'" : '';
+        $condition .= $this->params['data']['nom'] ? ($condition ? ' AND ': '').' nom like \'%'.$this->params['data']['nom']."%'" : '';
+        // courriel
+        $condition .= $this->params['data']['courriel'] ? ($condition ? ' AND ': '').' courriel like \'%'.$this->params['data']['courriel']."%'" : '';
+        
+        if ($condition)
+        {        
+            $this->set('listeEtudiants', $this->models['etudiant']->findAll(
+            $condition, array('id','nom','prenom','courriel', 'confirme', 'logdate', 'created')));
+            
+            $this->models['etudiant']->countLastFind = $this->models['etudiant']->db->numRows;
+        }
+	  } //data
+    }//id
+    
+    $this->render();
+  }
+
 	
-	      $condition .= $this->params['data']['courriel'] ? ($condition ? ' AND ': '').' courriel like \'%'.$this->params['data']['courriel']."%'" : '';
-	      
-		    $this->set('listeEtudiants', $this->models['etudiant']->findAll(
-	          $condition, array('nom','prenom','courriel', 'confirme')));
-
-		    $this->models['etudiant']->countLastFind = $this->models['etudiant']->db->numRows;
-		  } //data
-	  }//id
-
-	  $this->render();
-	}
-
-	
-}
+}//class
 
 ?>
