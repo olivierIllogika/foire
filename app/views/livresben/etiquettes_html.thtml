@@ -2,6 +2,10 @@
 
   <div id="livresEtiquetteDiv">
 
+    <div id="livresEtiquetteAnimatedGif">
+    <img src="../img/lasercodebaranim.gif" alt="gif animation code barre de la carte" />
+    </div>
+
     <ol>
     <li><?=htmlentities("Vos livres doivent déjà tous être inscrit sur le site de la Foire")?></li>
     <li><?=htmlentities("Passez le code barre de votre carte sous le laser")?></li>

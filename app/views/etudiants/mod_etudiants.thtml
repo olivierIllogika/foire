@@ -7,6 +7,7 @@
     <?php echo $html->formTag('/etudiants/mod_etudiants', 'post', array('name' => 'etRechForm')) ?>
             
             <p id="etPolySet">
+              <?=$html->tagErrorMsg('etudiant/id', htmlentities('Ce numéro est déjà en utilisation')) ?>
               <label for="RechChampId" title="Num&eacute;ro d'identification">ID: </label>
             <?php
 
@@ -37,9 +38,9 @@
                 {
                     $confirmeHtmlArray['checked'] = '"checked"';
                 }
-                echo $html->checkboxTag('etudiant/confirme', 'Confirm&eacute;', $confirmeHtmlArray);
+                echo $html->checkboxTag('confirme', 'Confirm&eacute;', $confirmeHtmlArray);
             ?></p>
-
+<!--
             <p id="etRechP1"><label for="RechChampP1" title="Mot de passe">Mot de passe: </label><?php
 
                 echo $html->passwordTag('motpasse1', 30, array('id'=>'RechChampP1','maxlength'=>'20', 'title'=>'Mot de passe'))
@@ -52,16 +53,17 @@
 
                 echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent &ecirc;tre identiques')
             ?></p>
-            
+    -->        
             <p id="RechSubmit"><?php
-              echo $html->submitTag('Rechercher');
+              echo $html->hiddenTag('modifId', $html->tagValue('id'));
+              echo $html->submitTag('Rechercher', array('name'=>'data[submit]'));
               ?>
 <!--              <input type="button" id="cleanFormButton" name="cleanFormButton" value="Vider" onClick="javascript:document.forms['etRechForm'].reset();" />-->
 							</p>
 							
 			<?php if ($canModify): ?>
 			    <p id="ModifSubmit">
-			    <?=$html->submitTag('Modifier'); ?>
+			    <?=$html->submitTag('Modifier', array('name'=>'data[submit]')); ?>
 			    </p>
 			<?php endif; ?>
     </form>
