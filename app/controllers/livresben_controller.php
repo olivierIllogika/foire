@@ -409,9 +409,9 @@ class LivresbenController extends LivresbenHelper
     $commis_id = $_SESSION['etudiant']['id'];
     $commis_n = $_SESSION['etudiant']['prenom'];
 
-    $total = $this->models['livre']->findBySql("SELECT count(distinct e.id) as total FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id)");
+    $total = $this->models['livre']->findBySql("SELECT count(distinct e.id) as total FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id) AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY)");
 
-    $ret = $this->models['livre']->findBySql("SELECT e.id as codebar FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id) LIMIT 1");
+    $ret = $this->models['livre']->findBySql("SELECT e.id as codebar FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id) AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY) LIMIT 1");
 
     if ($ret)
     {
@@ -438,7 +438,7 @@ class LivresbenController extends LivresbenHelper
       /******************************/
       $_SESSION['persistent']['etudiant'] = $id;
 
-      $ret = $this->models['evetudiant']->findBySql("SELECT id FROM evetudiants WHERE evenement=304 AND id=$id");
+      $ret = $this->models['evetudiant']->findBySql("SELECT id FROM evetudiants WHERE evenement=304 AND id=$id AND created > DATE_SUB(CURDATE(),INTERVAL 30 DAY)");
       
       if ($ret)
       {
@@ -499,7 +499,7 @@ class LivresbenController extends LivresbenHelper
 
 
       $request_content = "<td class=\"rowCommand\" colspan=\"5\">Pr&ecirc;t pour le suivant</td>";
-    }
+    }//passe
 
     if (strtolower($input) == 'suivant')
     {
@@ -507,11 +507,15 @@ class LivresbenController extends LivresbenHelper
 
       if ($ret)
       {
+        // count the number of time 'suivant' as been received
         $_SESSION['persistent']['suivant'] = empty($_SESSION['persistent']['suivant']) ? 1 :
                                              $_SESSION['persistent']['suivant']+1;
         
         if ($_SESSION['persistent']['suivant'] > 1)
         {
+          // write log line with lost book data
+          $this->logLostBooks($_SESSION['persistent']['etudiant'], $_SESSION['persistent']['etudiant_nom']);
+                
           // 2x 'suivant' overrides warnings
           @$this->models['livre']->findBySql("UPDATE livres SET codebar = 0 WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} ");
 
@@ -533,24 +537,32 @@ class LivresbenController extends LivresbenHelper
         // reste argent et/ou livre -> mauvais
         elseif (count($ret) == 2)
         {
-          // argent ET livre(s)
+          // forgot books AND money
           $_SESSION['persistent']['perdus']['nombre'] = $perdus = $ret[1]['c'];
           $_SESSION['persistent']['perdus']['montant'] = $valeur = $ret[1]['s'];
           $vendu = $ret[0]['s'];
           $total = $valeur + $vendu;
+          
+          // return info/warning about what's left to give back
           $request_content = "<td class=\"rowCommand\" colspan=\"5\"><blink>!</blink> $perdus livre(s) &agrave; rendre; valeur tax&eacute;e: $valeur$ (+$vendu$ = $total$)</td>";
         }
         elseif ($ret[0]['unsold'] == 0) // argent
         {
+          // forgot to give money back
           unset($_SESSION['persistent']['suivant']);
+
+          // return info/warning about what's left to give back
           $request_content = "<td class=\"rowCommand\" colspan=\"5\"><blink>!</blink> Argent &agrave; rendre</td>";
         }
         elseif ($ret[0]['unsold'] == 1) // livres
         {
+          // forgot some books
           $_SESSION['persistent']['perdus']['nombre'] = $perdus = $ret[0]['c'];
           $_SESSION['persistent']['perdus']['montant'] = $valeur = $ret[0]['s'];
           $vendu = $_SESSION['persistent']['remettre']['argent'];
           $total = $valeur + $vendu;
+
+          // return info/warning about what's left to give back
           $request_content = "<td class=\"rowCommand\" colspan=\"5\"><blink>!</blink> $perdus livre(s) &agrave; rendre; valeur tax&eacute;e: $valeur$ (+$vendu$ = $total$)</td>";
         }
       }
@@ -570,11 +582,12 @@ class LivresbenController extends LivresbenHelper
     {
       // pas 'suivant'
       unset($_SESSION['persistent']['suivant']);
-    }
+    } //suivant
 
     if (strtolower($input) == 'argent')
     {
-      $ret = $this->models['livre']->findBySql("SELECT id FROM livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND NOT ISNULL(livre_id) AND codebar={$_SESSION['persistent']['etudiant']} ");
+      // livres vendus (et en consigne)
+      $ret = $this->models['livre']->findBySql("SELECT id, titre, prix FROM livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND NOT ISNULL(livre_id) AND codebar={$_SESSION['persistent']['etudiant']} ");
 
       if (!$ret)
       {
@@ -582,6 +595,23 @@ class LivresbenController extends LivresbenHelper
       }
       else
       {
+        // save a file with the data from student
+        $bookList = '';
+        $sqlBooks = '';
+        foreach($ret as $row)
+        {
+            $bookList .= sprintf("%'.-50.50s %3s$\n",$row['titre'],$row['prix']);
+            $sqlBooks .= ($sqlBooks ? ',' : '').$row['id'];
+        }
+        $sqlBooks = "UPDATE livres SET codebar={$_SESSION['persistent']['etudiant']} WHERE id IN ($sqlBooks);";
+        //$this->print_pre($bookList,true);
+        
+        $etudiant = $this->models['etudiant']->find("id = {$_SESSION['persistent']['etudiant']}");
+        
+        $this->log("argent {$_SESSION['persistent']['remettre']['argent']}$ pour {$_SESSION['persistent']['etudiant_nom']} / ".$sqlBooks);
+        $this->courrielLivresVendus($etudiant['courriel'], $bookList, 0, $_SESSION['persistent']['remettre']['argent']);
+        
+        // move sold books to owner 0
         @$this->models['livre']->findBySql("UPDATE livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id SET codebar = 0 WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} AND NOT ISNULL(livre_id) ");
 
         $this->models['evetudiant']->logEvent(302,$commis,"récup: paiement de {$_SESSION['persistent']['remettre']['argent']}$ à {$_SESSION['persistent']['etudiant']} ($commis_n)");
@@ -590,7 +620,7 @@ class LivresbenController extends LivresbenHelper
 
         $request_content = "<td class=\"rowCommand\" colspan=\"5\">Argent remis</td>";
       }
-    }
+    }//argent
 
     $input = preg_replace('/[^0-9]/', '', $this->params['data']['scan_box']);
 
@@ -598,8 +628,9 @@ class LivresbenController extends LivresbenHelper
     {
 
       if (empty($_SESSION['persistent']['etudiant']))
+      // aucun etudiant au dossier ouvert
       {
-
+        
         if ($etudiant = $this->models['etudiant']->find("id = $input"))
         {
           // demande la page avec les infos de l'étudiant
@@ -608,7 +639,7 @@ class LivresbenController extends LivresbenHelper
           
           $this->models['evetudiant']->logEvent(301,$commis,"récup: affichage du dossier *$input* ($commis_n)");
           
-          $ret = $this->models['evetudiant']->findBySql("SELECT id FROM evetudiants WHERE evenement=304 AND id=$input");
+          $ret = $this->models['evetudiant']->findBySql("SELECT id FROM evetudiants WHERE evenement=304 AND id=$input AND created > DATE_SUB(CURDATE(),INTERVAL 30 DAY)");
 
           if ($ret)
           {
@@ -624,9 +655,13 @@ class LivresbenController extends LivresbenHelper
       }//empty etudiant
       else
       {
+        // dossier etudiant actif
+        
+        // remove price from barcode
         $input = substr($input,0,10);
 
         if ($livre = $this->models['livre']->find("id = $input AND codebar = {$_SESSION['persistent']['etudiant']}"))
+        // return book to owner
         {
 /**************************************************************************/
 //          $livre['en_consigne'] = $livre['en_consigne'] == 0 ? 1 : 0;
