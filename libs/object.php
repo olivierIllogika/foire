@@ -47,6 +47,8 @@ class Object
 	 * @var DBO
 	 */
 	var $db = null;
+	
+	var $_log = null;
 
 	/**
 	 * A hack to support __construct() on PHP 4
