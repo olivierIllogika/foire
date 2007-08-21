@@ -35,8 +35,7 @@ class EtudiantsHelper extends AppController
 
     $body =
     "Vous avez effectué une demande d'information sur la Foire aux Livres.".
-    "\n\nSi c'est à votre demande, cliquez sur le lien pour confirmer votre inscription.".
-    " Si ce n'est pas le cas, vous n'avez qu'à ignorer ce message\n\n".
+    "\n\nSi ce n'est pas le cas, vous n'avez qu'à ignorer ce message\n\n".
 
     "Votre code d'identification pour la section <<Mes livres>> est : $id\n".
     ($cartePoly ? "Vous pouvez entrer seulement les derniers chiffres, soit : ".(ltrim(substr($id,5),'0'))."\n" : '').
