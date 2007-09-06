@@ -1,7 +1,7 @@
 <?php
 if (!empty($refresh))
 {
-  header("Refresh: $refresh");
+  header("Refresh: $refresh; url=".$_SERVER['REQUEST_URI']);
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
