@@ -334,6 +334,8 @@ die();
   function mass_mailer($action=null)
   {
     $this->sessionCheck(SECURITY_LEVEL_MANAGMENT);
+    
+    $sender = 'Foire aux Livres <foire-noreply@step.polymtl.ca>';
 
     $mail_title = "Récupération tardive des livres";
     $body = $this->courrielRecuperationTardive(); // $date, $heure
@@ -342,10 +344,10 @@ die();
     $operation = ($action == 'envoyer' ? '[envoi]' : '[test]');
     $this->set('body', $body);
 
-    sendSMTP('Foire aux Livres <foire-noreply@step.polymtl.ca>','',
-            "Olivier Martin <olivier-2.martin@polymtl.ca>, Charles Gagnon <charles.gagnon@polymtl.ca>",
+    sendSMTP($sender,'',
+            "Olivier Martin <olivier-2.martin@polymtl.ca>",
             '[Foire] '.$operation.' '.$mail_title,
-            $body, false,'Foire aux Livres <foire-noreply@step.polymtl.ca>');
+            $body, false,$sender);
 
     if ($action == 'envoyer')
     {
@@ -355,17 +357,21 @@ die();
       $per_page = 30;
       do
       {
-        $ret = $this->models['etudiant']->findBySql("SELECT DISTINCT CONCAT(prenom, ' ', nom, ' <', courriel, '>') AS formed FROM etudiants AS e LEFT JOIN livres AS l ON l.codebar=e.id WHERE en_consigne=1 AND e.id!=0 ORDER BY SUBSTRING(courriel,INSTR(courriel,'@')),nom,prenom LIMIT ".($per_page*$page++).",$per_page");
+        // list based on books marked as picked up now (can contain books that have never been returned from previous years; over 40 false positive in 20073)
+        //$ret = $this->models['etudiant']->findBySql("SELECT DISTINCT CONCAT(prenom, ' ', nom, ' <', courriel, '>') AS formed FROM etudiants AS e LEFT JOIN livres AS l ON l.codebar=e.id WHERE en_consigne=1 AND e.id!=0 ORDER BY SUBSTRING(courriel,INSTR(courriel,'@')),nom,prenom LIMIT ".($per_page*$page++).",$per_page");
         
+        // list based on books picked up in the last 30 days
+        $ret = $this->models['etudiant']->findBySql("SELECT DISTINCT CONCAT(prenom, ' ', nom, ' <', courriel, '>') AS formed FROM etudiants AS e lEFT jOIN livres AS l ON l.codebar=e.id LEFT JOIN evlivres AS evl ON evl.id=l.id WHERE evl.evenement = 101 AND e.id!=0 AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY) ORDER BY SUBSTRING(courriel,INSTR(courriel,'@')),nom,prenom LIMIT ".($per_page*$page++).",$per_page");
+
         if ($ret)
         {
           $listeCourriel = array_map(create_function('$v', 'return $v[0];'), $ret);
 
 
-          sendSMTP('Foire aux Livres <foire-noreply@step.polymtl.ca>','',
+          sendSMTP($sender,'',
                   implode(', ',$listeCourriel),
                   '[Foire] '.$mail_title,
-                  $body, false,'Foire aux Livres <foire-noreply@step.polymtl.ca>');
+                  $body, false,$sender);
 
 //          $megaListe[] = $listeCourriel;
         }
@@ -382,56 +388,96 @@ die();
 
   function mod_etudiants($id=null)
   {
+    $this->sessionCheck(SECURITY_LEVEL_MANAGMENT);
+
 //$this->print_pre($this->params)    ;
     $this->models['etudiant']->countLastFind = -1;
     $this->set('canModify', false);
+
 
     if ($id)
     {
         if (empty($this->params['data']))
         {
             // find the data and display it
+            $id = preg_replace('/[^0-9]/','',$id);
             $this->models['etudiant']->setId($id);
             $this->params['data']= $this->models['etudiant']->read();
             $this->set('canModify', true);
         }
-        else
-        {
-            // apply modification to the data
-        }//data
 
     }
     else //id
     {
       if (!empty($this->params['data']))
       {
-        $this->models['etudiant']->countLastFind = 0;
-        $condition = '';
-
-        // id
-        $id = $this->params['data']['id'] ? preg_replace('/[^0-9]/','',$this->params['data']['id']) : 0;
-    
-        if ($id)
+        if ($this->params['data']['submit'] == 'Modifier')
         {
-            unset($this->params['data']);
-            $this->mod_etudiants($id);
-            return;
-        }
+            // apply modification to the data
+            $this->set('canModify', true);
 
-        // prenom + nom
-        $condition .= $this->params['data']['prenom'] ? ' prenom like \'%'.$this->params['data']['prenom']."%'" : '';
-        $condition .= $this->params['data']['nom'] ? ($condition ? ' AND ': '').' nom like \'%'.$this->params['data']['nom']."%'" : '';
-        // courriel
-        $condition .= $this->params['data']['courriel'] ? ($condition ? ' AND ': '').' courriel like \'%'.$this->params['data']['courriel']."%'" : '';
-        
-        if ($condition)
-        {        
-            $this->set('listeEtudiants', $this->models['etudiant']->findAll(
-            $condition, array('id','nom','prenom','courriel', 'confirme', 'logdate', 'created')));
+            $newId = preg_replace('/[^0-9]/','',$this->params['data']['id']);
+            $oldId = $this->params['data']['modifId'];
+            $this->models['etudiant']->setId($oldId);
+            $this->models['etudiant']->read();
             
-            $this->models['etudiant']->countLastFind = $this->models['etudiant']->db->numRows;
-        }
-	  } //data
+            if ($oldId != $newId && $newId != 0 && $oldId != 0)
+            {
+                // changing id => 1-check if already used; 2-update existing books
+                $duplicate = $this->checkDuplicates('', $newId);
+                
+                if($duplicate)
+                {
+                    // id already in use
+                    $this->models['etudiant']->validationErrors['id'] = 1;
+                    $this->render();
+                    return;
+                }
+                
+                $this->db->query("UPDATE livres SET codebar=$newId WHERE codebar=$oldId");
+
+                $this->params['data']['id'] = $newId;
+            } // $oldId != $newId
+
+
+            
+            $this->params['data']['confirme'] = $this->params['data']['confirme'] == 'on' ? 1 : 0;
+            $this->models['etudiant']->save($this->params['data'], false);
+            
+        }//data
+        
+        if ($this->params['data']['submit'] == 'Rechercher')
+        {
+            // recherche
+            
+            $this->models['etudiant']->countLastFind = 0;
+            $condition = '';
+            
+            // id
+            $id = $this->params['data']['id'] ? preg_replace('/[^0-9]/','',$this->params['data']['id']) : 0;
+            
+            if ($id)
+            {
+                unset($this->params['data']);
+                $this->mod_etudiants($id);
+                return;
+            }
+            
+            // prenom + nom
+            $condition .= $this->params['data']['prenom'] ? ' prenom like \'%'.$this->params['data']['prenom']."%'" : '';
+            $condition .= $this->params['data']['nom'] ? ($condition ? ' AND ': '').' nom like \'%'.$this->params['data']['nom']."%'" : '';
+            // courriel
+            $condition .= $this->params['data']['courriel'] ? ($condition ? ' AND ': '').' courriel like \'%'.$this->params['data']['courriel']."%'" : '';
+            
+            if ($condition)
+            {        
+                $this->set('listeEtudiants', $this->models['etudiant']->findAll(
+                $condition, array('id','nom','prenom','courriel', 'confirme', 'logdate', 'created')));
+                
+                $this->models['etudiant']->countLastFind = $this->models['etudiant']->db->numRows;
+            }
+        } //data
+      }
     }//id
     
     $this->render();
