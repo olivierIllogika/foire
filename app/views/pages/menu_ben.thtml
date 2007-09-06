@@ -3,6 +3,7 @@
 <!-- <h2><?=htmlentities("Menu bénévole")?></h2> -->
 
 <div id="menuBenDiv">
+<p><?=$html->linkOut('> Wiki de la Foire dans une nouvelle fen&ecirc;tre < ', 'http://foire.aep.polymtl.ca/wiki/', array('target' => '_blank'))?></p>
 <h2>Gestion</h2>
 <!-- <p><?=$html->linkTo('Foire', '#')?></p> -->
 <p><?=$html->linkTo('Étudiants', '/etudiants/mod_etudiants')?></p>
