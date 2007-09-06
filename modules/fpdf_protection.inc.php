@@ -214,6 +214,10 @@ class PDF_Protection extends FPDF
         // Compute P value
         $this->Pvalue = -(($protection^255)+1);
     }
+    
+    
+    
+      
 }
 
 ?>

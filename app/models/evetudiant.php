@@ -38,6 +38,9 @@ class Evetudiant extends AppModel
 *   302 récup: paiement de x$ à ..
 *   303 récup: .. sauté [cmd passe]
 *   304 récup: pseudo terminé
+*   305 récup: chèque #
+*   306 récup: correction chèque #
+*   307 récup: réimpression - nouveau cheque #
 *
 *   351 récup: livres remboursés
 */

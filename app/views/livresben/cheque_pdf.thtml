@@ -1,0 +1,19 @@
+<?php
+
+$pdf=new PDF_Cheque();
+
+$pdf->AliasNbPages();
+$pdf->SetAutoPageBreak(false);
+$pdf->Open();
+//$pdf->SetMargins(30, 20, 30);
+$pdf->AddPage();
+
+$pdf->SetFont('Courier','',12);
+$fill=0;
+
+$pdf->ChequePart($_SESSION['persistent']['etudiant_nom'], $_SESSION['persistent']['remettre']['argent_back']);
+
+
+echo $pdf->Output($filename,'S');
+chmod($filename, 0755);
+?>

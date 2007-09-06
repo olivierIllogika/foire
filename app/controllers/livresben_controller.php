@@ -3,6 +3,7 @@
 
 define('FPDF_FONTPATH',ROOT.'modules/fpdf152/font/');
 require_once ROOT.'modules/fpdf_label.inc.php';
+require_once ROOT.'modules/fpdf_cheque.inc.php';
 
 class LivresbenController extends LivresbenHelper
 {
@@ -366,6 +367,10 @@ class LivresbenController extends LivresbenHelper
     }
   }
 
+  ///
+  /// \brief Pick board is used to display books to be picked up and returned to owners. 
+  ///        It should be projected on a large white screen where everyone can see
+  ///
   function pick_board()
   {
     $ret = $this->models['actions_recente']->findBySql("SELECT nom, l.codebar, l.id, l.genie, l.titre, l.isbn, l.prix FROM actions_recentes as a JOIN livres as l ON a.codebar=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE ISNULL(livre_id) AND en_consigne=1  ORDER BY a.created, l.codebar, RIGHT(l.id,4), l.genie");
@@ -481,13 +486,17 @@ class LivresbenController extends LivresbenHelper
   
   function back_scan()
   {
-    $input = $this->params['data']['scan_box'];
+    $input = strtolower($this->params['data']['scan_box']);
     $commis = $_SESSION['etudiant']['id'];
     $commis_n = $_SESSION['etudiant']['prenom'];
 
     $request_content = "<td class=\"rowInvalid\" colspan=\"5\">{$this->params['data']['scan_box']}</td>";
 
-    if (strtolower($input) == 'passe')
+
+    ///
+    /// PASSE is used to ignore the current file and move on to the next
+    ///
+    if ($input == 'passe')
     {
       $this->models['evetudiant']->logEvent(303,$commis,"récup: {$_SESSION['persistent']['etudiant']} sauté ($commis_n)");
 
@@ -501,7 +510,12 @@ class LivresbenController extends LivresbenHelper
       $request_content = "<td class=\"rowCommand\" colspan=\"5\">Pr&ecirc;t pour le suivant</td>";
     }//passe
 
-    if (strtolower($input) == 'suivant')
+    /// 
+    /// SUIVANT will close the current file (if completed) and move to the next
+    /// entering SUIVANT 2x will consider all non returned books as lost and mark them as such
+    /// if SUIVANT is entered and the file is not complete, a warning will be sent back
+    ///
+    if ($input == 'suivant')
     {
       $ret = $this->models['livre']->findBySql("SELECT isnull(livre_id) AS unsold, CEILING(SUM(prix)*0.96) AS s, COUNT(*) AS c FROM livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} GROUP BY ISNULL(livre_id) ORDER BY isnull(livre_id)");
 
@@ -584,14 +598,35 @@ class LivresbenController extends LivresbenHelper
       unset($_SESSION['persistent']['suivant']);
     } //suivant
 
-    if (strtolower($input) == 'argent')
+    ///
+    /// ARGENT , CHEQUE and IMP_CHEQUE will marks all sold books to owner id-0
+    ///
+    if ($input == 'argent' || $input == 'cheque' || $input == 'imp_cheque' )
     {
       // livres vendus (et en consigne)
       $ret = $this->models['livre']->findBySql("SELECT id, titre, prix FROM livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND NOT ISNULL(livre_id) AND codebar={$_SESSION['persistent']['etudiant']} ");
 
       if (!$ret)
       {
-        $request_content = "<td class=\"rowCommand\" colspan=\"5\">On paye pas deux fois svp !</td>";
+        if ($input == 'cheque' && !empty($_SESSION['persistent']['remettre']['argent_back']) )
+        {
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">Entrer num&eacute;ro de ch&egrave;que corrig&eacute; <blink>!</blink></td>";
+          $_SESSION['persistent']['remettre']['num_cheque'] = -2;
+        }
+        elseif ($input == 'imp_cheque' && !empty($_SESSION['persistent']['remettre']['argent_back']) )
+        {
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">R&eacute;impression... Entrer num&eacute;ro de ch&egrave;que corrig&eacute; <blink>!</blink></td><!-- imp_cheque -->";
+          $_SESSION['persistent']['remettre']['num_cheque'] = -3;
+        }
+        elseif ( !empty($_SESSION['persistent']['remettre']['argent_back']) )
+        {
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">On paye pas deux fois svp !</td>";
+        }
+        else
+        {
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">On ne paye pas inutilement svp !</td>";
+        }
+
       }
       else
       {
@@ -603,31 +638,71 @@ class LivresbenController extends LivresbenHelper
             $bookList .= sprintf("%'.-50.50s %3s$\n",$row['titre'],$row['prix']);
             $sqlBooks .= ($sqlBooks ? ',' : '').$row['id'];
         }
+        
+        // this sql query is for logging purpose only
         $sqlBooks = "UPDATE livres SET codebar={$_SESSION['persistent']['etudiant']} WHERE id IN ($sqlBooks);";
         //$this->print_pre($bookList,true);
         
         $etudiant = $this->models['etudiant']->find("id = {$_SESSION['persistent']['etudiant']}");
         
-        $this->log("argent {$_SESSION['persistent']['remettre']['argent']}$ pour {$_SESSION['persistent']['etudiant_nom']} / ".$sqlBooks);
+        $this->log($input. " {$_SESSION['persistent']['remettre']['argent']}$ pour {$_SESSION['persistent']['etudiant_nom']} / ".$sqlBooks);
         $this->courrielLivresVendus($etudiant['courriel'], $bookList, 0, $_SESSION['persistent']['remettre']['argent']);
         
         // move sold books to owner 0
         @$this->models['livre']->findBySql("UPDATE livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id SET codebar = 0 WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} AND NOT ISNULL(livre_id) ");
 
-        $this->models['evetudiant']->logEvent(302,$commis,"récup: paiement de {$_SESSION['persistent']['remettre']['argent']}$ à {$_SESSION['persistent']['etudiant']} ($commis_n)");
+        $this->models['evetudiant']->logEvent(302,$commis,"récup: paiement($input) de {$_SESSION['persistent']['remettre']['argent']}$ à {$_SESSION['persistent']['etudiant']} ($commis_n)");
 
+        $_SESSION['persistent']['remettre']['num_cheque'] = -1;
+        $_SESSION['persistent']['remettre']['argent_back'] = $_SESSION['persistent']['remettre']['argent'];
         $_SESSION['persistent']['remettre']['argent'] = 0;
 
-        $request_content = "<td class=\"rowCommand\" colspan=\"5\">Argent remis</td>";
+        if ($input == 'imp_cheque')
+        {
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">Impression ch&egrave;que...  entrer num&eacute;ro <blink>!</blink></td><!-- imp_cheque -->";
+        }
+        elseif ($input == 'cheque')
+        {
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">Ch&egrave;que manuel... entrer num&eacute;ro <blink>!</blink></td>";
+        }
+        else
+        {
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">Argent remis</td>";
+        }
+        
       }
     }//argent
 
+
+    /// default INPUT is a BOOK ID, a STUDENT ID or a CHEQUE #
     $input = preg_replace('/[^0-9]/', '', $this->params['data']['scan_box']);
 
     if ($input)
     {
-
-      if (empty($_SESSION['persistent']['etudiant']))
+      if (!empty($_SESSION['persistent']['remettre']) && 
+          !empty($_SESSION['persistent']['remettre']['num_cheque']) && 
+          $_SESSION['persistent']['remettre']['num_cheque'] < 0 )
+      {
+        /// cheque number
+        
+        if ($_SESSION['persistent']['remettre']['num_cheque'] == -1)
+        {
+          $this->models['evetudiant']->logEvent(305,$commis,"récup: cheque # $input {$_SESSION['persistent']['remettre']['argent_back']}$ à {$_SESSION['persistent']['etudiant_nom']} ({$_SESSION['persistent']['etudiant']}) de ($commis_n)");
+        }
+        else if ($_SESSION['persistent']['remettre']['num_cheque'] == -2)
+        {
+          $this->models['evetudiant']->logEvent(306,$commis,"récup: cheque (correction) # $input {$_SESSION['persistent']['remettre']['argent_back']}$ à {$_SESSION['persistent']['etudiant_nom']} ({$_SESSION['persistent']['etudiant']}) de ($commis_n)");
+        }
+        else if ($_SESSION['persistent']['remettre']['num_cheque'] == -3)
+        {
+          $this->models['evetudiant']->logEvent(307,$commis,"récup: réimpression cheque # $input {$_SESSION['persistent']['remettre']['argent_back']}$ à {$_SESSION['persistent']['etudiant_nom']} ({$_SESSION['persistent']['etudiant']}) de ($commis_n)");
+        }
+        
+        $_SESSION['persistent']['remettre']['num_cheque'] = $input;
+        $request_content = "<td class=\"rowCommand\" colspan=\"5\">Ch&egrave;que #$input</td>";
+      }
+      
+      elseif (empty($_SESSION['persistent']['etudiant']))
       // aucun etudiant au dossier ouvert
       {
         
@@ -658,9 +733,9 @@ class LivresbenController extends LivresbenHelper
         // dossier etudiant actif
         
         // remove price from barcode
-        $input = substr($input,0,10);
+        $bookId = substr($input,0,10);
 
-        if ($livre = $this->models['livre']->find("id = $input AND codebar = {$_SESSION['persistent']['etudiant']}"))
+        if ($livre = $this->models['livre']->find("id = $bookId AND codebar = {$_SESSION['persistent']['etudiant']}"))
         // return book to owner
         {
 /**************************************************************************/
@@ -674,6 +749,12 @@ class LivresbenController extends LivresbenHelper
           $class = 'class="rowConsigne"';
           $request_content = "<td $class>".substr($livre['id'],-4).'-'.$livre['genie']."</td><td $class>".$this->cutText($livre['titre'],$this->vCutText)."</td><td $class>{$livre['prix']}$</td><td $class>{$livre['isbn']}$</td>";
         }
+        elseif ($this->models['etudiant']->find("id = $input"))
+        {
+          // a student id while a file is active?
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">Terminer avec 'suivant'</td>";
+        }
+        
       }//etudiant/livre
     }
 
@@ -772,6 +853,20 @@ class LivresbenController extends LivresbenHelper
     $this->set('redirect', "{$this->base}/livresben/etiquettes_flash");
     $this->render('etiquettes_pdf','back_download');
 
+  }
+
+  function impression_cheque()
+  {
+    $this->set('data', '');
+    $abs_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_FILENAME']);
+    $rel_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_NAME']);
+
+    $id = $_SESSION['persistent']['etudiant'];
+
+    $this->set('filename', "cheque_$id.pdf");
+    $this->set('downloadfile', "cheque_$id.pdf");
+    $this->set('redirect', "{$this->base}/livresben/recuperation");
+    $this->render('cheque_pdf','ask_download');
   }
 
   function commandes()

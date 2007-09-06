@@ -9,6 +9,7 @@
   function commandes()
   {
     window.location = '".$html->urlFor("/livresben/commandes")."';
+    return true;
   }
 
   function localHook(input)
@@ -83,6 +84,12 @@
       return;
     }
 
+
+    re = /imp_cheque/;
+    if (re.test(rowText))
+    {
+      window.location = '".$html->urlFor("/livresben/impression_cheque")."';
+    }
 
     re = /rowConsigne/;
     if (re.test(rowText))
