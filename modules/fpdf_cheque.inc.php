@@ -52,31 +52,50 @@ function InfoPane()
   
 function ChequePart($name, $amount)
 {
+  $name = ucwords($name);
   $numLiteral = new Num2Str($amount);
   $amount_literal = '* * * '.$numLiteral->literal().' * * *';
 
+  $date_imp_short = date('d').'/'.date('m').'/'.date('Y');
+
   $pageWidth = 165;
 
-  for ($i = 0; $i < 3; $i++)
-  {  
-    $name_amount_y = $this->GetY();
-    
-    $this->Cell($pageWidth,2,$name,0,1,'L');
-    $this->SetY($name_amount_y);
-    
-    $this->Cell($pageWidth,1,$amount.'.00',0,1,'R');
-  
-    $this->Ln(5);
-    $this->Cell($pageWidth,1,$amount_literal,0,1,'C');
-    
-    if ($i == 0)
-    {
-      $this->Ln(10);
-      $dim = $this->Code39($this->GetX(), $this->GetY(), $name,false,1,5);
-    }
+  // part 1    
+  $this->SetY(30);
+  $this->Cell($pageWidth,4,$amount.'.00',0,1,'R');
 
-    $this->SetY($this->GetY() + 90);
-  }
+  $this->SetY(30);
+  $this->Cell($pageWidth,4,$name,0,1,'L');
+
+  $this->SetY(40);
+  $this->Cell($pageWidth,1,$amount_literal,0,1,'C');
+
+  $this->SetY(55);
+  $dim = $this->Code39($this->GetX(), $this->GetY(), $name,false,1,5);
+
+  // part 2
+  $this->SetY(115);
+  $this->Cell($pageWidth,4,$date_imp_short,0,1,'L');
+
+  $this->SetY(125);
+  $this->Cell($pageWidth,4,$amount.'.00',0,1,'R');
+
+  $this->SetY(130);
+  $this->Cell($pageWidth,4,$name,0,1,'L');
+
+  $this->SetY(138);
+  $this->Cell($pageWidth,1,$amount_literal,0,1,'C');
+
+  // part 3
+  $this->SetY(220);
+  $this->Cell($pageWidth,4,$amount.'.00',0,1,'R');
+
+  $this->SetY(220);
+  $this->Cell($pageWidth,4,$name,0,1,'L');
+
+  $this->SetY(230);
+  $this->Cell($pageWidth,1,$amount_literal,0,1,'C');
+
 
 }
   

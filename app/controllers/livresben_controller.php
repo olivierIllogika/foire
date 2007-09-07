@@ -580,6 +580,13 @@ class LivresbenController extends LivresbenHelper
           $request_content = "<td class=\"rowCommand\" colspan=\"5\"><blink>!</blink> $perdus livre(s) &agrave; rendre; valeur tax&eacute;e: $valeur$ (+$vendu$ = $total$)</td>";
         }
       }
+      elseif (!empty($_SESSION['persistent']['remettre']) && 
+              !empty($_SESSION['persistent']['remettre']['num_cheque']) && 
+              $_SESSION['persistent']['remettre']['num_cheque'] < 0)
+      {
+        // still waiting for check number
+        $request_content = "<td class=\"rowCommand\" colspan=\"5\">Entrer num&eacute;ro ch&egrave;que <blink>!!!</blink></td>";
+      }
       else
       { // !ret
         unset($_SESSION['persistent']['perdus']);
@@ -615,7 +622,7 @@ class LivresbenController extends LivresbenHelper
         }
         elseif ($input == 'imp_cheque' && !empty($_SESSION['persistent']['remettre']['argent_back']) )
         {
-          $request_content = "<td class=\"rowCommand\" colspan=\"5\">R&eacute;impression... Entrer num&eacute;ro de ch&egrave;que corrig&eacute; <blink>!</blink></td><!-- imp_cheque -->";
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">R&eacute;impression... Entrer nouveau num&eacute;ro de ch&egrave;que <blink>!</blink></td><!-- imp_cheque -->";
           $_SESSION['persistent']['remettre']['num_cheque'] = -3;
         }
         elseif ( !empty($_SESSION['persistent']['remettre']['argent_back']) )
@@ -667,6 +674,7 @@ class LivresbenController extends LivresbenHelper
         }
         else
         {
+          $_SESSION['persistent']['remettre']['num_cheque'] = 0;
           $request_content = "<td class=\"rowCommand\" colspan=\"5\">Argent remis</td>";
         }
         
@@ -857,6 +865,8 @@ class LivresbenController extends LivresbenHelper
 
   function impression_cheque()
   {
+    $this->sessionCheck(SECURITY_LEVEL_GIVER);
+
     $this->set('data', '');
     $abs_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_FILENAME']);
     $rel_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_NAME']);
@@ -869,6 +879,34 @@ class LivresbenController extends LivresbenHelper
     $this->render('cheque_pdf','ask_download');
   }
 
+  function cheque_batch($amountLimit, $test=false)
+  {
+    $this->sessionCheck(SECURITY_LEVEL_MANAGMENT);
+    
+    if (intval($amountLimit) > 0)
+    {
+      $ret = $this->models['livre']->findBySql(
+      
+              "SELECT CONCAT(prenom, ' ', nom) AS nom, CEILING(SUM(prix)*0.96) AS montant ".
+              "FROM etudiants AS e JOIN livres AS l ON e.id=l.codebar ".
+              "JOIN facture_lignes AS fl ON fl.livre_id=l.id ".
+              "JOIN factures as f ON f.id=fl.parent_id ". (!$test ? "AND f.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) " :'') .
+              "WHERE codebar!=0 GROUP BY codebar ".
+              "HAVING montant > $amountLimit ORDER BY montant DESC, nom, prenom" . ($test ? ' LIMIT 10' :'') );
+              
+      $this->set('data', (!empty($ret) ? $ret : array(array('nom'=>'rien', 'montant'=>'0')) )  );
+  
+      $abs_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_FILENAME']);
+      $rel_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_NAME']);
+  
+      $this->set('filename', "cheque_batch_$amountLimit.pdf");
+      $this->set('downloadfile', "cheque_batch_$amountLimit.pdf");
+      $this->set('redirect', "{$this->base}/pages/menu_ben");
+      $this->render('cheque_pdf','ask_download');
+    }
+
+  }
+  
   function commandes()
   {
     $this->set('filename', "commandes.pdf");
