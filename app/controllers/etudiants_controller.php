@@ -337,8 +337,8 @@ die();
     
     $sender = 'Foire aux Livres <foire-noreply@step.polymtl.ca>';
 
-    $mail_title = "Récupération tardive des livres";
-    $body = $this->courrielRecuperationTardive(); // $date, $heure
+    $mail_title = "Récupération des livres";
+    $body = $this->courrielRecuperation(); // $date, $heure
 //    $body = $this->courrielRecuperationTardive(); // $date, $heure
 
     $operation = ($action == 'envoyer' ? '[envoi]' : '[test]');

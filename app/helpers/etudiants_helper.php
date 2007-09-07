@@ -78,7 +78,7 @@ class EtudiantsHelper extends AppController
     "Vous recevez ce courriel car vous avez de l'argent ou des livres à récupérer à la Foire aux Livres de l'AEP.".
     "\n\n".
 
-    "Vous devez vous présenter à la Galerie Rolland demain, le mercredi 18 janvier, entre 9h et 15h30\n\n".
+    "Vous devez vous présenter à la journée de récupération pour prendre livres et/ou argent. Consultez foire.polymtl.ca pour l'horaire.\n\n".
 
     "Assurez-vous d'avoir en main une des pièces d'identification suivante :\n\n".
     
