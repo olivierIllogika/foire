@@ -414,9 +414,9 @@ class LivresbenController extends LivresbenHelper
     $commis_id = $_SESSION['etudiant']['id'];
     $commis_n = $_SESSION['etudiant']['prenom'];
 
-    $total = $this->models['livre']->findBySql("SELECT count(distinct e.id) as total FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id) AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY)");
+    $total = $this->models['livre']->findBySql("SELECT count(distinct e.id) as total FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY) LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id)");
 
-    $ret = $this->models['livre']->findBySql("SELECT e.id as codebar FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id) AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY) LIMIT 1");
+    $ret = $this->models['livre']->findBySql("SELECT e.id as codebar FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY) LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id) LIMIT 1");
 
     if ($ret)
     {
