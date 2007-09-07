@@ -71,7 +71,7 @@ function ChequePart($name, $amount)
   $this->Cell($pageWidth,1,$amount_literal,0,1,'C');
 
   $this->SetY(55);
-  $dim = $this->Code39($this->GetX(), $this->GetY(), $name,false,1,5);
+  //$dim = $this->Code39($this->GetX(), $this->GetY(), $name,false,1,5);
 
   // part 2
   $this->SetY(115);
