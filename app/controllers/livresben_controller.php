@@ -411,6 +411,8 @@ class LivresbenController extends LivresbenHelper
 
   function pseudo_recup()
   {
+    $this->sessionCheck(SECURITY_LEVEL_MANAGMENT);
+
     $commis_id = $_SESSION['etudiant']['id'];
     $commis_n = $_SESSION['etudiant']['prenom'];
 
