@@ -16,7 +16,7 @@ $commandes = array(
 "vider",
 "argent",
 "cheque",
-"imp_cheque",
+"impcheque",
 "suivant",
 );
 

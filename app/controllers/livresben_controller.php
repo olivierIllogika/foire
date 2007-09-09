@@ -416,9 +416,9 @@ class LivresbenController extends LivresbenHelper
     $commis_id = $_SESSION['etudiant']['id'];
     $commis_n = $_SESSION['etudiant']['prenom'];
 
-    $total = $this->models['livre']->findBySql("SELECT count(distinct e.id) as total FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY) LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id)");
+    $total = $this->models['livre']->findBySql("SELECT count(distinct e.id) as total FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY) LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id JOIN evlivres AS evls ON evls.id=l.id AND evls.evenement=101 AND evls.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)  WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id)");
 
-    $ret = $this->models['livre']->findBySql("SELECT e.id as codebar FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY) LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id) LIMIT 1");
+    $ret = $this->models['livre']->findBySql("SELECT e.id as codebar FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY) LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id  JOIN evlivres AS evls ON evls.id=l.id AND evls.evenement=101 AND evls.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id) LIMIT 1");
 
     if ($ret)
     {
@@ -462,11 +462,11 @@ class LivresbenController extends LivresbenHelper
     
     if (!empty($_SESSION['persistent']['etudiant']))
     {
-      $this->set('data', $this->models['livre']->findBySql("SELECT l.id as lid, l.titre as ltitre, genie, prix, isbn, link, en_consigne, livre_id, en_retard FROM livres AS l LEFT JOIN isbns AS i ON l.isbn=i.id LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE codebar = {$_SESSION['persistent']['etudiant']} ORDER BY l.created DESC"));
+      $this->set('data', $this->models['livre']->findBySql("SELECT l.id as lid, l.titre as ltitre, genie, prix, isbn, link, en_consigne, livre_id, en_retard FROM livres AS l JOIN evlivres AS evl ON l.id=evl.id AND evenement=101 AND evl.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) LEFT JOIN isbns AS i ON l.isbn=i.id LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND l.codebar = {$_SESSION['persistent']['etudiant']} ORDER BY l.created DESC"));
 
       if (empty($_SESSION['persistent']['remettre']))
       {
-        $ret = $this->models['livre']->findBySql("SELECT isnull(livre_id) AS unsold, CEILING(SUM(prix)*0.96) AS s, COUNT(*) AS c FROM livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} GROUP BY ISNULL(livre_id) ORDER BY isnull(livre_id)");
+        $ret = $this->models['livre']->findBySql("SELECT isnull(livre_id) AS unsold, CEILING(SUM(prix)*0.96) AS s, COUNT(*) AS c FROM livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id JOIN evlivres AS evl ON l.id=evl.id AND evenement=101 AND evl.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) WHERE en_consigne=1 AND l.codebar={$_SESSION['persistent']['etudiant']} GROUP BY ISNULL(livre_id) ORDER BY isnull(livre_id)");
         
         if ($ret)
         {
@@ -607,10 +607,11 @@ class LivresbenController extends LivresbenHelper
       unset($_SESSION['persistent']['suivant']);
     } //suivant
 
-    ///
+    
     /// ARGENT , CHEQUE and IMP_CHEQUE will marks all sold books to owner id-0
     ///
-    if ($input == 'argent' || $input == 'cheque' || $input == 'imp_cheque' )
+    if ($input == 'impcheque') $input = 'imp_cheque';
+    if (!empty($_SESSION['persistent']['etudiant']) && ($input == 'argent' || $input == 'cheque' || $input == 'imp_cheque') )
     {
       // livres vendus (et en consigne)
       $ret = $this->models['livre']->findBySql("SELECT id, titre, prix FROM livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND NOT ISNULL(livre_id) AND codebar={$_SESSION['persistent']['etudiant']} ");
