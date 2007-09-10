@@ -267,7 +267,7 @@ class LivresbenController extends LivresbenHelper
             $msg = "non consigné !!";
           }
 
-          $this->models['evlivre']->logEvent(252,0,$codebar,"$msg ({$_SESSION['etudiant']['prenom']})");
+          $this->models['evlivre']->logEvent(252,$livre['id'],$codebar,"$msg ({$_SESSION['etudiant']['prenom']})");
           $livre['en_consigne'] = 1;
           $livre['prix'] = $prix;
           $this->models['livre']->save($livre,false);
@@ -384,7 +384,7 @@ class LivresbenController extends LivresbenHelper
   {
     $this->sessionCheck(SECURITY_LEVEL_GIVER);
 
-    $this->set('data', $this->models['livre']->findBySql("SELECT prenom, nom, codebar, isnull(livre_id) AS unsold, CEILING(SUM(prix)*0.85) AS s, COUNT(*) AS c FROM etudiants as e LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND codebar!=0 GROUP BY codebar, ISNULL(livre_id) ORDER BY nom, prenom, isnull(livre_id)"));
+    $this->set('data', $this->models['livre']->findBySql("SELECT prenom, nom, codebar, ISNULL(livre_id) AS unsold, CEILING(SUM(prix)*0.85) AS s, COUNT(*) AS c FROM etudiants as e LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id JOIN (SELECT DISTINCT(id) FROM evlivres WHERE evenement=101 AND created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)) AS evl ON evl.id=l.id WHERE en_consigne=1 AND codebar!=0 GROUP BY codebar, ISNULL(livre_id) ORDER BY nom, prenom, isnull(livre_id)"));
 
     $this->render('liste_retard', 'minimal');
   }
@@ -393,7 +393,7 @@ class LivresbenController extends LivresbenHelper
   {
     $this->sessionCheck(SECURITY_LEVEL_GIVER);
 
-    $this->set('data', $this->models['livre']->findBySql("SELECT prenom, nom, codebar, not isnull(livre_id) AS unsold, titre, prix, l.id as lid FROM etudiants as e LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND codebar!=0 ORDER BY nom, prenom, isnull(livre_id)"));
+    $this->set('data', $this->models['livre']->findBySql("SELECT prenom, nom, codebar, NOT ISNULL(livre_id) AS unsold, titre, prix, l.id AS lid FROM etudiants AS e LEFT JOIN livres AS l ON e.id=l.codebar JOIN (SELECT DISTINCT(id) FROM evlivres WHERE evenement=101 AND created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)) AS evl ON evl.id=l.id LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND codebar!=0 ORDER BY nom, prenom, ISNULL(livre_id)"));
 
     $this->render('liste_livres', 'minimal');
   }
@@ -404,7 +404,7 @@ class LivresbenController extends LivresbenHelper
 
     $this->set('data', $this->models['livre']->findBySql("SELECT prenom, nom, codebar,
     CEILING(SUM(prix)*0.85) AS s
-     FROM etudiants as e LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND codebar!=0 AND NOT ISNULL(livre_id) GROUP BY codebar ORDER BY nom, prenom;"));
+     FROM etudiants as e LEFT JOIN livres AS l ON e.id=l.codebar JOIN facture_lignes AS fl ON fl.livre_id=l.id JOIN factures AS f ON f.id=fl.parent_id AND f.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) WHERE en_consigne=1 AND codebar!=0 GROUP BY codebar ORDER BY nom, prenom;"));
 
     $this->render('liste_argent', 'minimal');
   }
@@ -416,9 +416,9 @@ class LivresbenController extends LivresbenHelper
     $commis_id = $_SESSION['etudiant']['id'];
     $commis_n = $_SESSION['etudiant']['prenom'];
 
-    $total = $this->models['livre']->findBySql("SELECT count(distinct e.id) as total FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY) LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id JOIN evlivres AS evls ON evls.id=l.id AND evls.evenement=101 AND evls.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)  WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id)");
+    $total = $this->models['livre']->findBySql("SELECT COUNT(DISTINCT e.id) AS total FROM etudiants AS e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY) LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id JOIN (SELECT DISTINCT(id) FROM evlivres WHERE evenement=101 AND created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)) AS evls ON evls.id=l.id WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id)");
 
-    $ret = $this->models['livre']->findBySql("SELECT e.id as codebar FROM etudiants as e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY) LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id  JOIN evlivres AS evls ON evls.id=l.id AND evls.evenement=101 AND evls.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) WHERE en_consigne=1 AND l.codebar!=0 AND isnull(livre_id) AND ISNULL(evl.id) LIMIT 1");
+    $ret = $this->models['livre']->findBySql("SELECT e.id AS codebar FROM etudiants AS e LEFT JOIN evetudiants AS evl ON evl.id=e.id AND evl.evenement=304 AND evl.created > DATE_SUB(CURDATE(),INTERVAL 30 DAY) LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id  JOIN evlivres AS evls ON evls.id=l.id AND evls.evenement=101 AND evls.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) WHERE en_consigne=1 AND l.codebar!=0 AND ISNULL(livre_id) AND ISNULL(evl.id) LIMIT 1");
 
     if ($ret)
     {
@@ -428,7 +428,7 @@ class LivresbenController extends LivresbenHelper
       $this->models['actions_recente']->logEvent($commis_id, '*'.$commis_n, $codebar);
 
       $this->set('total', $total[0]['total']);
-      $this->set('data', $this->models['livre']->findBySql("SELECT prenom, nom, codebar, not isnull(livre_id) AS unsold, titre, prix, l.id as lid FROM etudiants as e LEFT JOIN livres AS l ON e.id=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND codebar=$codebar "));
+      $this->set('data', $this->models['livre']->findBySql("SELECT prenom, nom, codebar, titre, prix, l.id AS lid FROM etudiants AS e JOIN livres AS l ON e.id=l.codebar JOIN (SELECT DISTINCT(id) FROM evlivres WHERE evenement=101 AND created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)) AS evl ON evl.id=l.id LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND ISNULL(livre_id) AND codebar=$codebar "));
 
     }
 
@@ -462,11 +462,11 @@ class LivresbenController extends LivresbenHelper
     
     if (!empty($_SESSION['persistent']['etudiant']))
     {
-      $this->set('data', $this->models['livre']->findBySql("SELECT l.id as lid, l.titre as ltitre, genie, prix, isbn, link, en_consigne, livre_id, en_retard FROM livres AS l JOIN evlivres AS evl ON l.id=evl.id AND evenement=101 AND evl.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) LEFT JOIN isbns AS i ON l.isbn=i.id LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND l.codebar = {$_SESSION['persistent']['etudiant']} ORDER BY l.created DESC"));
+      $this->set('data', $this->models['livre']->findBySql("SELECT l.id as lid, l.titre as ltitre, genie, prix, isbn, link, en_consigne, livre_id, en_retard FROM livres AS l JOIN (SELECT DISTINCT(id) FROM evlivres WHERE evenement=101 AND created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)) AS evl ON evl.id=l.id LEFT JOIN isbns AS i ON l.isbn=i.id LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND l.codebar = {$_SESSION['persistent']['etudiant']} ORDER BY l.created DESC"));
 
       if (empty($_SESSION['persistent']['remettre']))
       {
-        $ret = $this->models['livre']->findBySql("SELECT isnull(livre_id) AS unsold, CEILING(SUM(prix)*0.96) AS s, COUNT(*) AS c FROM livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id JOIN evlivres AS evl ON l.id=evl.id AND evenement=101 AND evl.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) WHERE en_consigne=1 AND l.codebar={$_SESSION['persistent']['etudiant']} GROUP BY ISNULL(livre_id) ORDER BY isnull(livre_id)");
+        $ret = $this->models['livre']->findBySql("SELECT isnull(livre_id) AS unsold, CEILING(SUM(prix)*0.96) AS s, COUNT(*) AS c FROM livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id JOIN (SELECT DISTINCT(id) FROM evlivres WHERE evenement=101 AND created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)) AS evl ON evl.id=l.id WHERE en_consigne=1 AND l.codebar={$_SESSION['persistent']['etudiant']} GROUP BY ISNULL(livre_id) ORDER BY isnull(livre_id)");
         
         if ($ret)
         {
