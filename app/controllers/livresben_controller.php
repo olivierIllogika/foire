@@ -393,7 +393,7 @@ class LivresbenController extends LivresbenHelper
   {
     $this->sessionCheck(SECURITY_LEVEL_GIVER);
 
-    $this->set('data', $this->models['livre']->findBySql("SELECT prenom, nom, codebar, NOT ISNULL(livre_id) AS unsold, titre, prix, l.id AS lid FROM etudiants AS e LEFT JOIN livres AS l ON e.id=l.codebar JOIN (SELECT DISTINCT(id) FROM evlivres WHERE evenement=101 AND created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)) AS evl ON evl.id=l.id LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND codebar!=0 ORDER BY nom, prenom, ISNULL(livre_id)"));
+    $this->set('data', $this->models['livre']->findBySql("SELECT prenom, nom, codebar, NOT ISNULL(livre_id) AS unsold, titre, prix, l.id AS lid FROM etudiants AS e LEFT JOIN livres AS l ON e.id=l.codebar JOIN (SELECT DISTINCT(id) FROM evlivres WHERE evenement=101 AND created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)) AS evl ON evl.id=l.id LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND codebar!=0 AND ISNULL(livre_id) ORDER BY nom, prenom, ISNULL(livre_id)"));
 
     $this->render('liste_livres', 'minimal');
   }
