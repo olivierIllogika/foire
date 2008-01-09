@@ -120,7 +120,7 @@ class EtudiantsController extends EtudiantsHelper
           array('id'));
         
       $duplicate = '';
-      if ($id != $this->params['data']['id']) {
+      if ($id != $this->params['data']['id'] && $this->params['data']['id'] != '') {
         $duplicate = $this->checkDuplicates('-',$this->params['data']['id']);
       }
       
