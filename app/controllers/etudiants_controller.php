@@ -102,8 +102,66 @@ class EtudiantsController extends EtudiantsHelper
   function profil()
   {
     $this->sessionCheck(0);
-    
-    
+
+    if (empty($this->params['data']) )
+    {
+      $this->params['data']['id'] = $_SESSION['etudiant']['id'];
+      $this->render();
+    }
+    else
+    {
+      $id = $_SESSION['etudiant']['id'];
+      $this->params['data']['id'] = preg_replace('/[^0-9]/', '', $this->params['data']['id']);
+
+      $this->params['data']['ancienmotpasse'] = $this->db->prepare($this->params['data']['ancienmotpasse']);
+      $etudiant = $this->models['etudiant']->find(
+          "confirme =1 AND id=$id".
+          " AND motpasse=PASSWORD({$this->params['data']['ancienmotpasse']})",
+          array('id'));
+        
+      $duplicate = $this->checkDuplicates('-',$this->params['data']['id']);
+      if ($duplicate)
+      {
+        $this->models['etudiant']->validationErrors['id'] = 1;
+      }
+        
+      if ($this->params['data']['motpasse'] != $this->params['data']['motpasse2'])
+      {
+        $this->models['etudiant']->validationErrors['motpasse2'] = 1;
+      }
+  
+      if ( empty($etudiant) ) {
+        $this->models['etudiant']->validationErrors['ancienmotpasse'] = 1;
+      }
+        
+      if ( empty($this->models['etudiant']->validationErrors) )
+      {
+        $modifiedFields = '';
+
+        if ($this->params['data']['id']) {
+          $modifiedFields = 'id='.$this->params['data']['id'];
+          $_SESSION['etudiant']['id'] = $this->params['data']['id'];
+        }
+        
+        if ($this->params['data']['motpasse'] != '') {
+          $modifiedFields .= $modifiedFields != '' ? ',' : '' ;
+          $motpasse = $this->db->prepare($this->params['data']['motpasse']);
+          $modifiedFields .= "motpasse = PASSWORD($motpasse)";
+        }
+        
+        if ($modifiedFields) {
+          $this->db->query("UPDATE etudiants SET $modifiedFields WHERE id=$id");
+          $this->flash(htmlentities('Mise à jour terminée...'),'/livres');
+        }
+        else {
+          $this->flash(htmlentities('Aucun changement...'),'/livres');
+        }
+        
+      } //validation
+    }//form submit
+    unset($this->params['data']['ancienmotpasse']);
+    unset($this->params['data']['motpasse']);
+    unset($this->params['data']['motpasse2']);
   }
 
   function perdu_infos($courriel=null)

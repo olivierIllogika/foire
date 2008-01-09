@@ -1,13 +1,9 @@
-<!--
+
 <div id="optionsEtudiant">
-<?=$html->linkTo('Modifier mon profil', '/etudiants/profile')?>
-</div> -->
+<?=$html->linkTo('Modifier mon profil', '/etudiants/profil')?>
+</div>
 
   <h2 id="livresTitre">Vos livres</h2>
-
-<!-- <div id="v2Temp">
-<p><?/*=htmlentities("'Modifier' et 'Supprimer' ne fonctionnent pas;  patience, j'y travaille")*/?></p>
-</div> -->
 
   <?php echo $html->linkTo('<div id="livresAjoutNeuf"><h4>Ajouter un livre</h4></div>', '/livres/ajouter_nouveau') ?>
 

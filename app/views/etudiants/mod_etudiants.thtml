@@ -1,6 +1,6 @@
   <h2 id="etRecherche">Recherche &eacute;tudiant</h2>
 
-  <?=($this->etudiant->validationErrors ? '<span class="error_message">'.htmlentities('** Vérifier le formulaire et corrigez les erreurs **').'</span>' :'')?>
+  <?=($this->etudiant->validationErrors ? '<span class="error_message">'.htmlentities('** Vérifiez le formulaire et corrigez les erreurs **').'</span>' :'')?>
 
   <div id="etRechFormulaire">
 

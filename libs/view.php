@@ -294,6 +294,7 @@ class View extends Object
 		if ($viewFileName && !$this->hasRendered)
 		{
 			$out = $this->_render($viewFileName, $this->_viewVars, 0);
+			
 			if ($out !== false)
 			{
 				if ($this->layout && $this->autoLayout)
@@ -329,7 +330,7 @@ class View extends Object
 		{
 			return "(Error rendering {$name})";
 		}
-		return $this->_render($fn, array_merge($this->_viewVars, $params));
+		return $this->_render($fn, array_merge($this->_viewVars, $params), false);
 	}
 
 	/**
@@ -348,7 +349,7 @@ class View extends Object
 
 		if (is_file($layout_fn))
 		{
-			$out = $this->_render($layout_fn, $data_for_layout);
+			$out = $this->_render($layout_fn, $data_for_layout, 0);
 
 			if ($out === false)
 			{

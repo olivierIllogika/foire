@@ -133,7 +133,7 @@ class EtudiantsHelper extends AppController
     return false;
   }
   
-  function checkDuplicates($courriel, $id)
+  function checkDuplicates($courriel='-', $id=-1)
   {
     /* AND confirme=1 */
     $data = $this->models['etudiant']->findAll("(id = $id OR courriel='$courriel') ", array('courriel','id','confirme'));

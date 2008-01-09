@@ -2,7 +2,7 @@
 
   <?=(!empty($duplicate) ? '<span class="error_message">'.$duplicate.htmlentities(' existe déjà parmis les consignataires. Si vous êtes déjà inscrit, essayer de ').$html->linkTo(htmlentities("récupérer vos informations"),"/etudiants/perdu_infos/$courriel").htmlentities(". Si non, vérifiez vos informations et écrivez à ").$html->linkEmail('foire@step.polymtl.ca').'</span>' :'')?>
   
-  <?=($this->etudiant->validationErrors ? '<span class="error_message">'.htmlentities('** Vérifier le formulaire et corrigez les erreurs **').'</span>' :'')?>
+  <?=($this->etudiant->validationErrors ? '<span class="error_message">'.htmlentities('** Vérifiez le formulaire et corrigez les erreurs **').'</span>' :'')?>
 
   <div id="etRegFormulaire">
 
