@@ -119,7 +119,11 @@ class EtudiantsController extends EtudiantsHelper
           " AND motpasse=PASSWORD({$this->params['data']['ancienmotpasse']})",
           array('id'));
         
-      $duplicate = $this->checkDuplicates('-',$this->params['data']['id']);
+      $duplicate = '';
+      if ($id != $this->params['data']['id']) {
+        $duplicate = $this->checkDuplicates('-',$this->params['data']['id']);
+      }
+      
       if ($duplicate)
       {
         $this->models['etudiant']->validationErrors['id'] = 1;
