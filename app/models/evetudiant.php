@@ -15,14 +15,8 @@ class Evetudiant extends AppModel
 *   409 logout_
 *
 *   410 modif info personnelles
-*   411 nom(%ancien%)=%nouv%;pre(%ancien%)=%nouv%;tel(%ancien%)=%nouv%;mail(%ancien%)=%nouv%;_
-*   412 nom(%ancien%)=%nouv%
-*   413 prenom(%ancien%)=%nouv%
-*   414 telelphone(%ancien%)=%nouv%
-*   415 email(%ancien%)=%nouv%
-*   416 mot de passe_
-*       recu perdu
-*       plus de courrier
+*   411 %id -ancien changement id
+*   412 mot de passe
 *
 *
 *   440 factures

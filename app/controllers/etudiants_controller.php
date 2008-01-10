@@ -142,19 +142,30 @@ class EtudiantsController extends EtudiantsHelper
       {
         $modifiedFields = '';
 
-        if ($this->params['data']['id']) {
+        if ($this->params['data']['id'] && $this->params['data']['id'] != $id) {
+          $this->models['evetudiant']->logEvent(411,$this->params['data']['id'],"$id -ancien changement id");
+          
           $modifiedFields = 'id='.$this->params['data']['id'];
           $_SESSION['etudiant']['id'] = $this->params['data']['id'];
+
+          $this->models['evetudiant']->logEvent(406,$_SESSION['etudiant']['id'],"login");
+
+          // UPDATING owned books
+          $this->db->query("UPDATE livres SET codebar={$this->params['data']['id']} WHERE codebar=$id");
         }
         
         if ($this->params['data']['motpasse'] != '') {
+          $this->models['evetudiant']->logEvent(412,$_SESSION['etudiant']['id'],"changement mot de passe");
+
           $modifiedFields .= $modifiedFields != '' ? ',' : '' ;
           $motpasse = $this->db->prepare($this->params['data']['motpasse']);
           $modifiedFields .= "motpasse = PASSWORD($motpasse)";
         }
         
         if ($modifiedFields) {
+          // UPDATING profile
           $this->db->query("UPDATE etudiants SET $modifiedFields WHERE id=$id");
+
           $this->flash(htmlentities('Mise à jour terminée...'),'/livres');
         }
         else {
