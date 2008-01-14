@@ -150,21 +150,11 @@ echo '</pre>';
   function recherche()
   {
     $this->pageTitle .= htmlentities(" - Recherche");
-
-    $this->set('totaux', $this->models['livre']->findBySql("SELECT COUNT(*) as total, en_consigne FROM livres WHERE codebar != 29334000487074 GROUP BY en_consigne ORDER BY en_consigne"));
-
-	if ( !isset($this->_viewVars['totaux'][1]) )
-	{
-		$this->_viewVars['totaux'][1][0] = $this->_viewVars['totaux'][1][1] = 0;
-	}
-
-    if (empty($this->params['data']))
-    {
-      $this->params['data']['cueillis'] = 1;
-      $this->params['data']['vendus'] = 1;
-      $this->render();
-    }
-    else
+    //$this->set('totaux', $this->models['livre']->findBySql("SELECT COUNT(*) as total, en_consigne FROM livres WHERE codebar != 29334000487074 GROUP BY en_consigne ORDER BY en_consigne"));
+    $total = $this->models['livre']->findBySql("SELECT COUNT(*) as total FROM livres as l join evlivres as evl on l.id=evl.id WHERE evl.codebar != 29334000487074 and evenement=101 AND evl.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) and en_consigne=1");
+    $this->set('total', $total[0][0]);
+    
+    if (!empty($this->params['data']))
     {
       $condition = array();
       
@@ -190,34 +180,16 @@ echo '</pre>';
         $condition[] = "cours like '%".preg_replace('/([ ]+)/', "%' AND cours like '%", trim($this->params['data']['cours']))."%'";
       }
 
-      if (!empty($this->params['data']['cueillis']))
-      {
-        $condition[] = "en_consigne = 1";
-      }
-
-      if (empty($this->params['data']['vendus']))
-      {
-        $join = '';
-      }
-      else
-      {
-        $condition[] = "isnull(livre_id)";
-        $join = "LEFT JOIN facture_lignes AS f ON l.id=f.livre_id ";
-      }
-
-//$this->print_pre($this->params['data'],true);
-//      
-//      $this->params['data']['vendus']
-
-  // join with isbn table on titre=null
-//      $condition[] = "en_consigne = 1";
-
+      $condition[] = "evenement = 101";
+      $condition[] = "evl.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
+      $condition[] = "en_consigne = 1";
+      $condition[] = "isnull(livre_id)";
       $conditions = implode(' AND ', $condition);
 
 //      $this->set('data', $this->models['livre']->findAll($conditions));
       if ($conditions)
       {
-        $this->set('data', $this->models['livre']->findBySql("SELECT titre, isbn, cours, en_consigne FROM livres AS l $join WHERE $conditions"));
+        $this->set('data', $this->models['livre']->findBySql("SELECT titre, isbn, cours, en_consigne FROM livres AS l LEFT JOIN facture_lignes AS f ON l.id=f.livre_id JOIN evlivres AS evl ON evl.id=l.id WHERE $conditions"));
         $this->models['livre']->countLastFind = $this->models['livre']->db->numRows;
       }
 

@@ -1,7 +1,7 @@
   <h2 id="livresTitre">Recherche</h2>
 
   <div id="livresRechForm">
-    <span><span class="livresCueillis"><?=$totaux[1][0]?></span> cueillis sur <span class="livresTotal"><?=($totaux[0][0]+$totaux[1][0])?></span> livres inscrits</span>
+    <span><span class="livresCueillis"><?=$total[0] ?></span> livres cueillis</span>
 
     <?php $isbn_help = htmlentities('ISBN non valide; 4 ou 10 caractères (Le dernier caractère d\'un ISBN peut être "X")') ?>
 
@@ -25,12 +25,6 @@
                echo '<label for="RechCours">Cours: </label>'.
                     $html->inputTag('livre/cours', 10, array('id'=>'RechTitre','maxlength'=>'10', 'title'=>'&Eacute;l&eacute;ment du code du cours'));
                ?></p>
-
-            <p><?php
-              echo $html->checkboxTag('cueillis', 'Livres cueillis seulement');
-              echo '<br />';
-              echo $html->checkboxTag('vendus', 'Livres non vendus seulement');
-            ?></p>
 
             <?=$html->submitTag('Chercher')?>
 
