@@ -177,10 +177,10 @@ echo '</pre>';
         $condition[] = "titre like '%".preg_replace('/([ ]+)/', "%", $unsplitted)."%'";
       }
       
-      if ($this->params['data']['cours'])
-      {
-        $condition[] = "cours like '%".preg_replace('/([ ]+)/', "%' AND cours like '%", trim($this->params['data']['cours']))."%'";
-      }
+//      if ($this->params['data']['cours'])
+//      {
+//        $condition[] = "cours like '%".preg_replace('/([ ]+)/', "%' AND cours like '%", trim($this->params['data']['cours']))."%'";
+//      }
 
       $condition[] = "evenement = 101";
       $condition[] = "evl.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)";

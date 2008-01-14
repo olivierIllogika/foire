@@ -21,10 +21,10 @@
                ?></p>
 
 
-            <p><?php
-               echo '<label for="RechCours">Cours: </label>'.
+            <!--<p><?php
+               //echo '<label for="RechCours">Cours: </label>'.
                     $html->inputTag('livre/cours', 10, array('id'=>'RechTitre','maxlength'=>'10', 'title'=>'&Eacute;l&eacute;ment du code du cours'));
-               ?></p>
+               ?></p>-->
 
             <?=$html->submitTag('Chercher')?>
 
