@@ -1,7 +1,7 @@
   <h2 id="livresTitre">Recherche</h2>
 
   <div id="livresRechForm">
-    <span><span class="livresCueillis"><?=$total[0] ?></span> livres cueillis</span>
+    <span><span class="livresCueillis"><?=$total ?></span> livres cueillis</span>
 
     <?php $isbn_help = htmlentities('ISBN non valide; 4 ou 10 caractères (Le dernier caractère d\'un ISBN peut être "X")') ?>
 
