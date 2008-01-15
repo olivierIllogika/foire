@@ -197,7 +197,7 @@ class EtudiantsController extends EtudiantsHelper
 //      $ret = $this->models['etudiant']->findAll(
 //          "courriel='{$this->params['data']['courriel']}'",
 //          array('id','nom','prenom','courriel'));
-     $ret = $this->models['etudiant']->findBySql("SELECT e.id, nom, prenom, courriel, MINUTE(TIMEDIFF(NOW(), eve.created)) AS lastrequest FROM etudiants AS e LEFT JOIN evetudiants AS eve ON e.id=eve.id ".
+     $ret = $this->models['etudiant']->findBySql("SELECT e.id, nom, prenom, courriel, TIME_TO_SEC(TIMEDIFF(NOW(), eve.created)) AS lastrequest FROM etudiants AS e LEFT JOIN evetudiants AS eve ON e.id=eve.id ".
      "WHERE (evenement=405 OR ISNULL(evenement)) AND courriel='{$this->params['data']['courriel']}' ORDER BY eve.created DESC LIMIT 1");
           
       if ($ret)
@@ -206,7 +206,7 @@ class EtudiantsController extends EtudiantsHelper
 
 //$this->print_pre($etudiant);
 
-        if ($etudiant['lastrequest'] == '' || $etudiant['lastrequest'] > $minuteDelay)
+        if ($etudiant['lastrequest'] == '' || $etudiant['lastrequest'] > $minuteDelay*60)
         {
           $this->models['evetudiant']->logEvent(405,$etudiant['id'],"infos perdu; pour {$this->params['data']['courriel']}");
           
