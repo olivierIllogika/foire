@@ -181,6 +181,8 @@ class EtudiantsController extends EtudiantsHelper
 
   function perdu_infos($courriel=null)
   {
+    $minuteDelay = 60;
+    
     $this->pageTitle .= htmlentities(" - Récupération de vos informations");
 
     if (empty($this->params['data']) )
@@ -192,22 +194,34 @@ class EtudiantsController extends EtudiantsHelper
     {
       $this->params['data']['courriel'] = trim($this->params['data']['courriel']);
 
-      $ret = $this->models['etudiant']->findAll(
-          "courriel='{$this->params['data']['courriel']}'",
-          array('id','nom','prenom','courriel'));
+//      $ret = $this->models['etudiant']->findAll(
+//          "courriel='{$this->params['data']['courriel']}'",
+//          array('id','nom','prenom','courriel'));
+     $ret = $this->models['etudiant']->findBySql("SELECT e.id, nom, prenom, courriel, MINUTE(TIMEDIFF(NOW(), eve.created)) AS lastrequest FROM etudiants AS e LEFT JOIN evetudiants AS eve ON e.id=eve.id ".
+     "WHERE (evenement=405 OR ISNULL(evenement)) AND courriel='{$this->params['data']['courriel']}' ORDER BY eve.created DESC LIMIT 1");
           
       if ($ret)
       {
         $etudiant = current($ret);
-        $this->models['evetudiant']->logEvent(405,$etudiant['id'],"infos perdu; pour {$this->params['data']['courriel']}");
-        
-        $newP = strtolower($this->randomPassword(6));
 
-    		$sql = "UPDATE {$this->models['etudiant']->table} SET motpasse=PASSWORD('$newP') WHERE id={$etudiant['id']}";
-    		$this->db->query($sql);
+//$this->print_pre($etudiant);
 
-        $this->courrielPerduInfos($etudiant['courriel'], $etudiant['id'], $newP);
-        $this->set('email_sent', true);
+        if ($etudiant['lastrequest'] == '' || $etudiant['lastrequest'] > $minuteDelay)
+        {
+          $this->models['evetudiant']->logEvent(405,$etudiant['id'],"infos perdu; pour {$this->params['data']['courriel']}");
+          
+          $newP = strtolower($this->randomPassword(6));
+  
+      		$sql = "UPDATE {$this->models['etudiant']->table} SET motpasse=PASSWORD('$newP') WHERE id={$etudiant['id']}";
+      		$this->db->query($sql);
+  
+          $this->courrielPerduInfos($etudiant['courriel'], $etudiant['id'], $newP);
+          $this->set('email_sent', true);
+        }
+        else
+        {
+          $this->models['etudiant']->validationErrors['delay'] = $minuteDelay;
+        }
       }
       else
       {

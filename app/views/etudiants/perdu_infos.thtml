@@ -1,7 +1,8 @@
   <h2 id="etTitre"><?=htmlentities("Récupération de vos informations")?></h2>
 
   <?=$html->tagErrorMsg('etudiant/courriel', htmlentities('L\'adresse entrée est inconnue'))?>
-  <?=($this->etudiant->validationErrors ? '<p>'.htmlentities('Êtes-vous déjà inscrit ? Si non, passez à ').$html->linkTo('l\'inscription',"/etudiants/inscription_choix").'. '.htmlentities('Si oui, l\'avez-vous confirmée en lisant votre courriel ? ').'</p>' :'')?>
+  <?=$html->tagErrorMsg('etudiant/delay', htmlentities("La récupération d'information est limitée à 1 fois par {$this->etudiant->validationErrors['delay']} minutes. Veuillez réessayer plus tard."))?>
+  <?=(!empty($this->etudiant->validationErrors['courriel']) ? '<p>'.htmlentities('Êtes-vous déjà inscrit ? Si non, passez à ').$html->linkTo('l\'inscription',"/etudiants/inscription_choix").'. '.htmlentities('Si oui, l\'avez-vous confirmée en lisant votre courriel ? ').'</p>' :'')?>
 
   <?=(!empty($email_sent) ? htmlentities('Courriel envoyé'):'')?>
 
