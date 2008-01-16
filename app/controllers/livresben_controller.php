@@ -888,24 +888,36 @@ class LivresbenController extends LivresbenHelper
     
     if (intval($amountLimit) > 0)
     {
-      $ret = $this->models['livre']->findBySql(
-      
-              "SELECT CONCAT(prenom, ' ', nom) AS nom, CEILING(SUM(prix)*0.96) AS montant ".
+      $sql =  "SELECT CONCAT(prenom, ' ', nom) AS nom, CEILING(SUM(prix)*0.96) AS montant ".
               "FROM etudiants AS e JOIN livres AS l ON e.id=l.codebar ".
               "JOIN facture_lignes AS fl ON fl.livre_id=l.id ".
-              "JOIN factures as f ON f.id=fl.parent_id ". (!$test ? "AND f.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) " :'') .
+              "JOIN factures as f ON f.id=fl.parent_id AND f.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) " .
               "WHERE codebar!=0 GROUP BY codebar ".
-              "HAVING montant > $amountLimit ORDER BY montant DESC, nom, prenom" . ($test ? ' LIMIT 10' :'') );
+              "HAVING montant > $amountLimit ORDER BY montant DESC, nom, prenom";
+
               
-      $this->set('data', (!empty($ret) ? $ret : array(array('nom'=>'rien', 'montant'=>'0')) )  );
+
+      if ($test) {
+        
+        $aggregateSql = "SELECT FLOOR(montant/20)*20 AS lim, SUM(montant) AS total, COUNT(montant) AS nb ".
+                        "FROM ( $sql ) AS t GROUP BY FLOOR(montant/20) ORDER BY lim DESC";
+
+        $ret = $this->models['livre']->findBySql( $sql );
+        $this->set('data', (!empty($ret) ? $ret : array(array('lim'=>'0', 'total'=>'0', 'nb'=>'0')) )  );
+          
+      } else {
   
-      $abs_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_FILENAME']);
-      $rel_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_NAME']);
+        $ret = $this->models['livre']->findBySql( $sql );
+        $this->set('data', (!empty($ret) ? $ret : array(array('nom'=>'rien', 'montant'=>'0')) )  );
   
-      $this->set('filename', "cheque_batch_$amountLimit.pdf");
-      $this->set('downloadfile', "cheque_batch_$amountLimit.pdf");
-      $this->set('redirect', "{$this->base}/pages/menu_ben");
-      $this->render('cheque_pdf','ask_download');
+        $abs_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_FILENAME']);
+        $rel_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_NAME']);
+    
+        $this->set('filename', "cheque_batch_$amountLimit.pdf");
+        $this->set('downloadfile', "cheque_batch_$amountLimit.pdf");
+        $this->set('redirect', "{$this->base}/pages/menu_ben");
+        $this->render('cheque_pdf','ask_download');
+      }
     }
 
   }
