@@ -902,7 +902,7 @@ class LivresbenController extends LivresbenHelper
         $aggregateSql = "SELECT FLOOR(montant/20)*20 AS lim, SUM(montant) AS total, COUNT(montant) AS nb ".
                         "FROM ( $sql ) AS t GROUP BY FLOOR(montant/20) ORDER BY lim DESC";
 
-        $ret = $this->models['livre']->findBySql( $sql );
+        $ret = $this->models['livre']->findBySql( $aggregateSql );
         $this->set('data', (!empty($ret) ? $ret : array(array('lim'=>'0', 'total'=>'0', 'nb'=>'0')) )  );
           
       } else {
