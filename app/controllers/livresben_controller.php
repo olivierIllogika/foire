@@ -373,8 +373,14 @@ class LivresbenController extends LivresbenHelper
   ///
   function pick_board()
   {
-    $ret = $this->models['actions_recente']->findBySql("SELECT nom, l.codebar, l.id, l.genie, l.titre, l.isbn, l.prix FROM actions_recentes as a JOIN livres as l ON a.codebar=l.codebar LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE ISNULL(livre_id) AND en_consigne=1  ORDER BY a.created, l.codebar, RIGHT(l.id,4), l.genie");
-    
+    $ret = $this->models['actions_recente']->findBySql(
+      "SELECT nom, l.codebar, l.id, l.genie, l.titre, l.isbn, l.prix ".
+      "FROM actions_recentes as a JOIN livres as l ON a.codebar=l.codebar ".
+      "JOIN (SELECT DISTINCT(id) FROM evlivres WHERE evenement=101 AND created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)) AS evl ON evl.id=l.id ".
+      "LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id ".
+      "WHERE ISNULL(livre_id) AND en_consigne=1  ".
+      "ORDER BY a.created, l.codebar, RIGHT(l.id,4), l.genie");
+
     $this->set('data', $ret ? $ret : array());
     $this->set('refresh',3);
     $this->render('pick_board', 'minimal');
@@ -519,7 +525,12 @@ class LivresbenController extends LivresbenHelper
     ///
     if ($input == 'suivant')
     {
-      $ret = $this->models['livre']->findBySql("SELECT isnull(livre_id) AS unsold, CEILING(SUM(prix)*0.96) AS s, COUNT(*) AS c FROM livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} GROUP BY ISNULL(livre_id) ORDER BY isnull(livre_id)");
+      $ret = $this->models['livre']->findBySql(
+        "SELECT isnull(livre_id) AS unsold, CEILING(SUM(prix)*0.96) AS s, COUNT(*) AS c ".
+        "FROM livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id JOIN ".
+        "(SELECT DISTINCT(id) FROM evlivres WHERE evenement=101 AND created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)) AS evl ON evl.id=l.id ".
+        "WHERE en_consigne=1 AND l.codebar={$_SESSION['persistent']['etudiant']} ".
+        "GROUP BY ISNULL(livre_id) ORDER BY isnull(livre_id)");
 
       if ($ret)
       {
