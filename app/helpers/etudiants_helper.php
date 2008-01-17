@@ -85,8 +85,6 @@ class EtudiantsHelper extends AppController
     "(en ordre de préférence)\n".
     "Votre carte étudiante\n".
     "OU\n".
-    "Votre reçu (ou celui de quelqu'un d'autre) en mentionnant le nom du consignataire\n".
-    "OU\n".
     "Une carte d'identité avec photo\n\n";
 
     return $body;
