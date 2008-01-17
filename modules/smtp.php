@@ -18,7 +18,7 @@
 
 
 define("SMTP_ADDR", 'smtp.polymtl.ca');
-define("SMTP_PORT", 125);
+define("SMTP_PORT", 25);
 define("DOMAIN", 'polymtl.ca');
 //define("REAL_NAME","Foire aux Livres");
 define("ORG_EMAIL", 'Foire aux Livres <foire@step.polymtl.ca>');
