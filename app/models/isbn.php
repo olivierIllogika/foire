@@ -206,7 +206,7 @@ echo '</pre>';
 
         $info['titre'] = $info['auteur'] = '';
 
-        $ret = call_user_func(array(&$this, $try), &$info, $isbn10);
+        $ret = call_user_func(array(&$this, $try), $info, $isbn10);
 /*
         if (!$ret && class_exists('mailmsg'))
         {
