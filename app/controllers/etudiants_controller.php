@@ -198,7 +198,7 @@ class EtudiantsController extends EtudiantsHelper
 //          "courriel='{$this->params['data']['courriel']}'",
 //          array('id','nom','prenom','courriel'));
      $ret = $this->models['etudiant']->findBySql("SELECT e.id, nom, prenom, courriel, TIME_TO_SEC(TIMEDIFF(NOW(), eve.created)) AS lastrequest FROM etudiants AS e LEFT JOIN evetudiants AS eve ON e.id=eve.id and evenement=405 ".
-     "WHERE (evenement=405 OR ISNULL(evenement)) AND courriel='{$this->params['data']['courriel']}' ORDER BY eve.created DESC LIMIT 1");
+     "WHERE (evenement=405 OR ISNULL(evenement)) AND courriel like '{$this->params['data']['courriel']}' ORDER BY eve.created DESC LIMIT 1");
           
       if ($ret)
       {
@@ -247,7 +247,7 @@ class EtudiantsController extends EtudiantsHelper
   {
     $this->pageTitle .= htmlentities(" - Inscription des consignataires");
 
-
+    $this->params['data']['courriel'] = strtolower($this->params['data']['courriel']);
     /* pre-processing de données */
     if ($this->params['data']['source'] == 'etudiant')
     {

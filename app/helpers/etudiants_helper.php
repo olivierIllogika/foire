@@ -134,6 +134,7 @@ class EtudiantsHelper extends AppController
   function checkDuplicates($courriel='-', $id=-1)
   {
     /* AND confirme=1 */
+    $courriel = strtolower($courriel);
     $data = $this->models['etudiant']->findAll("(id = $id OR courriel='$courriel') ", array('courriel','id','confirme'));
     
     if ($data)
@@ -148,7 +149,7 @@ class EtudiantsHelper extends AppController
         else
         {
           if ($row['id'] == $id)  return $id;
-          if ($row['courriel'] == $courriel)  return $courriel;
+          if (strtolower($row['courriel']) == $courriel)  return $courriel;
         }
       }
     }
