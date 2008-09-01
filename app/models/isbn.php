@@ -206,7 +206,7 @@ echo '</pre>';
 
         $info['titre'] = $info['auteur'] = '';
 
-        $ret = call_user_func(array(&$this, $try), $info, $isbn10);
+        $ret = call_user_func(array(&$this, $try), &$info, $isbn10);
 /*
         if (!$ret && class_exists('mailmsg'))
         {
@@ -325,22 +325,18 @@ echo '</pre>';
     $contents = $this->getWebContent($info['link'], '<'.'body');
 
     $meta_description = $this->getMetaContent($contents,'description');
-    $meta_d_array = explode(', ', $meta_description);
+    $meta_d_array = explode(': ', $meta_description);
 
     $meta_keywords = $this->getMetaContent($contents,'keywords');
-    $meta_k_array = explode(', ', $meta_keywords);
+    $meta_k_array = explode(',', $meta_keywords);
 
+    $info['titre'] = $meta_k_array[0];
+    $info['auteur'] = $meta_d_array[2];
 
-    for ($i = 0; $i < count($meta_d_array); $i++)
-      if ($meta_d_array[$i] == $meta_k_array[$i])
-        $pos = $i+1;
-      else
-        break;
-
-    $info['titre'] = implode(', ', array_slice($meta_d_array,0,$pos));
-    $info['auteur'] = implode(', ', array_slice($meta_d_array,$pos));
-
-    return true;
+    if (($info['titre'] == '' || $info['auteur'] == '') && $meta_description && $meta_keywords)
+      return false; // return false if possibly broken
+    else
+      return true;
   }
 
 // http://www.amazon.com/exec/obidos/ASIN/2744014850
