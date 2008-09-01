@@ -193,9 +193,9 @@ echo '</pre>';
 
     $try_array = array(
                         'local_db_fetch',
-                        'amazone_fr',
-                        'amazone_ca',
-                        'amazone_com',
+                        'amazon_fr',
+                        'amazon_ca',
+                        'amazon_com',
                       );
 
     foreach($try_array as $try)
@@ -304,20 +304,27 @@ echo '</pre>';
 ////////  NET SEARCH BELOW  ////////////////////////////
 ////////////////////////////////////////////////////////
 
-  function amazone_ca(&$info, $isbn, $link='')
+  function amazon_ca(&$info, $isbn, $link='')
   {
-    $info['source'] = 'amazone.ca';
+    $info['source'] = 'amazon.ca';
     $info['link'] = "http://www.amazon.ca/exec/obidos/ASIN/$isbn";
-    return $this->amazone_fr($info,$info['link']);
+    return $this->amazon_fr($info,$info['link']);
   }
 
-  function amazone_fr(&$info, $isbn, $link='')
+  function amazon_com(&$info, $isbn, $link='')
   {
-    // this hack allows for content layout wrapper (like amazone_ca)
+    $info['source'] = 'amazon.com';
+    $info['link'] = "http://www.amazon.com/exec/obidos/ASIN/$isbn";
+    return $this->amazon_fr($info,$info['link']);
+  }
+
+  function amazon_fr(&$info, $isbn, $link='')
+  {
+    // this hack allows for content layout wrapper (like amazon_ca)
     if ($link == '')
     {
       $info['link'] = "http://www.amazon.fr/exec/obidos/ASIN/$isbn";
-      $info['source'] = 'amazone.fr';
+      $info['source'] = 'amazon.fr';
     }
     else
       $info['link'] = $link;
@@ -325,56 +332,52 @@ echo '</pre>';
     $contents = $this->getWebContent($info['link'], '<'.'body');
 
     $meta_description = $this->getMetaContent($contents,'description');
-    $meta_d_array = explode(': ', $meta_description);
-
     $meta_keywords = $this->getMetaContent($contents,'keywords');
-    $meta_k_array = explode(',', $meta_keywords);
 
-    $info['titre'] = $meta_k_array[0];
-    $info['auteur'] = $meta_d_array[2];
+    $data = $this->amazonParse($meta_description, $meta_keywords, $isbn);
 
-    if (($info['titre'] == '' || $info['auteur'] == '') && $meta_description && $meta_keywords)
+    $info['titre'] = $data[0];
+    $info['auteur'] = $data[1];
+
+    if (($info['titre'] == '' || $info['auteur'] == '') && $meta_description != '' && $meta_keywords != '')
       return false; // return false if possibly broken
     else
       return true;
   }
 
-// http://www.amazon.com/exec/obidos/ASIN/2744014850
-
-  function amazone_com(&$info, $isbn, $link='')
+  
+  /*
+  :: best test case found ::
+  $desc = "Amazon.fr: Guide pour lire, comprendre et pratiquer : L'Alimentation ou la Troisi&egrave;me M&eacute;decine: Dominique Seignalet, Anne Seignalet, Henri Joyeux: Livres";
+  $keyw = "Guide pour lire, comprendre et pratiquer : L'Alimentation ou la Troisi&egrave;me M&eacute;decine,Fran&ccedil;ois-Xavier de Guibert,2755401559,Alimentation,Di&eacute;t&eacute;tique,Sant&eacute;-di&eacute;t&eacute;tique-beaut&eacute;";
+  $isbn = '2755401559';
+  */
+  function amazonParse($description, $keywords, $isbn)
   {
-    // this hack allows for content layout wrapper
-    if ($link == '')
+    $isbnPos = strpos($keywords, ','.$isbn);
+    if ($isbnPos === false) return array('','','');
+    
+    $titlePos = strpos($description, ': ') + 2;
+    if ($titlePos === false) return array('','','');
+    
+    $dtitle = substr($description, $titlePos);
+    $ktitle = substr($keywords, 0, $isbnPos);
+    
+    $max_iter = 8;
+    do
     {
-      $info['link'] = "http://www.amazon.com/exec/obidos/ASIN/$isbn";
-      $info['source'] = 'amazone.com';
-    }
-    else
-      $info['link'] = $link;
-
-    $contents = $this->getWebContent($info['link'], '<'.'body');
-
-    $meta_description = $this->getMetaContent($contents,'description');
-    $meta_keywords = $this->getMetaContent($contents,'keywords');
-
-    if ($meta_description == '') return true; // not found but not broken
-/*
-<meta name="description" content="Amazon.com: Books: Open GL 1.2 : Guide officiel by Mason Woo,Jackie Neider,Tom Davis,Dave Shreiner" />
-<meta name="keywords" content="Open GL 1.2 : Guide officiel,Mason Woo,Jackie Neider,Tom Davis,Dave Shreiner,2744014850" />
-*/
-    // found a parsing error in the wrapper
-    if (!strstr($meta_description, 'Books:')) return false;
-
-    $cleaned_desc = preg_replace('/[ ]*Amazon\.com:[ ]*Books:[ ]*/', '', $meta_description);
-
-    $meta_d_array = explode(' by ', $cleaned_desc);
-
-    $author_index = count($meta_d_array)-1;
-
-    $info['titre'] = implode(' by ', array_slice($meta_d_array,0,$author_index));
-    $info['auteur'] = $meta_d_array[$author_index];
-
-    return true;
+      $commaPos = strrpos($ktitle, ','); // look for title/author delimiter
+      if ($commaPos)
+        $ktitle = trim(substr($ktitle, 0, $commaPos)); // trim string
+    
+      $titlePos = strpos($dtitle, $ktitle); // try matching
+    } while($titlePos === false && --$max_iter > 0);
+    
+    $titleLen = strlen($ktitle);
+    $author = trim(substr($dtitle, $titleLen, strrpos($dtitle, ':') - $titleLen), " :");
+    $editior = trim(substr($keywords, $titleLen, $isbnPos - $titleLen), " ,");
+    
+    return array($ktitle, $author, $editior);
   }
 
   function getWebContent($link, $stop_on='')
