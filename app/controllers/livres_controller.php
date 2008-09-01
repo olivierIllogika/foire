@@ -218,14 +218,14 @@ echo '</pre>';
 die();
 */
       // seulement 4 ou 10 caractères
-      if (!preg_match('/^([0-9]{4}$)|([0-9]{9}[0-9X]$)/', $isbn_code4))
+      if (!preg_match('/^([0-9]{4,5}$)|([0-9]{9}[0-9X]$)/', $isbn_code4))
       {
         $this->models['livre']->validationErrors['isbn_rech'] = 1;
         $this->render('ajouter_nouveau');
         return;
       }
 
-      if (strlen($isbn_code4) == 4)
+      if (strlen($isbn_code4) == 4 || strlen($isbn_code4) == 5)
       {
         // code4
 //        $ret = $this->models['coopbook']->findAll("id = $isbn_code4");

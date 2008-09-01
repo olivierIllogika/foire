@@ -141,7 +141,7 @@ echo '</pre>';
       return $if_blank;
     }
 
-    if (strlen($isbn) < 5)
+    if (strlen($isbn) <= 5)
     {
       return $isbn; // code4
     }
