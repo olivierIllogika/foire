@@ -308,14 +308,14 @@ echo '</pre>';
   {
     $info['source'] = 'amazon.ca';
     $info['link'] = "http://www.amazon.ca/exec/obidos/ASIN/$isbn";
-    return $this->amazon_fr($info,$info['link']);
+    return $this->amazon_fr(&$info, $isbn, $info['link']);
   }
 
   function amazon_com(&$info, $isbn, $link='')
   {
     $info['source'] = 'amazon.com';
     $info['link'] = "http://www.amazon.com/exec/obidos/ASIN/$isbn";
-    return $this->amazon_fr($info,$info['link']);
+    return $this->amazon_fr(&$info, $isbn, $info['link']);
   }
 
   function amazon_fr(&$info, $isbn, $link='')
