@@ -625,7 +625,7 @@ class LivresbenController extends LivresbenHelper
     if (!empty($_SESSION['persistent']['etudiant']) && ($input == 'argent' || $input == 'cheque' || $input == 'imp_cheque') )
     {
       // livres vendus (et en consigne)
-      $ret = $this->models['livre']->findBySql("SELECT id, titre, prix FROM livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id WHERE en_consigne=1 AND NOT ISNULL(livre_id) AND codebar={$_SESSION['persistent']['etudiant']} ");
+      $ret = $this->models['livre']->findBySql("SELECT id, titre, prix FROM livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id JOIN factures AS f ON f.id=fl.parent_id WHERE f.created > DATE_SUB(NOW(),INTERVAL 30 DAY) AND en_consigne=1 AND NOT ISNULL(livre_id) AND codebar={$_SESSION['persistent']['etudiant']} ");
 
       if (!$ret)
       {
