@@ -70,7 +70,7 @@ class FacturesController extends FacturesHelper
 
     $this->set('filename', "facture.pdf");
     $this->set('downloadfile', "facture.pdf");
-    $this->set('redirect', "{$this->base}/facture");
+    $this->set('redirect', "{$this->base}/factures");
     $this->render('facture_pdf','ask_download');
 //    $this->render('f_test');
   }
