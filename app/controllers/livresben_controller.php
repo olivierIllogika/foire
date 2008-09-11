@@ -893,13 +893,32 @@ class LivresbenController extends LivresbenHelper
     $this->render('cheque_pdf','ask_download');
   }
 
-  function cheque_batch($amountLimit, $test=false)
+  function cheque_retard_batch($amountLimit, $test=false)
+  {
+    $this->cheque_batch($amountLimit, $test, $onTime=false);
+    if ($test)
+      $this->render('cheque_batch');
+  }
+  
+  function cheque_batch($amountLimit, $test=false, $onTime=true)
   {
     $this->sessionCheck(SECURITY_LEVEL_MANAGMENT);
     
+    if ($onTime)
+    {
+      $percent = 0.96;
+      $pdfSuffix = '';
+    }
+    else
+    {
+      $percent = 0.85;
+      $pdfSuffix = '_retard';
+    }
+      
+    
     if (intval($amountLimit) > 0)
     {
-      $sql =  "SELECT CONCAT(prenom, ' ', nom) AS nom, CEILING(SUM(prix)*0.96) AS montant ".
+      $sql =  "SELECT CONCAT(prenom, ' ', nom) AS nom, CEILING(SUM(prix)*$percent) AS montant ".
               "FROM etudiants AS e JOIN livres AS l ON e.id=l.codebar ".
               "JOIN facture_lignes AS fl ON fl.livre_id=l.id ".
               "JOIN factures as f ON f.id=fl.parent_id AND f.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) " .
@@ -924,8 +943,8 @@ class LivresbenController extends LivresbenHelper
         $abs_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_FILENAME']);
         $rel_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_NAME']);
     
-        $this->set('filename', "cheque_batch_$amountLimit.pdf");
-        $this->set('downloadfile', "cheque_batch_$amountLimit.pdf");
+        $this->set('filename', "cheque_batch_$amountLimit$pdfSuffix.pdf");
+        $this->set('downloadfile', "cheque_batch_$amountLimit$pdfSuffix.pdf");
         $this->set('redirect', "{$this->base}/pages/menu_ben");
         $this->render('cheque_pdf','ask_download');
       }
