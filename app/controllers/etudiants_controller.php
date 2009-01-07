@@ -39,7 +39,8 @@ class EtudiantsController extends EtudiantsHelper
         return;
       }
 
-
+      $this->params['data']['motpasse'] = mysql_escape_string($this->params['data']['motpasse']);
+      
       $etudiant = $this->models['etudiant']->find(
           "confirme =1 AND ".
           "(id=$id OR ( LEFT(id,5) = '29334' AND CAST( RIGHT(id,9) AS UNSIGNED) = $id  ))".
