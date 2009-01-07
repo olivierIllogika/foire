@@ -188,11 +188,12 @@ echo '</pre>';
   }
 ////////////////////////////////////////////
 ////////////////////////////////////////////
-  function getInfo($isbn10)
+  function getInfo($isbn10, $force=false)
   {
 
+    // test at http://localhost/foire-work/isbns/outil_insertion
     $try_array = array(
-                        'local_db_fetch',
+                        $force ? '' : 'local_db_fetch',
                         'amazon_fr',
                         'amazon_ca',
                         'amazon_com',
@@ -225,7 +226,7 @@ echo '</pre>';
         {
           $body = "ISBN wrapper '$try()' might be broken (with $isbn10)\n\n";
           $body .= "Check ".__FILE__." \n\n";
-          $body .= "Caller was in {$_SERVER['SCRIPT_NAME']} \n\n";
+          $body .= "Caller was in {$_SERVER['SCRIPT_NAME']} # {$_SERVER['REQUEST_URI']} \n\n";
 
           @mail('lope@step.polymtl.ca', 'RAPPORT D\'ERREUR', $body);
 
@@ -252,7 +253,7 @@ echo '</pre>';
           // data found
           if ($try != 'local_db_fetch')
           {
-            $this->local_db_cache($info);
+            $this->local_db_cache($info, $force);
           }
 
           break;
@@ -282,9 +283,18 @@ echo '</pre>';
 ////////  DB SEARCH BELOW  ////////////////////////////
 ////////////////////////////////////////////////////////
 
-  function local_db_cache($info)
+  function local_db_cache($info, $wasForced=false)
   {
-    return $this->insertWithId($info, false, $info['id']);
+	$canInsert = true;
+	if ($wasForced)
+	{
+		$result = $this->findAll("id={$info['id']}", array('titre','auteur','source','link'));
+		$canInsert = empty($result);
+	}
+	if ($canInsert)
+	{
+		$this->insertWithId($info, false, $info['id']);
+	}
   }
 
   function local_db_fetch(&$info, $isbn, $link='')
@@ -340,7 +350,20 @@ echo '</pre>';
     $info['auteur'] = $data[1];
 
     if (($info['titre'] == '' || $info['auteur'] == '') && $meta_description != '' && $meta_keywords != '')
+    {
+      if (0)
+      {
+        $this->log_miss("reading {$info['link']} yields:\r\n".
+          "meta_description:\r\n".
+          "$meta_description\r\n".
+          "meta_keywords:\r\n".
+          "$meta_keywords\r\n".
+          '');
+      }
+      $info['metadescription'] = $meta_description;
+      $info['metakeywords'] = $meta_keywords;
       return false; // return false if possibly broken
+    }
     else
       return true;
   }
@@ -375,9 +398,9 @@ echo '</pre>';
     
     $titleLen = strlen($ktitle);
     $author = trim(substr($dtitle, $titleLen, strrpos($dtitle, ':') - $titleLen), " :");
-    $editior = trim(substr($keywords, $titleLen, $isbnPos - $titleLen), " ,");
+    $editor = trim(substr($keywords, $titleLen, $isbnPos - $titleLen), " ,");
     
-    return array($ktitle, $author, $editior);
+    return array($ktitle, $author, $editor);
   }
 
   function getWebContent($link, $stop_on='')

@@ -34,7 +34,8 @@ class IsbnsController extends IsbnsHelper
         }
         else
         {
-          $info = $this->getInfo($valid_isbn);
+          $info = $this->models['isbn']->getInfo($valid_isbn, $force=true);
+          $this->set('info', $info);
           $this->render();
         } //len = 9
       }//valid isbn
