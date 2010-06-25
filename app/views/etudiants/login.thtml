@@ -62,7 +62,7 @@
 <div id="coopPub">
  <span>Pour vos livres neufs,</span>
  <br />
- <?=$html->imageTag('coopoly_small.gif', 'Coopoly, votre librairie de g&eacute;nie')?>
+ <img src="../img/coopoly_small.gif" alt="Coopoly, votre librairie de g&eacute;nie" />
 </div>
   
 
