@@ -33,7 +33,7 @@ class FacturesController extends FacturesHelper
 
       $sql = "SELECT fl.parent_id ".
       "FROM facture_lignes AS fl JOIN livres AS l ON fl.livre_id = l.id JOIN factures AS f ON f.id=fl.parent_id, facture_lignes AS flb JOIN livres AS lb ON lb.id=flb.livre_id ".
-      "WHERE RIGHT(l.id, 4) = {$matches[1][0]} AND RIGHT(lb.id, 4) = {$matches[1][1]} AND l.genie = {$matches[2][0]} AND lb.genie = {$matches[2][1]} AND fl.parent_id = flb.parent_id AND f.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
+      "WHERE RIGHT(l.id, 4) = {$matches[1][0]} AND RIGHT(lb.id, 4) = {$matches[1][1]} AND l.genie = {$matches[2][0]} AND lb.genie = {$matches[2][1]} AND fl.parent_id = flb.parent_id AND f.created > DATE_SUB(CURDATE(), INTERVAL 60 DAY)";
 
     }
     elseif ($total_ref == 1) {
