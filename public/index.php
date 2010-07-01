@@ -82,8 +82,20 @@ config('tags', 'database');
 
 if (class_exists('DATABASE_CONFIG'))
 {
-	$DB = DboFactory::getInstance('default');
-	loadModels();
+    $host = $_SERVER["HTTP_HOST"];
+    if (strpos($host, 'poly') !== false)
+    {
+        $DB = DboFactory::getInstance('localhost');
+    }
+    elseif (strpos($host, 'ets') !== false)
+    {
+        $DB = DboFactory::getInstance('ets');
+    }
+    else
+    {
+        $DB = DboFactory::getInstance('localhost');
+    }
+    loadModels();
 }
 
 //RUN THE SCRIPT
