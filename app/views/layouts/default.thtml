@@ -12,7 +12,7 @@
 	<?=$html->cssTag('foire')?>
 
 </head>
-<body onload="if (top!=self) top.location=self.location;">
+<body onload="if (top!=self && top.location.href.indexOf('notes.html') == -1) top.location=self.location;">
 <div id="container">
 
 <?php if (empty($compact_header) || !$compact_header): ?>
