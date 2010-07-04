@@ -13,17 +13,12 @@
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-// définir ORG_EMAIL, REAL_NAME, SMTP_ADDR, SMTP_PORT, DOMAIN -> define("ORG_EMAIL", 'foire@step.polymtl.ca');
+// config in smtpconfig.php
 ////////////////////////////////////////////////////////////////////////////////
 
+require_once 'smtpconfig.php';
 
-define("SMTP_ADDR", 'smtp.polymtl.ca');
-define("SMTP_PORT", 25);
-define("DOMAIN", 'polymtl.ca');
-//define("REAL_NAME","Foire aux Livres");
-define("ORG_EMAIL", 'Foire aux Livres <foire@step.polymtl.ca>');
-define("DEFAULT_CHARSET", 'iso-8859-1');
-$default_charset = 'iso-8859-1';
+$default_charset = 'UTF-8';
 
 /**
  * Returns an array of email addresses.
@@ -295,14 +290,15 @@ function sendSMTP($t, $c, $b, $subject, $body, $verbose = false, $from=ORG_EMAIL
     $cc = cornerAddrs(parseAddrs($c));
     $bcc = cornerAddrs(parseAddrs($b));
 
-    $from_addr = $from;
+    $from_addr = parseAddrs($from);
 
     $smtpServerAddress = SMTP_ADDR;
     $smtpPort = SMTP_PORT;
     $domain = DOMAIN;
     
-    $smtpConnection = fsockopen($smtpServerAddress, $smtpPort, 
-                                $errorNumber, $errorString);
+    $smtpConnection = stream_socket_client("tcp://$smtpServerAddress:$smtpPort",
+                             $errorNumber, $errorString, 10);
+
     if (!$smtpConnection) {
 
         if ($errorNumber != 0) {
@@ -323,12 +319,54 @@ function sendSMTP($t, $c, $b, $subject, $body, $verbose = false, $from=ORG_EMAIL
     
     /* Lets introduce ourselves */
     
-//    if (! isset ($use_authenticated_smtp) 
-//        || $use_authenticated_smtp == false) {
+    if (strpos($domain, 'gmail.com') !== false) 
+    {
+        // connect to gmail esmtp
+
+        fputs($smtpConnection, "EHLO $domain\r\n");
+        $tmp = fgets($smtpConnection, 1024);
+        if (errorCheck($tmp, $smtpConnection)!=5) return(0);
+
+        fputs($smtpConnection, "STARTTLS\r\n");
+        $tmp = fgets($smtpConnection, 1024);
+        if (errorCheck($tmp, $smtpConnection)!=5) return(0);
+
+        if (!stream_socket_enable_crypto($smtpConnection, true, STREAM_CRYPTO_METHOD_TLS_CLIENT))
+        {
+            echo '<br /><br />Failed to set crypto TLS<br />';
+            return(0);
+        }
+
+        fputs($smtpConnection, "EHLO $domain\r\n");
+        $tmp = fgets($smtpConnection, 1024);
+        if (errorCheck($tmp, $smtpConnection)!=5) return(0);
+
+        fputs($smtpConnection, "AUTH LOGIN\r\n");
+        $tmp = fgets($smtpConnection, 1024);
+        if (errorCheck($tmp, $smtpConnection)!=5) {
+            return(0);
+        }
+
+        fputs($smtpConnection, base64_encode (ESTMP_USERNAME) . "\r\n");
+        $tmp = fgets($smtpConnection, 1024);
+        if (errorCheck($tmp, $smtpConnection)!=5) {
+            return(0);
+        }
+        
+        fputs($smtpConnection, base64_encode (ESTMP_PASSWORD) . "\r\n");
+        $tmp = fgets($smtpConnection, 1024);
+        if (errorCheck($tmp, $smtpConnection)!=5) {
+            return(0);
+        }
+
+    }
+    else
+    {
         fputs($smtpConnection, "HELO $domain\r\n");
         $tmp = fgets($smtpConnection, 1024);
         if (errorCheck($tmp, $smtpConnection)!=5) return(0);
-/*    }  else {
+    }  /*else {
+        
         fputs($smtpConnection, "EHLO $domain\r\n");
         $tmp = fgets($smtpConnection, 1024);
         if (errorCheck($tmp, $smtpConnection)!=5) return(0);
@@ -354,7 +392,7 @@ function sendSMTP($t, $c, $b, $subject, $body, $verbose = false, $from=ORG_EMAIL
     }*/
     
     /* Ok, who is sending the message? */
-    fputs($smtpConnection, "MAIL FROM: <$from_addr>\r\n");
+    fputs($smtpConnection, "MAIL FROM: <{$from_addr[0]}>\r\n");
     $tmp = fgets($smtpConnection, 1024);
     if (errorCheck($tmp, $smtpConnection)!=5) {
         return(0);
@@ -395,7 +433,7 @@ function sendSMTP($t, $c, $b, $subject, $body, $verbose = false, $from=ORG_EMAIL
     }
 
     /* Send the message */
-    $headerlength = write822Header ($smtpConnection, $t, $c, $b, $subject, $from_addr);
+    $headerlength = write822Header ($smtpConnection, $t, $c, $b, $subject, $from);
     $bodylength = writeBody($smtpConnection, $body, "\r\n", true);
     
     fputs($smtpConnection, ".\r\n"); /* end the DATA part */
@@ -511,7 +549,7 @@ function errorCheck($line, $smtpConnection, $verbose = false) {
 
         echo '<br /><br />'.$msg;
     }
-    if (! $verbose) return $status;
+    if (!$verbose && $status != 0) return $status;
     return $err_num;
 }
 

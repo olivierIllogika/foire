@@ -72,6 +72,9 @@ require_once ROOT.'libs/object.php';
 require_once ROOT.'libs/neat_array.php';
 require_once ROOT.'libs/inflector.php';
 
+require_once ROOT.'modules/smtpconfig.php';
+require_once ROOT.'config/school.php';
+
 DEBUG? error_reporting(E_ALL): error_reporting(0);
 
 $TIME_START = getMicrotime();
@@ -86,14 +89,17 @@ if (class_exists('DATABASE_CONFIG'))
     if (strpos($host, 'poly') !== false)
     {
         $DB = DboFactory::getInstance('localhost');
+        School::$instance = new SchoolPoly();
     }
     elseif (strpos($host, 'ets') !== false)
     {
         $DB = DboFactory::getInstance('ets');
+        School::$instance = new SchoolETS();
     }
     else
     {
         $DB = DboFactory::getInstance('localhost');
+        School::$instance = new SchoolETS();
     }
     loadModels();
 }
