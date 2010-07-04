@@ -59,9 +59,9 @@ class Isbnstat extends AppModel
   {
 
 		$sql = 
-      "REPLACE isbnstats (id, count, min, max, avg, range, stddev) ".
+      "REPLACE isbnstats (id, count, min, max, avg, `range`, stddev) ".
       "SELECT isbn, COUNT(*) as c,  MIN(prix) AS min, MAX(prix) AS max, ".
-      "AVG(prix) AS avg, MAX(prix)-MIN(prix) AS range, STDDEV(prix) AS stddev ".
+      "AVG(prix) AS avg, MAX(prix)-MIN(prix) AS `range`, STDDEV(prix) AS stddev ".
       "FROM livres WHERE isbn!=0 GROUP BY isbn HAVING c >= $minCount ORDER BY isbn";
  
 //    if ($_SERVER['REMOTE_ADDR'] != '127.0.0.1')
@@ -87,11 +87,11 @@ class Isbnstat extends AppModel
     $listeCourriel[] = 'lope@step.polymtl.ca';
 
     $body =
-    "Vous recevez ce courriel parce qu'un de vos livres inscrit à la Foire possède maintenant des statistiques de prix.\n\n".
+    "Vous recevez ce courriel parce qu'un de vos livres inscrit ï¿½ la Foire possï¿½de maintenant des statistiques de prix.\n\n".
 
-    "Le livre intitulé \"$titre\" se trouve maintenant en nombre suffisant pour en afficher une moyenne de prix significative.  Les statistiques sont fournis à titre indicatif seulement; méfiez-vous en!  Quelques informations sont disponibles à ce sujet dans la section <<FAQ>>.\n\n".
+    "Le livre intitulï¿½ \"$titre\" se trouve maintenant en nombre suffisant pour en afficher une moyenne de prix significative.  Les statistiques sont fournis ï¿½ titre indicatif seulement; mï¿½fiez-vous en!  Quelques informations sont disponibles ï¿½ ce sujet dans la section <<FAQ>>.\n\n".
     
-    "Les statistiques des livres sont une fonctionnalité nouvellement ajoutée.  Les avis par courriel pourraient être considérés abusif.  Svp, soyez indulgent jusqu'à ce que le système soit au point.  Soyez assuré que tous les efforts sont mis en oeuvres pour ne pas surcharger votre boîte de courrier.\n\n".
+    "Les statistiques des livres sont une fonctionnalitï¿½ nouvellement ajoutï¿½e.  Les avis par courriel pourraient ï¿½tre considï¿½rï¿½s abusif.  Svp, soyez indulgent jusqu'ï¿½ ce que le systï¿½me soit au point.  Soyez assurï¿½ que tous les efforts sont mis en oeuvres pour ne pas surcharger votre boï¿½te de courrier.\n\n".
 
     "Merci, et bonne Foire !";
 

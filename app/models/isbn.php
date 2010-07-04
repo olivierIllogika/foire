@@ -207,7 +207,7 @@ echo '</pre>';
 
         $info['titre'] = $info['auteur'] = '';
 
-        $ret = call_user_func(array(&$this, $try), &$info, $isbn10);
+        $ret = call_user_func(array(&$this, $try), $info, $isbn10);
 /*
         if (!$ret && class_exists('mailmsg'))
         {
@@ -318,14 +318,14 @@ echo '</pre>';
   {
     $info['source'] = 'amazon.ca';
     $info['link'] = "http://www.amazon.ca/exec/obidos/ASIN/$isbn";
-    return $this->amazon_fr(&$info, $isbn, $info['link']);
+    return $this->amazon_fr($info, $isbn, $info['link']);
   }
 
   function amazon_com(&$info, $isbn, $link='')
   {
     $info['source'] = 'amazon.com';
     $info['link'] = "http://www.amazon.com/exec/obidos/ASIN/$isbn";
-    return $this->amazon_fr(&$info, $isbn, $info['link']);
+    return $this->amazon_fr($info, $isbn, $info['link']);
   }
 
   function amazon_fr(&$info, $isbn, $link='')
