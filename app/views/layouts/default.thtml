@@ -1,8 +1,9 @@
+<?php header('Content-Type: text/html; charset=utf-8'); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
 <head>
 	<title><?=$title_for_layout?></title>
-	<?=$html->charsetTag('iso-8859-1')?>
+	<?=$html->charsetTag('utf-8')?>
   <meta name="author" content="Olivier-2.Martin" />
   <meta name="keywords" content="foire livres usage consigne aep association etudiants polytechnique" />
   <meta name="description" content="Vente de livres sous consigne, un service de l'AEP (Association des Etudiants de Polytechnique)" />
@@ -25,7 +26,7 @@
   
   <div id="subTitle">
     <h2>Vente de livres usag&eacute;s sous consigne</h2>
-    <h3>Un service de l'<?=(empty($kiosk) || !$kiosk ? $html->linkOut("AEP", "http://www.aep.polymtl.ca", array('title'=>'Association des &Eacute;tudiants de Polytechnique')) : 'AEP' ) ?>, votre association &eacute;tudiante</h3>
+    <h3><?=School::Get()->TagLine($html, !empty($kiosk) && $kiosk)?></h3>
   </div>
 
 <?php else: ?>
@@ -41,7 +42,7 @@
     <?=$html->linkTo('FAQ', "/faqs") ?>
     <?=$html->linkTo('Factures', "/factures") ?>
     <?=(!empty($_SESSION['etudiant']) && $_SESSION['etudiant']['niveau'] > 1 ?
-          $html->linkTo(htmlentities("BÉNÉVOLES"), "/pages/menu_ben", array('class' => 'benLink'))
+          $html->linkTo(htmlentities("Bï¿½Nï¿½VOLES"), "/pages/menu_ben", array('class' => 'benLink'))
         : $html->linkTo('&Agrave; propos...', "/pages/apropos")) ?>
   </div>
   <?php endif; ?>
@@ -70,11 +71,6 @@
 ?>
 
 <?php if (empty($_SESSION['persistent']['v2'])) : ?>
-
-<!--
-<div id="v2Temp">
-<p><?=htmlentities("Vous naviguez sur la version 2 du site de la Foire, la version officielle de l'automne 2005.  Vos commentaires sont appréciés (foire@step.polymtl.ca).")?></p>
-</div> -->
 
 <?php $_SESSION['persistent']['v2'] = 'done'; endif; ?>
 
