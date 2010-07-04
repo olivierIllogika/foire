@@ -16,7 +16,7 @@ class EtudiantsController extends EtudiantsHelper
 
   function login()
   {
-    $this->pageTitle .= htmlentities(" - Entrée des consignataires");
+    $this->pageTitle .= " - EntrÃ©e des consignataires";
 
     if (empty($this->params['data']['id']) || empty($this->params['data']['motpasse']))
     {
@@ -85,7 +85,7 @@ class EtudiantsController extends EtudiantsHelper
         }
         elseif ($etudiant['confirme'] == 0)
         {
-          // pas confirmé
+          // pas confirmÃ©
           $this->models['etudiant']->validationErrors['confirme'] = 1;
         }
         else
@@ -167,10 +167,10 @@ class EtudiantsController extends EtudiantsHelper
           // UPDATING profile
           $this->db->query("UPDATE etudiants SET $modifiedFields WHERE id=$id");
 
-          $this->flash(htmlentities('Mise à jour terminée...'),'/livres');
+          $this->flash('Mise Ã  jour terminÃ©e...','/livres');
         }
         else {
-          $this->flash(htmlentities('Aucun changement...'),'/livres');
+          $this->flash('Aucun changement...','/livres');
         }
         
       } //validation
@@ -184,7 +184,7 @@ class EtudiantsController extends EtudiantsHelper
   {
     $minuteDelay = 60;
     
-    $this->pageTitle .= htmlentities(" - Récupération de vos informations");
+    $this->pageTitle .= " - RÃ©cupÃ©ration de vos informations";
 
     if (empty($this->params['data']) )
     {
@@ -249,7 +249,7 @@ class EtudiantsController extends EtudiantsHelper
     $this->pageTitle .= htmlentities(" - Inscription des consignataires");
 
     $this->params['data']['courriel'] = strtolower($this->params['data']['courriel']);
-    /* pre-processing de données */
+    /* pre-processing de donnï¿½es */
     if ($this->params['data']['source'] == 'etudiant')
     {
       $this->params['data']['courriel'] = preg_replace('/@.+/', '', $this->params['data']['courriel']).'@polymtl.ca';
@@ -344,7 +344,7 @@ echo '</pre>';
     }
     else
     {
-      if ($this->params['data']['id']) // id suggéré (carte/permis)
+      if ($this->params['data']['id']) // id suggï¿½rï¿½ (carte/permis)
       {
         $id = $this->params['data']['id'];
         
@@ -383,7 +383,7 @@ print_r($this->params['data']);
 echo '</pre>';
 die();
 */
-      $this->flash(htmlentities('Courriel d\'inscription envoyé'),'/etudiants/inscription_choix');
+      $this->flash("Courriel d'inscription envoyÃ©",'/etudiants/inscription_choix',3);
       
     }
 
@@ -399,21 +399,21 @@ die();
       if ($row['confirme'] == 1)
       {
         $this->models['evetudiant']->logEvent(452,$id,"reconfirmation!");
-        $this->flash(htmlentities('Inscription déjà confirmée'),'/livres/');
+        $this->flash('Inscription dÃ©jÃ  confirmÃ©e','/livres/');
       }
       else
       {
         $this->models['evetudiant']->logEvent(402,$id,"confirmation");
         $row['confirme'] = 1;
         $this->models['etudiant']->save($row,false);
-        $this->flash(htmlentities('Inscription confirmée'),'/livres/');
+        $this->flash('Inscription confirmÃ©e','/livres/');
       }
 
     }
     else
     {
       // ne devrait jamais venir ici
-      $this->models['evetudiant']->logEvent(451,$id,"conf:identité inconnue");
+      $this->models['evetudiant']->logEvent(451,$id,"conf:identitÃ© inconnue");
       $this->flash(htmlentities('Identification inconnue'),'/etudiants/inscription_choix');
     }
 
@@ -425,7 +425,7 @@ die();
     
     $sender = 'Foire aux Livres <foire-noreply@step.polymtl.ca>';
 
-    $mail_title = "Récupération des livres";
+    $mail_title = "RÃ©cupÃ©ration des livres";
     $body = $this->courrielRecuperation(); // $date, $heure
 //    $body = $this->courrielRecuperationTardive(); // $date, $heure
 
@@ -433,7 +433,7 @@ die();
     $this->set('body', $body);
 
     sendSMTP($sender,'',
-            "Olivier Martin <olivier-2.martin@polymtl.ca>",
+            $gDevErrorEmail,
             '[Foire] '.$operation.' '.$mail_title,
             $body, false,$sender);
 

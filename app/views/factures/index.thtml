@@ -1,32 +1,32 @@
 <h2><?=htmlentities("Factures")?></h2>
 
 <div id="factures">
-<p><?=htmlentities("De cette section, vous pouvez rÈcupÈrer un reÁu correspondant ‡ vos achats.  Puisque chaque livre achetÈ est unique, il est possible de retracer chaque transaction gr‚ce aux informations contenues sur les Ètiquettes des livres.")?></p>
+<p>De cette section, vous pouvez r√©cup√©rer un re√ßu correspondant √† vos achats.  Puisque chaque livre achet√© est unique, il est possible de retracer chaque transaction gr√¢ce aux informations contenues sur les √©tiquettes des livres.</p>
 
 
-<h3><?=htmlentities("Ce que vous devez entrer")?></h3>
-<p><?=htmlentities("Vous devez entrer des rÈfÈrences de livre achetÈs. Le format attendu d'une rÈfÈrence est xxxx-x o˘ chaque 'x' reprÈsente un chiffre.  Vous pouvez trouver cette sÈquence sur chaque Ètiquette de livre achetÈ, ‡ gauche du code barre.")?></p>
+<h3>Ce que vous devez entrer</h3>
+<p>Vous devez entrer des r√©f√©rences de livre achet√©s. Le format attendu d'une r√©f√©rence est xxxx-x o√π chaque 'x' repr√©sente un chiffre.  Vous pouvez trouver cette s√©quence sur chaque √©tiquette de livre achet√©, √† gauche du code barre.</p>
 <p>
 <dl>
-<dt><?=htmlentities("Vous avez achetÈ deux livres ou plus")?></dt>
-<dd><?=htmlentities("Entrez deux rÈfÈrences, sÈparÈes par une virgule. Ex.: \"1234-5, 6789-0\"")?></dd>
-<dt><?=htmlentities("Vous avez achetÈ un seul livre")?></dt>
-<dd><?=htmlentities("Entrez l'unique rÈfÈrence du livre. Ex.: \"1234-5\"")?></dd>
-<dt><?=htmlentities("Vous avez achetÈ plus d'une fois ‡ la Foire")?></dt>
-<dd><?=htmlentities("Les achats ne sont pas combinÈs; vous devez traiter chaque transaction comme une facture diffÈrente")?></dd>
+<dt>Vous avez achet√© deux livres ou plus</dt>
+<dd>Entrez deux r√©f√©rences, s√©par√©es par une virgule. Ex.: "1234-5, 6789-0"</dd>
+<dt>Vous avez achet√© un seul livre</dt>
+<dd>Entrez l'unique r√©f√©rence du livre. Ex.: "1234-5"</dd>
+<dt>Vous avez achet√© plus d'une fois √† la Foire</dt>
+<dd>Les achats ne sont pas combin√©s; vous devez traiter chaque transaction comme une facture diff√©rente</dd>
 </dl>
 </p>
 
 <div id="FactureForm">
 <?=$html->formTag('/factures/facture') ?>
 
-  <?=$html->tagErrorMsg('facture/references', array(htmlentities("Vous devez entrer au moins une rÈfÈrence"),
-                                                   htmlentities("Vous avez mal entrÈ vos rÈfÈrences, respectez le format \"xxxx-x, xxxx-x\""),
-                                                   htmlentities("Aucune facture contenant ces rÈfÈrences n'a ÈtÈ trouvÈe")))?>
+  <?=$html->tagErrorMsg('facture/references', array("Vous devez entrer au moins une r√©f√©rence",
+                                                   "Vous avez mal entr√© vos r√©f√©rences, respectez le format \"xxxx-x, xxxx-x\"",
+                                                   "Aucune facture contenant ces r√©f√©rences n'a √©t√© trouv√©e"))?>
 
   <p id="FactureRef">
-    <label for="FactureChampRef" title="Num&eacute;ro(s) de r&eacute;f&eacute;rence">Num&eacute;ro(s) de r&eacute;f&eacute;rence: </label>
-    <?=$html->inputTag('facture/references', 15, array('id'=>'FactureChampRef','title'=>'Num&eacute;ro(s) de r&eacute;f&eacute;rence')).
+    <label for="FactureChampRef" title="Num√©ro(s) de r√©f√©rence">Num√©ro(s) de r√©f√©rence: </label>
+    <?=$html->inputTag('facture/references', 15, array('id'=>'FactureChampRef','title'=>'Num√©ro(s) de r√©f√©rence')).
 
     $html->submitTag('Afficher la facture')
       ?></p>
@@ -36,11 +36,12 @@
 <h3><?=htmlentities("Erreurs possibles")?></h3>
 <p>
 <dl>
-<dt><?=htmlentities("Aucune facture n'a ÈtÈ trouvÈe")?></dt>
-<dd><?=htmlentities("VÈrifiez bien vos rÈfÈrences.  Si vous avez besoin d'assistance, Ècrivez ‡ foire@step.polymtl.ca avec un maximum de dÈtails pour nous permettre d'identifier le problËme et d'y remÈdier.")?></dd>
+<?php $writeAt="√† <a href=\"mailto:{$GLOBALS['gFoireEmail']}\">{$GLOBALS['gFoireEmail']}</a> avec un maximum de d√©tails pour nous permettre d'identifier le probl√®me et d'y rem√©dier."; ?>
+<dt>Aucune facture n'a √©t√© trouv√©e</dt>
+<dd>V√©rifiez bien vos r√©f√©rences.  Si vous avez besoin d'assistance, √©crivez <?=$writeAt ?></dd>
 </dl>
-<dt><?=htmlentities("Ma facture est incorrecte")?></dt>
-<dd><?=htmlentities("…crivez ‡ foire@step.polymtl.ca avec un maximum de dÈtails pour nous permettre d'identifier le problËme et d'y remÈdier.")?></dd>
+<dt>Ma facture est incorrecte</dt>
+<dd>√âcrivez <?=$writeAt ?></dd>
 </p>
 
 </div> <!-- factures -->

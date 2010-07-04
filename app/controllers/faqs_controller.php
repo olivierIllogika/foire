@@ -6,14 +6,14 @@ class FaqsController extends FaqsHelper
 {
   function index()
   {
-    $this->pageTitle .= htmlentities(" - Foire aux questions");
+    $this->pageTitle .= " - Foire aux questions";
 
     $this->set('sections', $this->models['faq']->findBySql(
           "SELECT DISTINCT(section) FROM ".$this->models['faq']->tablePrefix."faqs WHERE afficher=1 ORDER BY section"));
           
     $req = $this->models['faq']->findAll("", array('id','section', 'question','reponse','afficher'), 'afficher DESC,section,id');
     $this->set('data', $req);
-//$this->print_pre($req, true);
+
     if (isset($_SESSION['etudiant']['niveau']))
     {
       $this->set('canMod', ($_SESSION['etudiant']['niveau'] > 8));
@@ -22,7 +22,7 @@ class FaqsController extends FaqsHelper
 
   function poser()
   {
-    $this->pageTitle .= htmlentities(" - Poser votre question");
+    $this->pageTitle .= " - Poser votre question";
 
     $sections = $this->load_sections();
 
@@ -60,10 +60,10 @@ class FaqsController extends FaqsHelper
         $courriel = $this->params['data']['courriel'];
       }
 
-      $destination = ($this->params['data']['sujet']=='site' ? 'lope@step.polymtl.ca' : 'foire@step.polymtl.ca');
+      $destination = ($this->params['data']['sujet']=='site' ? $GLOBALS['gDevErrorEmail'] : $GLOBALS['gFoireEmail']);
       
       $this->courrielQuestion($this->params['data']['question'], $courriel, $destination);
-      $this->flash(htmlentities('Question envoyée'),'/faqs');
+      $this->flash('Question envoyÃ©e','/faqs');
 
     }
   }
@@ -99,7 +99,7 @@ class FaqsController extends FaqsHelper
 
       $this->params['data']['afficher'] = empty($this->params['data']['afficher']) ? '0' : '1';
       $this->models['faq']->save($this->params['data']);
-      $this->flash(htmlentities('Question ajoutée'),'/faqs');
+      $this->flash(htmlentities('Question ajoutï¿½e'),'/faqs');
 
 //      $this->print_pre($this->params['data']);
     }
@@ -111,7 +111,7 @@ class FaqsController extends FaqsHelper
 
     if ($this->models['faq']->del($id))
     {
-      $this->flash(htmlentities('Question supprimée'),'/faqs');
+      $this->flash(htmlentities('Question supprimï¿½e'),'/faqs');
     }
 
   }
@@ -151,7 +151,7 @@ class FaqsController extends FaqsHelper
 
       $this->models['faq']->setId($id);
       $this->models['faq']->save($this->params['data']);
-      $this->flash(htmlentities('Question modifiée'),'/faqs');
+      $this->flash(htmlentities('Question modifiï¿½e'),'/faqs');
 
     }
   }

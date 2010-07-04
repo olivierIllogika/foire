@@ -1,8 +1,9 @@
-  <h2 id="etTitre">Inscription des &eacute;tudiants</h2>
+  <h2 id="etTitre">Inscription des √©tudiants</h2>
 
-  <?=(!empty($duplicate) ? '<span class="error_message">'.$duplicate.htmlentities(' existe dÈj‡ parmis les consignataires. Si vous Ítes dÈj‡ inscrit, essayer de ').$html->linkTo(htmlentities("rÈcupÈrer vos informations"),"/etudiants/perdu_infos/$courriel").htmlentities(". Si non, vÈrifiez vos informations et Ècrivez ‡ ").$html->linkEmail('foire@step.polymtl.ca').'</span>' :'')?>
+  <?=(!empty($duplicate) ? 
+		"<span class=\"error_message\">$duplicate existe d√©j√† parmis les consignataires. Si vous √™tes d√©j√† inscrit, essayer de ".$html->linkTo("r√©cup√©rer vos informations","/etudiants/perdu_infos/$courriel").". Si non, v√©rifiez vos informations et √©crivez √† ".$html->linkEmail($GLOBALS['gFoireEmail']).'</span>' :'')?>
   
-  <?=($this->etudiant->validationErrors ? '<span class="error_message">'.htmlentities('** VÈrifiez le formulaire et corrigez les erreurs **').'</span>' :'')?>
+  <?=($this->etudiant->validationErrors ? '<span class="error_message">** V√©rifiez le formulaire et corrigez les erreurs **</span>' :'')?>
 
   <div id="etRegFormulaire">
 
@@ -11,29 +12,29 @@
     <?=$html->formTag('/etudiants/inscription') ?>
             <?=$html->hiddenTag('source','etudiant')?>
 
-            <div id="etRegImgCarte"><img src="../img/code-barre.gif" alt="code barre de la carte" /></div>
+            <div id="etRegImgCarte"><img src="../img/<?=School::Get()->GetBarCodeImg() ?>" alt="code barre de la carte" /></div>
             <p id="etRegCode">
-              <?=htmlentities("ComplÈtez le numÈro de votre carte Ètudiante :")?><br />
-              <label for="RegChampCode" title="Code barre de la carte &Eacute;tudiante">Code barre: </label><?php
+              Compl√©tez le num√©ro de votre carte √©tudiante :<br />
+              <label for="RegChampCode" title="<?=School::Get()->BarCodeTitle()?>">Code barre: </label>
 
-               echo $html->inputTag('etudiant/id', 15, array('id'=>'RegChampCode','maxlength'=>'17', 'title'=>'Code barre de la carte &Eacute;tudiante', 'value'=>($html->tagValue('id') ? $html->tagValue('id') : '2 9334 ')))
-               ?>&nbsp;(avec ou sans espaces)<?php
+              <?php
+               echo $html->inputTag('etudiant/id', 15, array('id'=>'RegChampCode','maxlength'=>School::Get()->BarCodeFieldSize(), 'title'=>School::Get()->BarCodeTitle(), 'value'=>($html->tagValue('id') ? $html->tagValue('id') : School::Get()->BarCodePrefix() )));
 
-               echo $html->tagErrorMsg('etudiant/id', htmlentities('Le numÈro de code barre contient 14 chiffres')) ?></p>
-               
+               echo $html->tagErrorMsg('etudiant/id', 'Le num√©ro de code barre contient '.School::Get()->BarCodeDataSize().' chiffres');
+			  ?>			               
 
             <p id="etRegCourriel"><?php
                echo '<label for="RegChampCourriel" title="'.$email_help.'">Courriel:&nbsp;</label>'.
-                    $html->inputTag('etudiant/courriel', 20, array('id'=>'RegChampCourriel','maxlength'=>'100', 'title'=>$email_help)).'<b>@polymtl.ca</b>';
+                    $html->inputTag('etudiant/courriel', 20, array('id'=>'RegChampCourriel','maxlength'=>'100', 'title'=>$email_help))."<b>@{$GLOBALS['gStudSufixEmail']}</b>";
                echo $html->tagErrorMsg('etudiant/courriel', $email_help)
                ?></p>
 
-            <p id="etRegPrenom"><label for="RegChampPrenom" title="Pr&eacute;nom">Pr&eacute;nom:&nbsp;</label><?php
+            <p id="etRegPrenom"><label for="RegChampPrenom" title="Pr√©nom">Pr√©nom:&nbsp;</label><?php
 
-               echo $html->inputTag('etudiant/prenom', 30, array('id'=>'RegChampPrenom','maxlength'=>'70', 'title'=>'Pr&eacute;nom'))
+               echo $html->inputTag('etudiant/prenom', 30, array('id'=>'RegChampPrenom','maxlength'=>'70', 'title'=>'Pr√©nom'))
                ?><?php
 
-               echo $html->tagErrorMsg('etudiant/prenom', htmlentities('Un prÈnom est requis')) ?></p>
+               echo $html->tagErrorMsg('etudiant/prenom', 'Un pr√©nom est requis') ?></p>
 
             <p id="etRegNom"><label for="RegChampNom" title="Nom de famille">Nom: </label><?php
 
@@ -51,7 +52,7 @@
                 echo $html->tagErrorMsg('etudiant/motpasse', 'Un mot de passe est requis')
             ?></p>
 
-            <p id="etRegP2"><label for="RegChampP2" title="Retappez le mot de passe">R&eacute;p&eacute;tez: </label><?php
+            <p id="etRegP2"><label for="RegChampP2" title="Retappez le mot de passe">R√©p√©tez: </label><?php
 
                 echo $html->passwordTag('motpasse2', 30, array('id'=>'RegChampP2','maxlength'=>'20', 'title'=>'Retappez le mot de passe'))
             ?><?php

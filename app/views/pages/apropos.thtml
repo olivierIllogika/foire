@@ -1,24 +1,18 @@
-<?php     $this->pageTitle = htmlentities("Foire aux Livres - À propos...");
+<?php     $this->pageTitle = htmlentities("Foire aux Livres - Ã€ propos...");
 ?>
-<h2><?=htmlentities("À propos de la Foire aux Livres")?></h2>
+<h2>Ã€ propos de la Foire aux Livres</h2>
 
 <div id="aboutDiv">
 <h3>Le concept</h3>
 <p id="aboutFoire">
-<?=htmlentities("La Foire aux Livres est une activité de vente de livres usagés sous consigne offert par l'Association des Étudiants de Polytechnique.  Ce site permet aux consignataires d'enregistrer leurs livres, mais permet aussi aux bénévoles de gérer la cueillette, vendre les livres et procéder au retour de biens des consignataires.")?>
+La Foire aux Livres est une activitÃ© de vente de livres usagÃ©s sous consigne initiÃ©e par des Ã©tudiants de Polytechnique.  Le service est offert Ã  Poly par l'Association des Ã‰tudiants et Ã  l'ETS grÃ¢ce Ã  TribuTerre.  Ce site permet aux consignataires d'enregistrer leurs livres, mais permet aussi aux bÃ©nÃ©voles de gÃ©rer la cueillette, vendre les livres et procÃ©der au retour de biens des consignataires.
 </p>
 
 
-<h3><?=htmlentities("Les bénévoles")?></h3>
+<h3>Les bÃ©nÃ©voles</h3>
 <p id="aboutTeam">
-<?=htmlentities("Ce service est offert par les étudiants, pour les étudiants.  Les gens oeuvrant aux différentes activités de la Foire sont bénévoles, et donc non salariés.  Essayer de rester courtois, respectueux et compréhensif même si vous êtes pressé par le temps; car si vous croyez manquer le début d'un cours, considérez que certains bénévoles manquent peut-être plusieurs cours.  Si vous voulez participer et donner un coup de mains, vous êtes le bienvenue.")?>
+Ce service est offert par les Ã©tudiants, pour les Ã©tudiants.  Les gens oeuvrant aux diffÃ©rentes activitÃ©s de la Foire sont bÃ©nÃ©voles, et donc non salariÃ©s.  Essayer de rester courtois, respectueux et comprÃ©hensif mÃªme si vous Ãªtes pressÃ© par le temps; car si vous croyez manquer le dÃ©but d'un cours, considÃ©rez que certains bÃ©nÃ©voles manquent peut-Ãªtre plusieurs de leurs cours.  Si vous voulez participer et donner un coup de mains, vous Ãªtes le bienvenue.
 </p>
-<!--
-<h3>Le site</h3>
-<p id="aboutWebSite">
-<?=htmlentities("Cette nouvelle version du site de la Foire")?>
-</p>
--->
 
 </div> <!-- aboutDiv -->
 

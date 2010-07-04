@@ -1,26 +1,24 @@
-  <h2 id="etTitre">Entr&eacute;e des consignataires</h2>
+  <h2 id="etTitre">Entr√©e des consignataires</h2>
 
-  <?=$html->tagErrorMsg('etudiant/id', array(htmlentities("Le code d'identification doit contenir des chiffres"),
-                                             htmlentities("Le code entrÈ est inconnu; Ítes-vous inscrit ?")))?>
+  <?=$html->tagErrorMsg('etudiant/id', array("Le code d'identification doit contenir des chiffres",
+                                             "Le code entr√© est inconnu; √™tes-vous inscrit ?"))?>
 
-  <?=$html->tagErrorMsg('etudiant/motpasse', htmlentities("Le mot de passe entrÈ n'est pas valide"))?>
+  <?=$html->tagErrorMsg('etudiant/motpasse', "Le mot de passe entr√© n'est pas valide")?>
 
-  <?=$html->tagErrorMsg('etudiant/confirme', htmlentities("Votre inscription n'est pas confirmÈe; vous devez cliquer sur le lien dans le courriel envoyÈ"))?>
+  <?=$html->tagErrorMsg('etudiant/confirme', "Votre inscription n'est pas confirm√©e; vous devez cliquer sur le lien dans le courriel envoy√©")?>
 
-  <?=($this->etudiant->validationErrors ? '<span>'.htmlentities(' tes-vous dÈj‡ inscrit ? Si non, passez ‡ ').$html->linkTo('l\'inscrition',"/etudiants/inscription_choix").'.<br /> '.htmlentities('Si oui, l\'avez-vous ').'<b>'.htmlentities('confirmÈe').'</b>'.htmlentities(' en cliquant sur le lien du courriel ? ').'<br />'.htmlentities("Notez que inscription de la version prÈcÈdente du site n'est plus valide...").$html->linkTo('pourquoi ?',"/faqs#qa25").'</span>' :'')?>
+  <?=($this->etudiant->validationErrors ? '<span>√ätes-vous d√©j√† inscrit ? Si non, passez √† '.$html->linkTo("l'inscrition","/etudiants/inscription_choix")."<br /> Si oui, l'avez-vous <b>confirm√©e</b> en cliquant sur le lien du courriel ? ".$html->linkTo('pourquoi ?',"/faqs#qa25").'</span>' :'')?>
 
   <div id="etLoginForm">
 
     <div id="etLoginSupport">
       <ul>
-        <li>code barre de Poly</li>
+        <li>code barre de <?=School::Get()->Name(School::ShortName, true)?></li>
         <li># permis de conduire (sans lettre)</li>
         <li>ou # personnel (voir courriel d'inscription)</li>
       </ul>
-<!--      <div id="loginSupport">-->
         <p><?=$html->linkTo('Pas encore inscrit ?',"/etudiants/inscription_choix")?></p>
         <p><?=$html->linkTo('Perdu mes infos !',"/etudiants/perdu_infos")?></p>
-<!--      </div>-->
     </div>
 
 
@@ -29,13 +27,13 @@
             <p id="etLoginCode">
               <label for="LogChampCode" title="Code d'entr&eacute;e">Code d'identification: </label><?php
 
-                echo $html->inputTag('etudiant/id', 15, array('id'=>'LogChampCode','maxlength'=>'17', 'title'=>'Code barre de Poly, permis de conduire ou numÈro personnel (voir courriel d\'inscription)'));
+                echo $html->inputTag('etudiant/id', 15, array('id'=>'LogChampCode','maxlength'=>'17', 'title'=>'Code barre de Poly, permis de conduire ou num√©ro personnel (voir courriel d\'inscription)'));
             ?>
 
               <div id="LogChoix"><?php /*
                $radioOptions = array(
                   'carte' => "Carte de Poly: ".$html->inputTag('etudiant/id_carte', 15, array('id'=>'LogChampPoly','maxlength'=>'17', 'title'=>'Code de la carte de Poly', 'value'=>'2 9334 ')).'(avec ou sans espaces)',
-                  'permis' => "Permis de conduire: M".$html->inputTag('etudiant/id_permis', 15, array('id'=>'LogChampPermis','maxlength'=>'14', 'title'=>'NumÈro de permis de conduire', 'value'=>'')),
+                  'permis' => "Permis de conduire: M".$html->inputTag('etudiant/id_permis', 15, array('id'=>'LogChampPermis','maxlength'=>'14', 'title'=>'Num√©ro de permis de conduire', 'value'=>'')),
                   'perso' => "Autre: ".$html->inputTag('etudiant/id_perso', 15, array('id'=>'LogChampPerso','maxlength'=>'8', 'title'=>'Code personnel (voir courriel d\'inscription)', 'value'=>''))
                                     );
                echo $html->radioTags('etudiant/choix', $radioOptions, '<br />', array('title'=>'', 'id'=>'LogChampChoix'));*/
@@ -50,19 +48,20 @@
 
 
 
-            <p id="etSubmit"><?php
-
-              echo $html->submitTag('Entrer')
-              ?></p>
+            <p id="etSubmit"><?=$html->submitTag('Entrer') ?></p>
     </form>
-    
 
   </div><!-- etLoginForm -->
 
 <div id="coopPub">
  <span>Pour vos livres neufs,</span>
  <br />
- <img src="../img/coopoly_small.gif" alt="Coopoly, votre librairie de g&eacute;nie" />
+ <?php
+ 	$altText = '';
+ 	$coopLink = '';
+ 	$coopImg = School::Get()->CoopImg($altText, $coopLink);
+ ?>
+ <a href="<?=$coopLink?>"><img src="../img/<?=$coopImg ?>" alt="<?=$altText ?>" /></a>
 </div>
   
 

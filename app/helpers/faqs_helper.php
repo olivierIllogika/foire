@@ -12,10 +12,10 @@ class FaqsHelper extends AppController
     return array('html' => $html_sections, 'sql' => $sql_sections);
   }
   
-  function courrielQuestion($question, $provenance='Foire aux Livres <foire-noreply@step.polymtl.ca>', $destination='Foire aux Livres <foire@step.polymtl.ca>')
+  function courrielQuestion($question, $provenance, $destination)
   {
 
-    $body = "Voici la question posée:\n\n".$question;
+    $body = "Voici la question posÃ©e:\n\n".$question;
 
     sendSMTP($destination,'','','[Foire] Question', $body, false,$provenance);
 

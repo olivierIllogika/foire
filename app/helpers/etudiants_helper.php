@@ -12,18 +12,18 @@ class EtudiantsHelper extends AppController
     $conf_link = 'http://'.$_SERVER['HTTP_HOST'].preg_replace('/public.*/','',$_SERVER['SCRIPT_NAME'])."etudiants/confirmer/$id";
 
     $body =
-    "Vous avez effectué une demande d'inscription sur la Foire aux Livres.".
-    "\n\nSi c'est à votre demande, cliquez sur le lien pour confirmer votre inscription.".
-    " Si ce n'est pas le cas, vous n'avez qu'à ignorer ce message\n\n".
+    "Vous avez effectuÃ© une demande d'inscription sur la Foire aux Livres.".
+    "\n\nSi c'est Ã  votre demande, cliquez sur le lien pour confirmer votre inscription.".
+    " Si ce n'est pas le cas, vous n'avez qu'Ã  ignorer ce message\n\n".
 
     "Votre code d'identification pour la section <<Mes livres>> est : $id\n".
     ($cartePoly ? "Vous pouvez entrer seulement les derniers chiffres, soit : ".(ltrim(substr($id,5),'0'))."\n" : '').
 
-    "\nCliquez sur ce lien ou copiez l'adresse dans votre navigateur pour confirmer votre inscription à la Foire aux Livres\n".
+    "\nCliquez sur ce lien ou copiez l'adresse dans votre navigateur pour confirmer votre inscription Ã  la Foire aux Livres\n".
     "$conf_link\n\n".
     "Merci, et bonne Foire !";
 
-    sendSMTP($courriel,'','','[Foire]Confirmation: suivez le lien pour continuer', $body, false,'Foire aux Livres <foire-noreply@step.polymtl.ca>');
+    sendSMTP($courriel,'','','[Foire]Confirmation: suivez le lien pour continuer', $body, false,$GLOBALS['gNoReplyEmail']);
 
   }
 
@@ -34,8 +34,8 @@ class EtudiantsHelper extends AppController
     $cartePoly = (substr($id,0,5) == '29334');
 
     $body =
-    "Vous avez effectué une demande d'information sur la Foire aux Livres.".
-    "\n\nSi ce n'est pas le cas, vous n'avez qu'à ignorer ce message\n\n".
+    "Vous avez effectuÃ© une demande d'information sur la Foire aux Livres.".
+    "\n\nSi ce n'est pas le cas, vous n'avez qu'Ã  ignorer ce message\n\n".
 
     "Votre code d'identification pour la section <<Mes livres>> est : $id\n".
     ($cartePoly ? "Vous pouvez entrer seulement les derniers chiffres, soit : ".(ltrim(substr($id,5),'0'))."\n" : '').
@@ -43,7 +43,7 @@ class EtudiantsHelper extends AppController
 
     "Merci, et bonne Foire !";
 
-    sendSMTP($courriel,'','','[Foire]Nouveau mot de passe', $body, false,'Foire aux Livres <foire-noreply@step.polymtl.ca>');
+    sendSMTP($courriel,'','','[Foire]Nouveau mot de passe', $body, false,$GLOBALS['gNoReplyEmail']);
 
   }
 
@@ -53,19 +53,19 @@ class EtudiantsHelper extends AppController
     $body =
     "Bonjour,\n\n".
 
-    "La foire aux livres est terminée et il reste des gens qui ne sont pas venus ".
-    "chercher leur argent et/ou leurs livres restants.  La procédure pour récupérer ".
-    "l'argent et/ou les livres est simple.  Présentez-vous à l'AEP pendant les ".
-    "heures d'ouverture (9h00 @ 16h00) et présentez votre carte étudiante.\n\n".
+    "La foire aux livres est terminÃ©e et il reste des gens qui ne sont pas venus ".
+    "chercher leur argent et/ou leurs livres restants.  La procÃ©dure pour rÃ©cupÃ©rer ".
+    "l'argent et/ou les livres est simple.  PrÃ©sentez-vous Ã  l'AEP pendant les ".
+    "heures d'ouverture (9h00 @ 16h00) et prÃ©sentez votre carte Ã©tudiante.\n\n".
 /*
-    "Les dates pour la récupération sont les suivantes : du 21 septembre (mercredi) ".
+    "Les dates pour la rÃ©cupÃ©ration sont les suivantes : du 21 septembre (mercredi) ".
     "au 27 septembre prochain (mardi).\n\n".
 */
-    "La date limite pour la récupération est vendredi prochain, le 3 février.\n\n".
+    "La date limite pour la rÃ©cupÃ©ration est vendredi prochain, le 3 fÃ©vrier.\n\n".
 
-    "Il est à noter que 15% de la valeur totale des ventes a été prélevé.\n\n".
+    "Il est Ã  noter que 15% de la valeur totale des ventes a Ã©tÃ© prÃ©levÃ©.\n\n".
 
-    "L'équipe de la foire";
+    "L'Ã©quipe de la foire";
 
     return $body;
 
@@ -75,17 +75,17 @@ class EtudiantsHelper extends AppController
   {
 
     $body =
-    "Vous recevez ce courriel car vous avez de l'argent ou des livres à récupérer à la Foire aux Livres de l'AEP.".
+    "Vous recevez ce courriel car vous avez de l'argent ou des livres Ã  rÃ©cupÃ©rer Ã  la Foire aux Livres de l'AEP.".
     "\n\n".
 
-    "Vous devez vous présenter à la journée de récupération pour prendre livres et/ou argent. Consultez foire.polymtl.ca pour l'horaire.\n\n".
+    "Vous devez vous prÃ©senter Ã  la journÃ©e de rÃ©cupÃ©ration pour prendre livres et/ou argent. Consultez foire.aep.polymtl.ca pour l'horaire.\n\n".
 
-    "Assurez-vous d'avoir en main une des pièces d'identification suivante :\n\n".
+    "Assurez-vous d'avoir en main une des piÃ¨ces d'identification suivante :\n\n".
     
-    "(en ordre de préférence)\n".
-    "Votre carte étudiante\n".
+    "(en ordre de prÃ©fÃ©rence)\n".
+    "Votre carte Ã©tudiante\n".
     "OU\n".
-    "Une carte d'identité avec photo\n\n";
+    "Une carte d'identitÃ© avec photo\n\n";
 
     return $body;
   }
