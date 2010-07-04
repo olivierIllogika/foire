@@ -3,8 +3,9 @@ Cette version du système de gestion de la Foire aux Livres utilise php-cake.  Li
 Le fichier de contrôle d'accès se trouve ici:
 ~/www/wiki/conf/users.auth.php
 
-Pour développer localement, modifier ~/www/config/database.php et et .htaccess nécessaire pour que vos chemins correspondent
+Pour développer localement, modifier ~/www/config/database.php et .htaccess nécessaire pour que vos chemins correspondent
 
 Pour me rejoindre:
 olivier-2.martin@polymtl.ca
+olivier2.martin@gmail.com
 olivier2.martin@gmail.com
