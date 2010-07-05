@@ -99,7 +99,7 @@ class FaqsController extends FaqsHelper
 
       $this->params['data']['afficher'] = empty($this->params['data']['afficher']) ? '0' : '1';
       $this->models['faq']->save($this->params['data']);
-      $this->flash(htmlentities('Question ajout�e'),'/faqs');
+      $this->flash('Question ajoutée','/faqs');
 
 //      $this->print_pre($this->params['data']);
     }
@@ -111,7 +111,7 @@ class FaqsController extends FaqsHelper
 
     if ($this->models['faq']->del($id))
     {
-      $this->flash(htmlentities('Question supprim�e'),'/faqs');
+      $this->flash('Question supprimée','/faqs');
     }
 
   }
@@ -151,7 +151,7 @@ class FaqsController extends FaqsHelper
 
       $this->models['faq']->setId($id);
       $this->models['faq']->save($this->params['data']);
-      $this->flash(htmlentities('Question modifi�e'),'/faqs');
+      $this->flash('Question modifiée','/faqs');
 
     }
   }

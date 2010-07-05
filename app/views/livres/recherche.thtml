@@ -3,7 +3,7 @@
   <div id="livresRechForm">
     <span><span class="livresCueillis"><?=$total ?></span> livres cueillis</span>
 
-    <?php $isbn_help = htmlentities('ISBN non valide; 4 ou 10 caract�res (Le dernier caract�re d\'un ISBN peut �tre "X")') ?>
+    <?php $isbn_help = 'ISBN non valide; 4 ou 10 caractères (Le dernier caractère d\'un ISBN peut être "X")' ?>
 
     <?php echo $html->formTag('/livres/recherche') ?>
 
@@ -23,7 +23,7 @@
 
             <!--<p><?php
                //echo '<label for="RechCours">Cours: </label>'.
-                    $html->inputTag('livre/cours', 10, array('id'=>'RechTitre','maxlength'=>'10', 'title'=>'&Eacute;l&eacute;ment du code du cours'));
+                    $html->inputTag('livre/cours', 10, array('id'=>'RechTitre','maxlength'=>'10', 'title'=>'Élément du code du cours'));
                ?></p>-->
 
             <?=$html->submitTag('Chercher')?>
@@ -40,18 +40,18 @@
         <th id="livresHISBN"><?php echo $this->livre->isbn10_code4_Html() ?></th>
       </tr>
 
-        <?=$this->livre->countLastFind?> r&eacute;sultat<?=$this->livre->countLastFind > 1 ? 's' :''?>
+        <?=$this->livre->countLastFind?> résultat<?=$this->livre->countLastFind > 1 ? 's' :''?>
         <?php foreach ($data as $livre): ?>
         <tr>
-          <td class="livreTitre"><?php echo htmlentities($livre['titre']) ?></td>
+          <td class="livreTitre"><?=htmlspecialchars($livre['titre']) ?></td>
           <td class="livreCours"><?=$livre['cours'] ?></td>
-          <td class="livreISBN"><?php echo $this->isbn->isbn2formated($livre['isbn']) ?></td>
+          <td class="livreISBN"><?=$this->isbn->isbn2formated($livre['isbn']) ?></td>
 
         </tr>
         <?php endforeach; ?>
     </table>
     <?php } else { // countLastFind ?>
-    <p id="livresAucun">Aucun r&eacute;sultats &agrave; afficher</p>
+    <p id="livresAucun">Aucun résultats à afficher</p>
     <?php } //if countLastFind ?>
   </div><!-- livresRechDiv -->
 

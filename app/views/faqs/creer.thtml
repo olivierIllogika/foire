@@ -1,4 +1,4 @@
-<h2><?=htmlentities("Créer une entrée de FAQ")?></h2>
+<h2>CrÃ©er une entrÃ©e de FAQ</h2>
 <pre><?/*=print_r($sections, true)*/?></pre>
   <?=$html->formTag('/faqs/creer') ?>
 

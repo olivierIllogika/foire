@@ -1,10 +1,10 @@
-  <h2 id="etTitre"><?=htmlentities("RÈcupÈration de vos informations")?></h2>
+  <h2 id="etTitre">R√©cup√©ration de vos informations</h2>
 
-  <?=$html->tagErrorMsg('etudiant/courriel', htmlentities('L\'adresse entrÈe est inconnue'))?>
-  <?=$html->tagErrorMsg('etudiant/delay', htmlentities("La rÈcupÈration d'information est limitÈe ‡ 1 fois par {$this->etudiant->validationErrors['delay']} minutes. Veuillez rÈessayer plus tard."))?>
-  <?=(!empty($this->etudiant->validationErrors['courriel']) ? '<p>'.htmlentities(' tes-vous dÈj‡ inscrit ? Si non, passez ‡ ').$html->linkTo('l\'inscription',"/etudiants/inscription_choix").'. '.htmlentities('Si oui, l\'avez-vous confirmÈe en lisant votre courriel ? ').'</p>' :'')?>
+  <?=$html->tagErrorMsg('etudiant/courriel', "L'adresse entr√©e est inconnue")?>
+  <?=$html->tagErrorMsg('etudiant/delay', "La r√©cup√©ration d'information est limit√©e √† 1 fois par {$this->etudiant->validationErrors['delay']} minutes. Veuillez r√©essayer plus tard.")?>
+  <?=(!empty($this->etudiant->validationErrors['courriel']) ? '<p>√ätes-vous d√©j√† inscrit ? Si non, passez √† '.$html->linkTo('l\'inscription',"/etudiants/inscription_choix").'. Si oui, l\'avez-vous confirm√©e en lisant votre courriel ? </p>' :'')?>
 
-  <?=(!empty($email_sent) ? htmlentities('Courriel envoyÈ'):'')?>
+  <?=(!empty($email_sent) ? 'Courriel envoy√©':'')?>
 
   <div id="etInfoForm">
 

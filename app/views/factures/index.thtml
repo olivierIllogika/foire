@@ -1,4 +1,4 @@
-<h2><?=htmlentities("Factures")?></h2>
+<h2>Factures</h2>
 
 <div id="factures">
 <p>De cette section, vous pouvez récupérer un reçu correspondant à vos achats.  Puisque chaque livre acheté est unique, il est possible de retracer chaque transaction grâce aux informations contenues sur les étiquettes des livres.</p>
@@ -33,7 +33,7 @@
 </form>
 </div>
 
-<h3><?=htmlentities("Erreurs possibles")?></h3>
+<h3>Erreurs possibles</h3>
 <p>
 <dl>
 <?php $writeAt="à <a href=\"mailto:{$GLOBALS['gFoireEmail']}\">{$GLOBALS['gFoireEmail']}</a> avec un maximum de détails pour nous permettre d'identifier le problème et d'y remédier."; ?>

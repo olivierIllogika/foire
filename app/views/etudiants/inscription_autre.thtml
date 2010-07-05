@@ -26,10 +26,10 @@
 
             <p id="etPermisSet"><fieldset>
             <legend>2- <?=$html->radioTags('mode',array(2 => $option2), null, array())?></legend>
-              <label for="RegChampPermis" title="Num&eacute;ro de permis de conduire">Num&eacute;ro de permis: </label>
+              <label for="RegChampPermis" title="Numéro de permis de conduire">Numéro de permis: </label>
             <?php
 
-               echo $html->inputTag('etudiant/id_permis', 15, array('id'=>'RegChampPermis','maxlength'=>'15', 'title'=>'Num&eacute;ro de permis de conduire', 'value'=>$html->tagValue('id_permis')))
+               echo $html->inputTag('etudiant/id_permis', 15, array('id'=>'RegChampPermis','maxlength'=>'15', 'title'=>'Numéro de permis de conduire', 'value'=>$html->tagValue('id_permis')))
                ?>&nbsp;(avec ou sans '-')<?php
 
                echo $html->tagErrorMsg('etudiant/id_permis', 'Le numéro de permis contient 12 chiffres')
@@ -41,9 +41,9 @@
             Vous recevrez un numéro d'identité par courriel une fois votre inscription terminée.
             </fieldset></p>
 
-            <p id="etRegPrenom"><label for="RegChampPrenom" title="Pr&eacute;nom">Pr&eacute;nom:&nbsp;</label><?php
+            <p id="etRegPrenom"><label for="RegChampPrenom" title="Prénom">Prénom:&nbsp;</label><?php
 
-               echo $html->inputTag('etudiant/prenom', 30, array('id'=>'RegChampPrenom','maxlength'=>'70', 'title'=>'Pr&eacute;nom'))
+               echo $html->inputTag('etudiant/prenom', 30, array('id'=>'RegChampPrenom','maxlength'=>'70', 'title'=>'Prénom'))
                ?><?php
 
                echo $html->tagErrorMsg('etudiant/prenom', 'Un prénom est requis') ?></p>
@@ -69,12 +69,12 @@
                 echo $html->tagErrorMsg('etudiant/motpasse', 'Un mot de passe est requis')
             ?></p>
 
-            <p id="etRegP2"><label for="RegChampP2" title="Retappez le mot de passe">R&eacute;p&eacute;tez: </label><?php
+            <p id="etRegP2"><label for="RegChampP2" title="Retappez le mot de passe">Répétez: </label><?php
 
                 echo $html->passwordTag('motpasse2', 30, array('id'=>'RegChampP2','maxlength'=>'20', 'title'=>'Retappez le mot de passe'))
             ?><?php
 
-                echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent &ecirc;tre identiques')
+                echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent être identiques')
             ?></p>
             
             <p id="AjSubmit"><?php

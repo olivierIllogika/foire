@@ -1,4 +1,4 @@
-<?php     $this->pageTitle = htmlentities("Foire aux Livres - À propos...");
+<?php     $this->pageTitle = "Foire aux Livres - À propos...";
 ?>
 <h2>À propos de la Foire aux Livres</h2>
 

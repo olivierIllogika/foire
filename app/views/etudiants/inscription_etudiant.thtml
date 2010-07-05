@@ -57,7 +57,7 @@
                 echo $html->passwordTag('motpasse2', 30, array('id'=>'RegChampP2','maxlength'=>'20', 'title'=>'Retappez le mot de passe'))
             ?><?php
 
-                echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent &ecirc;tre identiques')
+                echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent être identiques')
             ?></p>
 
             <p id="etSubmit"><?php

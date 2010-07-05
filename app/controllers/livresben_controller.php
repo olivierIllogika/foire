@@ -45,7 +45,7 @@ class LivresbenController extends LivresbenHelper
         }
         else
         {
-          $this->models['evlivre']->logEvent(102,$livre['id'],$_SESSION['etudiant']['id'],"déconsigne ({$_SESSION['etudiant']['prenom']})");
+          $this->models['evlivre']->logEvent(102,$livre['id'],$_SESSION['etudiant']['id'],"dï¿½consigne ({$_SESSION['etudiant']['prenom']})");
         } // en_consigne
 
         $this->models['livre']->save($livre);
@@ -53,7 +53,7 @@ class LivresbenController extends LivresbenHelper
       }
       else // $ret != null
       {
-          $this->models['evlivre']->logEvent(151,0,$_SESSION['etudiant']['id'],"échec [{$this->params['data']['scan_box']}] ({$_SESSION['etudiant']['prenom']})");
+          $this->models['evlivre']->logEvent(151,0,$_SESSION['etudiant']['id'],"ï¿½chec [{$this->params['data']['scan_box']}] ({$_SESSION['etudiant']['prenom']})");
 
         $request_content = "<td class=\"rowInvalid\" colspan=\"4\">{$this->params['data']['scan_box']}</td>";
       } // $ret != null
@@ -163,7 +163,7 @@ class LivresbenController extends LivresbenHelper
       if (array_key_exists($modePaiement, $this->mode_paiement) && $facture)
       {
 
-        // défini le mode de paiement de la facture
+        // dï¿½fini le mode de paiement de la facture
         $_SESSION['persistent']['mode_paiement'] = $facture['carte'] = $modePaiement;
         $facture['total'] = $this->params['data']['totalPrice'];
         $remise = '';
@@ -212,7 +212,7 @@ class LivresbenController extends LivresbenHelper
           {
             if ($etudiant['niveau'] < 3 && $_SESSION['persistent']['godspawn'])
             {
-              // niveau de sécurité mis à jour
+              // niveau de sï¿½curitï¿½ mis ï¿½ jour
               $etudiant['niveau'] = 3;
               $this->models['etudiant']->save($etudiant,false);
             }
@@ -220,7 +220,7 @@ class LivresbenController extends LivresbenHelper
             if ($etudiant['niveau'] < 3 && !$_SESSION['persistent']['godspawn'])
             {
               // kick!
-              $request_content = "<td class=\"rowCommand\" colspan=\"3\">Niveau de s&eacute;curit&eacute; insuffisant</td>";
+              $request_content = "<td class=\"rowCommand\" colspan=\"3\">Niveau de sÃ©curitÃ© insuffisant</td>";
 
               $this->set('request_content', $request_content);
               $this->render('ajax_back','ajax');
@@ -260,11 +260,11 @@ class LivresbenController extends LivresbenHelper
           // hijacked !!  || ou pas
           if ($livre['prix'] != $prix )
           {
-            $msg = "prix modifié !! scanné:$prix ; actuel:{$livre['prix']}";
+            $msg = "prix modifiï¿½ !! scannï¿½:$prix ; actuel:{$livre['prix']}";
           }
           else
           {
-            $msg = "non consigné !!";
+            $msg = "non consignï¿½ !!";
           }
 
           $this->models['evlivre']->logEvent(252,$livre['id'],$codebar,"$msg ({$_SESSION['etudiant']['prenom']})");
@@ -284,7 +284,7 @@ class LivresbenController extends LivresbenHelper
         {
           $vente = current($ret);
 
-          // vente existe différente de cette facture
+          // vente existe diffï¿½rente de cette facture
           if ($vente['parent_id'] != $fid)
           {
             $request_content = "<td class=\"rowCommand\" colspan=\"3\"><blink>Rembourser</blink> $prix $ et garder le livre ".substr($livre['id'],-4)."-{$livre['genie']}</td>";
@@ -293,7 +293,7 @@ class LivresbenController extends LivresbenHelper
 
           }
           else
-          // re-scan du livre dans la même facture
+          // re-scan du livre dans la mï¿½me facture
           {
             $class = 'class="rowNonVendu"';
             $request_content = "<td $class>".preg_replace('/.{5}(.)(.{4})$/','\2-\1',$livre['id'])."</td><td $class>".$this->cutText($livre['titre'],$this->vCutText)."</td><td $class>{$prix}$</td><!-- $prix -->";
@@ -314,10 +314,10 @@ class LivresbenController extends LivresbenHelper
         }
 
 
-        // nouvelle facture si "mode de paiement" défini ou aucune "dernière facture" trouvée
+        // nouvelle facture si "mode de paiement" dï¿½fini ou aucune "derniï¿½re facture" trouvï¿½e
         if (!empty($_SESSION['persistent']['mode_paiement']) || !$fid)
         {
-          // créer une nouvelle facture
+          // crï¿½er une nouvelle facture
           $this->models['facture']->save(array('commis' => $_SESSION['etudiant']['id']),false);
           
           $fid = $_SESSION['persistent']['derniere_facture'] = $this->models['facture']->id;
@@ -344,7 +344,7 @@ class LivresbenController extends LivresbenHelper
       }
       else // $livre != null
       {
-        $this->models['evlivre']->logEvent(251,$fid,$_SESSION['etudiant']['id'],"échec [{$this->params['data']['scan_box']}] ({$_SESSION['etudiant']['prenom']})");
+        $this->models['evlivre']->logEvent(251,$fid,$_SESSION['etudiant']['id'],"ï¿½chec [{$this->params['data']['scan_box']}] ({$_SESSION['etudiant']['prenom']})");
 
         $request_content = "<td class=\"rowInvalid\" colspan=\"3\">{$this->params['data']['scan_box']}</td>";
       } // $livre != null
@@ -430,7 +430,7 @@ class LivresbenController extends LivresbenHelper
     {
       $codebar = $ret[0]['codebar'];
 
-      $this->models['evetudiant']->logEvent(304,$codebar,"récup: pseudo ($commis_n)");
+      $this->models['evetudiant']->logEvent(304,$codebar,"rï¿½cup: pseudo ($commis_n)");
       $this->models['actions_recente']->logEvent($commis_id, '*'.$commis_n, $codebar);
 
       $this->set('total', $total[0]['total']);
@@ -506,7 +506,7 @@ class LivresbenController extends LivresbenHelper
     ///
     if ($input == 'passe')
     {
-      $this->models['evetudiant']->logEvent(303,$commis,"récup: {$_SESSION['persistent']['etudiant']} sauté ($commis_n)");
+      $this->models['evetudiant']->logEvent(303,$commis,"rï¿½cup: {$_SESSION['persistent']['etudiant']} sautï¿½ ($commis_n)");
 
       unset($_SESSION['persistent']['perdus']);
       unset($_SESSION['persistent']['etudiant']);
@@ -515,7 +515,7 @@ class LivresbenController extends LivresbenHelper
       unset($_SESSION['persistent']['suivant']);
 
 
-      $request_content = "<td class=\"rowCommand\" colspan=\"5\">Pr&ecirc;t pour le suivant</td>";
+      $request_content = "<td class=\"rowCommand\" colspan=\"5\">PrÃªt pour le suivant</td>";
     }//passe
 
     /// 
@@ -547,11 +547,11 @@ class LivresbenController extends LivresbenHelper
           @$this->models['livre']->findBySql("UPDATE livres SET codebar = 0 WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} ");
 
           $this->models['evetudiant']->logEvent(351,$commis,
-              "récup: paiement de perdus pour ".
+              "rï¿½cup: paiement de perdus pour ".
               (empty($_SESSION['persistent']['perdus']['nombre']) ? '$' :
                 $_SESSION['persistent']['perdus']['montant'].'$ ('.
                 $_SESSION['persistent']['perdus']['nombre'].' livres)').
-              " à {$_SESSION['persistent']['etudiant']} ($commis_n)");
+              " ï¿½ {$_SESSION['persistent']['etudiant']} ($commis_n)");
 
           unset($_SESSION['persistent']['perdus']);
           unset($_SESSION['persistent']['etudiant']);
@@ -559,7 +559,7 @@ class LivresbenController extends LivresbenHelper
           unset($_SESSION['persistent']['etudiant_nom']);
           unset($_SESSION['persistent']['suivant']);
 
-          $request_content = "<td class=\"rowCommand\" colspan=\"5\">Pr&ecirc;t pour le suivant</td>";
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">PrÃªt pour le suivant</td>";
         }
         // reste argent et/ou livre -> mauvais
         elseif (count($ret) == 2)
@@ -571,7 +571,7 @@ class LivresbenController extends LivresbenHelper
           $total = $valeur + $vendu;
           
           // return info/warning about what's left to give back
-          $request_content = "<td class=\"rowCommand\" colspan=\"5\"><blink>!</blink> $perdus livre(s) &agrave; rendre; valeur tax&eacute;e: $valeur$ (+$vendu$ = $total$)</td>";
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\"><blink>!</blink> $perdus livre(s) Ã  rendre; valeur taxÃ©e: $valeur$ (+$vendu$ = $total$)</td>";
         }
         elseif ($ret[0]['unsold'] == 0) // argent
         {
@@ -579,7 +579,7 @@ class LivresbenController extends LivresbenHelper
           unset($_SESSION['persistent']['suivant']);
 
           // return info/warning about what's left to give back
-          $request_content = "<td class=\"rowCommand\" colspan=\"5\"><blink>!</blink> Argent &agrave; rendre</td>";
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\"><blink>!</blink> Argent Ã  rendre</td>";
         }
         elseif ($ret[0]['unsold'] == 1) // livres
         {
@@ -590,7 +590,7 @@ class LivresbenController extends LivresbenHelper
           $total = $valeur + $vendu;
 
           // return info/warning about what's left to give back
-          $request_content = "<td class=\"rowCommand\" colspan=\"5\"><blink>!</blink> $perdus livre(s) &agrave; rendre; valeur tax&eacute;e: $valeur$ (+$vendu$ = $total$)</td>";
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\"><blink>!</blink> $perdus livre(s) Ã  rendre; valeur taxÃ©e: $valeur$ (+$vendu$ = $total$)</td>";
         }
       }
       elseif (!empty($_SESSION['persistent']['remettre']) && 
@@ -598,7 +598,7 @@ class LivresbenController extends LivresbenHelper
               $_SESSION['persistent']['remettre']['num_cheque'] < 0)
       {
         // still waiting for check number
-        $request_content = "<td class=\"rowCommand\" colspan=\"5\">Entrer num&eacute;ro ch&egrave;que <blink>!!!</blink></td>";
+        $request_content = "<td class=\"rowCommand\" colspan=\"5\">Entrer numÃ©ro chÃ¨que <blink>!!!</blink></td>";
       }
       else
       { // !ret
@@ -608,7 +608,7 @@ class LivresbenController extends LivresbenHelper
         unset($_SESSION['persistent']['etudiant_nom']);
         unset($_SESSION['persistent']['suivant']);
 
-        $request_content = "<td class=\"rowCommand\" colspan=\"5\">Pr&ecirc;t pour le suivant</td>";
+        $request_content = "<td class=\"rowCommand\" colspan=\"5\">PrÃªt pour le suivant</td>";
       }
 
     }
@@ -631,12 +631,12 @@ class LivresbenController extends LivresbenHelper
       {
         if ($input == 'cheque' && !empty($_SESSION['persistent']['remettre']['argent_back']) )
         {
-          $request_content = "<td class=\"rowCommand\" colspan=\"5\">Entrer num&eacute;ro de ch&egrave;que corrig&eacute; <blink>!</blink></td>";
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">Entrer numÃ©ro de chÃ¨que corrigÃ© <blink>!</blink></td>";
           $_SESSION['persistent']['remettre']['num_cheque'] = -2;
         }
         elseif ($input == 'imp_cheque' && !empty($_SESSION['persistent']['remettre']['argent_back']) )
         {
-          $request_content = "<td class=\"rowCommand\" colspan=\"5\">R&eacute;impression... Entrer nouveau num&eacute;ro de ch&egrave;que <blink>!</blink></td><!-- imp_cheque -->";
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">RÃ©impression... Entrer nouveau numÃ©ro de chÃ¨que <blink>!</blink></td><!-- imp_cheque -->";
           $_SESSION['persistent']['remettre']['num_cheque'] = -3;
         }
         elseif ( !empty($_SESSION['persistent']['remettre']['argent_back']) )
@@ -672,7 +672,7 @@ class LivresbenController extends LivresbenHelper
         // move sold books to owner 0
         @$this->models['livre']->findBySql("UPDATE livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id SET codebar = 0 WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} AND NOT ISNULL(livre_id) ");
 
-        $this->models['evetudiant']->logEvent(302,$commis,"récup: paiement($input) de {$_SESSION['persistent']['remettre']['argent']}$ à {$_SESSION['persistent']['etudiant']} ($commis_n)");
+        $this->models['evetudiant']->logEvent(302,$commis,"rï¿½cup: paiement($input) de {$_SESSION['persistent']['remettre']['argent']}$ ï¿½ {$_SESSION['persistent']['etudiant']} ($commis_n)");
 
         $_SESSION['persistent']['remettre']['num_cheque'] = -1;
         $_SESSION['persistent']['remettre']['argent_back'] = $_SESSION['persistent']['remettre']['argent'];
@@ -680,11 +680,11 @@ class LivresbenController extends LivresbenHelper
 
         if ($input == 'imp_cheque')
         {
-          $request_content = "<td class=\"rowCommand\" colspan=\"5\">Impression ch&egrave;que...  entrer num&eacute;ro <blink>!</blink></td><!-- imp_cheque -->";
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">Impression chÃ¨que...  entrer numÃ©ro <blink>!</blink></td><!-- imp_cheque -->";
         }
         elseif ($input == 'cheque')
         {
-          $request_content = "<td class=\"rowCommand\" colspan=\"5\">Ch&egrave;que manuel... entrer num&eacute;ro <blink>!</blink></td>";
+          $request_content = "<td class=\"rowCommand\" colspan=\"5\">ChÃ¨que manuel... entrer numÃ©ro <blink>!</blink></td>";
         }
         else
         {
@@ -709,19 +709,19 @@ class LivresbenController extends LivresbenHelper
         
         if ($_SESSION['persistent']['remettre']['num_cheque'] == -1)
         {
-          $this->models['evetudiant']->logEvent(305,$commis,"récup: cheque # $input {$_SESSION['persistent']['remettre']['argent_back']}$ à {$_SESSION['persistent']['etudiant_nom']} ({$_SESSION['persistent']['etudiant']}) de ($commis_n)");
+          $this->models['evetudiant']->logEvent(305,$commis,"rï¿½cup: cheque # $input {$_SESSION['persistent']['remettre']['argent_back']}$ ï¿½ {$_SESSION['persistent']['etudiant_nom']} ({$_SESSION['persistent']['etudiant']}) de ($commis_n)");
         }
         else if ($_SESSION['persistent']['remettre']['num_cheque'] == -2)
         {
-          $this->models['evetudiant']->logEvent(306,$commis,"récup: cheque (correction) # $input {$_SESSION['persistent']['remettre']['argent_back']}$ à {$_SESSION['persistent']['etudiant_nom']} ({$_SESSION['persistent']['etudiant']}) de ($commis_n)");
+          $this->models['evetudiant']->logEvent(306,$commis,"rï¿½cup: cheque (correction) # $input {$_SESSION['persistent']['remettre']['argent_back']}$ ï¿½ {$_SESSION['persistent']['etudiant_nom']} ({$_SESSION['persistent']['etudiant']}) de ($commis_n)");
         }
         else if ($_SESSION['persistent']['remettre']['num_cheque'] == -3)
         {
-          $this->models['evetudiant']->logEvent(307,$commis,"récup: réimpression cheque # $input {$_SESSION['persistent']['remettre']['argent_back']}$ à {$_SESSION['persistent']['etudiant_nom']} ({$_SESSION['persistent']['etudiant']}) de ($commis_n)");
+          $this->models['evetudiant']->logEvent(307,$commis,"rï¿½cup: rï¿½impression cheque # $input {$_SESSION['persistent']['remettre']['argent_back']}$ ï¿½ {$_SESSION['persistent']['etudiant_nom']} ({$_SESSION['persistent']['etudiant']}) de ($commis_n)");
         }
         
         $_SESSION['persistent']['remettre']['num_cheque'] = $input;
-        $request_content = "<td class=\"rowCommand\" colspan=\"5\">Ch&egrave;que #$input</td>";
+        $request_content = "<td class=\"rowCommand\" colspan=\"5\">ChÃ¨que #$input</td>";
       }
       
       elseif (empty($_SESSION['persistent']['etudiant']))
@@ -730,11 +730,11 @@ class LivresbenController extends LivresbenHelper
         
         if ($etudiant = $this->models['etudiant']->find("id = $input"))
         {
-          // demande la page avec les infos de l'étudiant
+          // demande la page avec les infos de l'ï¿½tudiant
           $_SESSION['persistent']['etudiant'] = $etudiant['id'];
           $_SESSION['persistent']['etudiant_nom'] = $etudiant['prenom'].' '.$etudiant['nom'];
           
-          $this->models['evetudiant']->logEvent(301,$commis,"récup: affichage du dossier *$input* ($commis_n)");
+          $this->models['evetudiant']->logEvent(301,$commis,"rï¿½cup: affichage du dossier *$input* ($commis_n)");
           
           $ret = $this->models['evetudiant']->findBySql("SELECT id FROM evetudiants WHERE evenement=304 AND id=$input AND created > DATE_SUB(CURDATE(),INTERVAL 30 DAY)");
 
@@ -766,7 +766,7 @@ class LivresbenController extends LivresbenHelper
 /**************************************************************************/
           $this->models['livre']->save($livre, false);
 
-          $this->models['evlivre']->logEvent(304,$livre['id'],$commis,"récup: retour au consignataire ($commis_n)");
+          $this->models['evlivre']->logEvent(304,$livre['id'],$commis,"rï¿½cup: retour au consignataire ($commis_n)");
 
           $class = 'class="rowConsigne"';
           $request_content = "<td $class>".substr($livre['id'],-4).'-'.$livre['genie']."</td><td $class>".$this->cutText($livre['titre'],$this->vCutText)."</td><td $class>{$livre['prix']}$</td><td $class>{$livre['isbn']}$</td>";
@@ -786,7 +786,7 @@ class LivresbenController extends LivresbenHelper
   
   function etiquettes_flash()
   {
-    $this->flash(htmlentities('Impression en cours... veuillez patienter'),'/livresben/etiquettes',10);
+    $this->flash('Impression en cours... veuillez patienter','/livresben/etiquettes',10);
   }
 
   function etiquettes($codebar=null)
@@ -822,14 +822,6 @@ class LivresbenController extends LivresbenHelper
       return;
     }
 
-		// same user trying to re-print
-    if (!empty($_SESSION['persistent']['dernier_codebar']) && $_SESSION['persistent']['dernier_codebar'] == $codebar)
-    {
-      $this->models['livre']->validationErrors['id'] = 1;
-      $this->render('etiquettes_html');
-      return;
-    }
-
     $_SESSION['persistent']['dernier_codebar'] = $codebar;
 
     $ret = $this->models['livre']->findAll("codebar = $codebar AND en_consigne=0",null,'created DESC', null);
@@ -843,20 +835,28 @@ class LivresbenController extends LivresbenHelper
       {
         // aucune inscription
         $this->models['livre']->validationErrors['inscription'] = 1;
-        $this->models['evlivre']->logEvent(451,0,$codebar,"étiquette; non-inscrit");
+        $this->models['evlivre']->logEvent(451,0,$codebar,"ï¿½tiquette; non-inscrit");
       }
       elseif ($ret[0]['confirme'] == 0)
       {
-        // pas confirmé
+        // pas confirmï¿½
         $this->models['livre']->validationErrors['confirmation'] = 1;
-        $this->models['evlivre']->logEvent(452,0,$codebar,"étiquette; non-confirmé");
+        $this->models['evlivre']->logEvent(452,0,$codebar,"ï¿½tiquette; non-confirmï¿½");
       }
       else
       {
-        // pas d'étiquettes
+        // pas d'ï¿½tiquettes
         $this->models['livre']->validationErrors['etiquettes'] = 1;
-        $this->models['evlivre']->logEvent(453,0,$codebar,"pas d'étiquettes");
+        $this->models['evlivre']->logEvent(453,0,$codebar,"pas d'ï¿½tiquettes");
       }
+      $this->render('etiquettes_html');
+      return;
+    }
+    
+	// same user trying to re-print
+    if (!empty($_SESSION['persistent']['dernier_codebar']) && $_SESSION['persistent']['dernier_codebar'] == $codebar)
+    {
+      $this->models['livre']->validationErrors['id'] = 1;
       $this->render('etiquettes_html');
       return;
     }
@@ -972,7 +972,7 @@ class LivresbenController extends LivresbenHelper
 
   function recu_flash()
   {
-    $this->flash(htmlentities('Impression en cours... un instant svp'),'/livresben/cueillette',10);
+    $this->flash('Impression en cours... un instant svp','/livresben/cueillette',10);
   }
 
   function recu($methode=null)
@@ -982,7 +982,7 @@ class LivresbenController extends LivresbenHelper
     if (!$methode)
     {
       $this->models['livre']->validationErrors['methode'] = 1;
-      $this->models['evlivre']->logEvent(152,0,$_SESSION['etudiant']['id'],"méthode de recu nulle ({$_SESSION['etudiant']['prenom']})");
+      $this->models['evlivre']->logEvent(152,0,$_SESSION['etudiant']['id'],"mï¿½thode de recu nulle ({$_SESSION['etudiant']['prenom']})");
       $this->render('cueillette');
       return;
     }
@@ -990,12 +990,12 @@ class LivresbenController extends LivresbenHelper
     if (empty($_SESSION['persistent']['dernier_codebar']))
     {
       $this->models['livre']->validationErrors['codebar'] = 1;
-      $this->models['evlivre']->logEvent(153,0,$_SESSION['etudiant']['id'],"aucun étudiant défini pour le recu ({$_SESSION['etudiant']['prenom']})");
+      $this->models['evlivre']->logEvent(153,0,$_SESSION['etudiant']['id'],"aucun ï¿½tudiant dï¿½fini pour le recu ({$_SESSION['etudiant']['prenom']})");
       $this->render('cueillette');
       return;
     }
 
-    $this->set('recuperation', $this->models['journee']->find("activite = 'R&eacute;cup&eacute;ration' AND session = {$_SESSION['foire']['session']}"));
+    $this->set('recuperation', $this->models['journee']->find("activite = 'RÃ©cupÃ©ration' AND session = {$_SESSION['foire']['session']}"));
 
     $codebar = $_SESSION['persistent']['dernier_codebar'];
 
@@ -1004,7 +1004,7 @@ class LivresbenController extends LivresbenHelper
     if (!$ret)
     {
       $this->models['livre']->validationErrors['recu'] = 1;
-      $this->models['evlivre']->logEvent(154,0,$_SESSION['etudiant']['id'],"aucun livres à imprimer sur le reçu de $codebar ({$_SESSION['etudiant']['prenom']})");
+      $this->models['evlivre']->logEvent(154,0,$_SESSION['etudiant']['id'],"aucun livres ï¿½ imprimer sur le reï¿½u de $codebar ({$_SESSION['etudiant']['prenom']})");
       $this->render('cueillette');
       return;
     }
@@ -1026,20 +1026,20 @@ class LivresbenController extends LivresbenHelper
 
     if ($methode == 'imprimer')
     {
-      $this->models['evlivre']->logEvent(103,0,$_SESSION['etudiant']['id'],"impression du reçu pour $codebar ({$_SESSION['etudiant']['prenom']})");
+      $this->models['evlivre']->logEvent(103,0,$_SESSION['etudiant']['id'],"impression du reï¿½u pour $codebar ({$_SESSION['etudiant']['prenom']})");
       $this->set('redirect', "{$this->base}/livresben/recu_flash");
       $this->render('recu_pdf','back_download');
     }
     elseif ($methode == 'courriel')
     {
-      $this->models['evlivre']->logEvent(104,0,$_SESSION['etudiant']['id'],"reçu par courriel pour $codebar ({$_SESSION['etudiant']['prenom']})");
+      $this->models['evlivre']->logEvent(104,0,$_SESSION['etudiant']['id'],"reï¿½u par courriel pour $codebar ({$_SESSION['etudiant']['prenom']})");
       $this->render('recu_pdf','generated');
 
     }
     else
     {
       $this->models['livre']->validationErrors['methode_inconnue'] = 1;
-      $this->models['evlivre']->logEvent(155,0,$_SESSION['etudiant']['id'],"méthode de recu inconnue ({$_SESSION['etudiant']['prenom']})");
+      $this->models['evlivre']->logEvent(155,0,$_SESSION['etudiant']['id'],"mï¿½thode de recu inconnue ({$_SESSION['etudiant']['prenom']})");
       $this->render('cueillette');
     }
   }

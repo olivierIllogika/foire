@@ -10,7 +10,7 @@
 
       <label for="faqSectionN">Nouvelle: </label>
       <?=$html->inputTag('faq/n_section', 15, array('id'=>'faqSectionN','maxlength'=>'29')) ?>
-      (et choisissez la section qui la pr&eacute;c&egrave;dera dans la liste)
+      (et choisissez la section qui la précèdera dans la liste)
       </p>
     </fieldset>
 
@@ -23,7 +23,7 @@
 
     <p id="faqInReponse">
 
-      <label for="faqReponse">R&eacute;ponse: </label><br />
+      <label for="faqReponse">Réponse: </label><br />
       <?=$html->areaTag('reponse') ?>
     </p>
 

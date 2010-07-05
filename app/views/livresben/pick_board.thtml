@@ -1,5 +1,3 @@
-<!-- <h2 id="livresTitre"><?=htmlentities("Pick board")?></h2> -->
-
 <table width="100%">
 <tr>
 <?php

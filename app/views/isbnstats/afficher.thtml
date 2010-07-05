@@ -7,11 +7,11 @@
     <p>Prix maximum: <?=$data['max']?>$</p>
     <p>(max-min): <?=$data['range']?></p>
     <p>Prix moyen: <?=round($data['avg'],1)?></p>
-    <p>D&eacute;v. Std: <?=round($data['stddev'],1)?></p>
-    <p>Derni&egrave;re mise &agrave; jour: <?=preg_replace('/.{11}(.{2}).(.{2}).{3}/','\1h\2',$data['created'])?></p>
+    <p>Dév. Std: <?=round($data['stddev'],1)?></p>
+    <p>Dernière mise à jour: <?=preg_replace('/.{11}(.{2}).(.{2}).{3}/','\1h\2',$data['created'])?></p>
     
   <?php else: ?>
-    <p>Aucune donn&eacute;es disponibles pour ce livre</p>
+    <p>Aucune données disponibles pour ce livre</p>
   <?php endif; ?>
 </div><!-- divStats -->
 

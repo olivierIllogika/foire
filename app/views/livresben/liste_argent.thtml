@@ -1,4 +1,4 @@
-<h2 id="livresTitre"><?=htmlentities("Liste de montants à préparer")?></h2>
+<h2 id="livresTitre">Liste de montants Ã  prÃ©parer</h2>
 
 <table>
 <tr ">

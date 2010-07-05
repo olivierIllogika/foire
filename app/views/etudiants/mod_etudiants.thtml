@@ -1,23 +1,23 @@
-  <h2 id="etRecherche">Recherche &eacute;tudiant</h2>
+  <h2 id="etRecherche">Recherche étudiant</h2>
 
-  <?=($this->etudiant->validationErrors ? '<span class="error_message">'.htmlentities('** V�rifiez le formulaire et corrigez les erreurs **').'</span>' :'')?>
+  <?=($this->etudiant->validationErrors ? '<span class="error_message">** Vérifiez le formulaire et corrigez les erreurs **</span>' :'')?>
 
   <div id="etRechFormulaire">
 
     <?php echo $html->formTag('/etudiants/mod_etudiants', 'post', array('name' => 'etRechForm')) ?>
             
             <p id="etPolySet">
-              <?=$html->tagErrorMsg('etudiant/id', htmlentities('Ce num�ro est d�j� en utilisation')) ?>
-              <label for="RechChampId" title="Num&eacute;ro d'identification">ID: </label>
+              <?=$html->tagErrorMsg('etudiant/id', 'Ce numéro est déjà en utilisation') ?>
+              <label for="RechChampId" title="Numéro d'identification">ID: </label>
             <?php
 
-               echo $html->inputTag('etudiant/id', 15, array('id'=>'RechChampId','maxlength'=>'20', 'title'=>'Num&eacute;ro d\'identification'))
+               echo $html->inputTag('etudiant/id', 15, array('id'=>'RechChampId','maxlength'=>'20', 'title'=>'Numéro d\'identification'))
                ?>
 						</p>
 
-            <p id="etRechPrenom"><label for="RechChampPrenom" title="Pr&eacute;nom">Pr&eacute;nom:&nbsp;</label><?php
+            <p id="etRechPrenom"><label for="RechChampPrenom" title="Prénom">Prénom:&nbsp;</label><?php
 
-               echo $html->inputTag('etudiant/prenom', 30, array('id'=>'RechChampPrenom','maxlength'=>'70', 'title'=>'Pr&eacute;nom'))
+               echo $html->inputTag('etudiant/prenom', 30, array('id'=>'RechChampPrenom','maxlength'=>'70', 'title'=>'Prénom'))
                ?></p>
                
             <p id="etRechNom"><label for="RechChampNom" title="Nom de famille">Nom: </label><?php
@@ -26,19 +26,19 @@
             ?></p>
             
             <p id="etRechCourriel"><?php
-               echo '<label for="RechCourriel" title="Courrier &eacute;lectronique">Courriel:&nbsp;</label>'.
-                    $html->inputTag('etudiant/courriel', 50, array('id'=>'RechCourriel','maxlength'=>'150', 'title'=>'Courrier &eacute;lectronique'));
-               echo $html->tagErrorMsg('etudiant/courriel', 'Courrier &eacute;lectronique')
+               echo '<label for="RechCourriel" title="Courrier électronique">Courriel:&nbsp;</label>'.
+                    $html->inputTag('etudiant/courriel', 50, array('id'=>'RechCourriel','maxlength'=>'150', 'title'=>'Courrier électronique'));
+               echo $html->tagErrorMsg('etudiant/courriel', 'Courrier électronique')
                ?></p>
 
-            <p id="etRechConfirm"><!-- <label for="RechConfirm" title="Inscription confirm&eacute;">Confirm&eacute;: </label> --><?php
+            <p id="etRechConfirm"><!-- <label for="RechConfirm" title="Inscription confirmé">Confirmé: </label> --><?php
 
-                $confirmeHtmlArray = array('id'=>'RechConfirm', 'title'=>'Inscription confirm&eacute;');
+                $confirmeHtmlArray = array('id'=>'RechConfirm', 'title'=>'Inscription confirmé');
                 if ($html->tagValue('confirme') == 1)
                 {
                     $confirmeHtmlArray['checked'] = '"checked"';
                 }
-                echo $html->checkboxTag('confirme', 'Confirm&eacute;', $confirmeHtmlArray);
+                echo $html->checkboxTag('confirme', 'Confirmé', $confirmeHtmlArray);
             ?></p>
 <!--
             <p id="etRechP1"><label for="RechChampP1" title="Mot de passe">Mot de passe: </label><?php
@@ -46,12 +46,12 @@
                 echo $html->passwordTag('motpasse1', 30, array('id'=>'RechChampP1','maxlength'=>'20', 'title'=>'Mot de passe'))
             ?></p>
 
-            <p id="etRechP2"><label for="RechChampP2" title="Retappez le mot de passe">R&eacute;p&eacute;tez: </label><?php
+            <p id="etRechP2"><label for="RechChampP2" title="Retappez le mot de passe">Répétez: </label><?php
 
                 echo $html->passwordTag('motpasse2', 30, array('id'=>'RechChampP2','maxlength'=>'20', 'title'=>'Retappez le mot de passe'))
             ?><?php
 
-                echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent &ecirc;tre identiques')
+                echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent être identiques')
             ?></p>
     -->        
             <p id="RechSubmit"><?php
@@ -75,11 +75,11 @@
     <table id="etudiantsListe">
 
       <tr id="etudiantsHeadRow">
-        <th id="etudiantsNom">Nom<?=($this->etudiant->countLastFind > 3 ? '&nbsp;&nbsp;('.$this->etudiant->countLastFind.' trouv&eacute;s)' : '')?></th>
+        <th id="etudiantsNom">Nom<?=($this->etudiant->countLastFind > 3 ? '&nbsp;&nbsp;('.$this->etudiant->countLastFind.' trouvés)' : '')?></th>
         <th id="etudiantsPrenom">Prenom</th>
         <th id="etudiantsCourriel">Courriel</th>
-        <th id="etudiantsConfirme">Confirm&eacute;</th>
-        <th id="etudiantsCreation">Cr&eacute;ation</th>
+        <th id="etudiantsConfirme">Confirmé</th>
+        <th id="etudiantsCreation">Création</th>
         <th id="etudiantsLastLogin">Visite</th>
       </tr>
 	
@@ -100,6 +100,6 @@
         <?php endforeach; ?>
     </table>
     <?php } elseif ($this->etudiant->countLastFind == 0) { // countLastFind ?>
-    <p id="etudiantsAucun">Aucun &eacute;tudiant &agrave; afficher</p>
+    <p id="etudiantsAucun">Aucun étudiant à afficher</p>
     <?php } //if countLastFind ?>
   </div><!-- livresListeDiv -->

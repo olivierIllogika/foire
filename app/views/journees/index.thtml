@@ -1,35 +1,32 @@
-<h2><?=htmlentities("Horaire $sess_literal $annee")?></h2>
+<h2>Horaire <?="$sess_literal $annee"?></h2>
 
 <div id="divHoraire">
 
   <table id="tbHoraire">
     <tr>
-      <th id="headAct">Activit&eacute;</th>
+      <th id="headAct">Activit√©</th>
       <th id="headDate">Date</th>
       <th id="headHeure">Heures*</th>
       <th id="headLieu">Emplacement</th>
     </tr>
-<?php
-/*
-echo '<pre>';
-print_r($sess_literal);
-echo '</pre>';
-*/
-$lastDate = '';
-$lastAct = '';
-?>
+	<?php
+		$lastDate = '';
+		$lastAct = '';
+	?>
     <?php foreach ($data as $journee): ?>
-
     <?php if ($lastAct != '' && $lastAct != $journee['activite']) {
       
       // assuming all events are consecutive, a change in the event type will write a blank line
       $lastAct = $journee['activite'];
       ?>
+
       <tr>
         <td colspan="4" class="horBlank"></td>
       </tr>
+
     <?php }
       if ($journee['activite'] != 'Retard') { ?>
+
       <tr>
         <td class="horAct"><?=$lastAct = $journee['activite']?></td>
         <td class="horDate"><?=date('j',strtotime($journee['date'])).' '.$month_fr[date('n',strtotime($journee['date']))-1]?></td>
@@ -37,20 +34,10 @@ $lastAct = '';
         <td class="horLieu"><?=$journee['lieu']?></td>
       </tr>
     <?php } /*elseif ($journee['date'] > $lastDate) { */?>
-<!--
-    <php $j1 = $journee; $j2 = next($data); ?>
-      <tr>
-        <td class="horRetard"><=$j1['activite']?></td>
-        <td class="horDate"><=date('j', $j1['date']).'-'.date('j',$j2['date'])?></td>
-        <td class="horDate"><=$j1['date'].'-'.$j2['date']?></td>
-        <td class="horHeure">Heures de l'AEP</td>
-        <td class="horLieu"><=$j1['lieu']?></td>
-      </tr>
-    <php break; }  ?>-->
 
     <?php endforeach; ?>
   </table>
-  <span id="avisHeures"><?=htmlentities("* Les heures des activitÈs peuvent varier sans prÈavis")?></span>
+  <span id="avisHeures">* Les heures des activit√©s peuvent varier sans pr√©avis</span>
 </div><!-- horaire -->
 
 <?=$this->renderElement('procedure_vente') ?>

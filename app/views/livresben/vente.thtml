@@ -268,14 +268,14 @@ $total_livres = (empty($total_livres) ? '0' : $total_livres);
   <hr>
   
   <div id="cueilLegende">
-  L&eacute;gende:
+  Légende:
   <table>
     <tr>
       <td class="rowLoading">Chargement</td>
-      <td class="rowVendu">Livre ajout&eacute;</td>
-      <td class="rowNonVendu">Livre RETIR&Eacute;</td>
+      <td class="rowVendu">Livre ajouté</td>
+      <td class="rowNonVendu">Livre RETIRÉ</td>
       <td class="rowCommand">Commande</td>
-      <td class="rowInvalid">Entr&eacute;e non valide</td>
+      <td class="rowInvalid">Entrée non valide</td>
     </tr>
   </table>
   Pour une liste des modes de paiement, tapez "cartes"

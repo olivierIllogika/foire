@@ -7,7 +7,7 @@ class LivresbenHelper extends AppController
 
   var $mode_paiement = array('aucune' => 'Paiment comptant',
                           'visa' => 'Carte Visa',
-                          'debit' => 'Carte d&eacute;bit',
+                          'debit' => 'Carte dÃ©bit',
                           'autre' => 'Autre carte ?!');
 
   var $vCutText = 55;
@@ -46,12 +46,12 @@ class LivresbenHelper extends AppController
   {
 
     $body =
-    "Vous venez de récupérer $returnedMoney $ de la vente de vos livres.  ".
-    "Cette somme correspond au total de vos ventes moins le montant de la commission prélevée.\n\n".
-    "Voici le détail de vos livres vendus :\n\n".
+    "Vous venez de rï¿½cupï¿½rer $returnedMoney $ de la vente de vos livres.  ".
+    "Cette somme correspond au total de vos ventes moins le montant de la commission prï¿½levï¿½e.\n\n".
+    "Voici le dï¿½tail de vos livres vendus :\n\n".
     $bookList.
 
-    "\n\nMerci d'avoir participé à cette édition de la Foire !";
+    "\n\nMerci d'avoir participï¿½ ï¿½ cette ï¿½dition de la Foire !";
 
     sendSMTP($email,'','','[Foire]Livres vendus', $body, false,'Foire aux Livres <foire-noreply@step.polymtl.ca>');
 

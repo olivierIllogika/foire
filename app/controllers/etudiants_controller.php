@@ -193,7 +193,8 @@ class EtudiantsController extends EtudiantsHelper
     }
     else
     {
-      $this->params['data']['courriel'] = trim($this->params['data']['courriel']);
+        $this->models['etudiant']->validationErrors['delay'] = 0;
+        $this->params['data']['courriel'] = trim($this->params['data']['courriel']);
 
 //      $ret = $this->models['etudiant']->findAll(
 //          "courriel='{$this->params['data']['courriel']}'",
@@ -246,7 +247,7 @@ class EtudiantsController extends EtudiantsHelper
 
   function inscription()
   {
-    $this->pageTitle .= htmlentities(" - Inscription des consignataires");
+    $this->pageTitle .= " - Inscription des consignataires";
 
     $this->params['data']['courriel'] = strtolower($this->params['data']['courriel']);
     /* pre-processing de donn�es */
@@ -414,7 +415,7 @@ die();
     {
       // ne devrait jamais venir ici
       $this->models['evetudiant']->logEvent(451,$id,"conf:identité inconnue");
-      $this->flash(htmlentities('Identification inconnue'),'/etudiants/inscription_choix');
+      $this->flash('Identification inconnue','/etudiants/inscription_choix');
     }
 
   }

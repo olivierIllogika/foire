@@ -5,11 +5,11 @@
 
   <div id="livresAjFormulaire">
 
-    <?php $isbn_help = htmlentities('4 ou 10 caractères (Le dernier caractère d\'un ISBN peut être "X")') ?>
+    <?php $isbn_help = "4 ou 10 caractÃ¨res (Le dernier caractÃ¨re d'un ISBN peut Ãªtre \"X\")" ?>
     <?php $prix_help = 'Le prix auquel VOUS estimez la valeur de revente du livre' ?>
 
     <?php echo $html->formTag('/livres/rech_isbn') ?>
-            <p><?=htmlentities("Entrez un ISBN/code4 et cliquez sur le bouton 'Trouver le titre'.  Si l'information est disponible, quelques champs pourront être remplis pour vous!")?></p>
+            <p>Entrez un ISBN/code4 et cliquez sur le bouton 'Trouver le titre'.  Si l'information est disponible, quelques champs pourront Ãªtre remplis pour vous!</p>
             
             <p id="AjISBN"><?php
                echo $html->tagErrorMsg('livre/isbn_rech', 'ISBN/code4 non valide; '.$isbn_help);
@@ -27,7 +27,7 @@
 
             <?=(!empty($info) ? '<span class="isbnInfo">De l\'information est disponible pour ce livre <span class="isbnWarn">(N\'oubliez pas d\'ajouter un prix!)</span>:</span>' : '')?>
 
-            <?=($html->tagValue('isbn_rech') && empty($info) && !$html->tagErrorMsg('livre/isbn_rech','blank') ? '<span class="isbnWarn">Aucune information disponible pour ce livre</span>'.(strlen($html->tagValue('isbn_rech')) == 4 ? '<span class="isbnWarn">; il est probable que ce polycopi&eacute; ne soit pas utilis&eacute; dans les cours de cette session</span>':'') : '')?>
+            <?=($html->tagValue('isbn_rech') && empty($info) && !$html->tagErrorMsg('livre/isbn_rech','blank') ? '<span class="isbnWarn">Aucune information disponible pour ce livre</span>'.(strlen($html->tagValue('isbn_rech')) == 4 ? '<span class="isbnWarn">; il est probable que ce polycopiÃ© ne soit pas utilisÃ© dans les cours de cette session</span>':'') : '')?>
 
 
             <p id="AjPrix"><label for="AjChampPrix">Prix: </label><?php
@@ -35,7 +35,7 @@
                 echo $html->inputTag('livre/prix', 3, array('id'=>'AjChampPrix','maxlength'=>'3', 'title'=>$prix_help))
             ?>&nbsp;$<?php
 
-                echo $html->tagErrorMsg('livre/prix', 'Le prix est requis (sans d&eacute;cimales)');
+                echo $html->tagErrorMsg('livre/prix', 'Le prix est requis (sans dÃ©cimales)');
 
                 $statsClick = "window.open('".$html->urlFor("/isbnstats/afficher/".$html->tagValue('isbn_rech'))."','Statistiques de livre','width=300,height=350,screenX=300,screenY=300,top=300,left=300'); return false;";
 
@@ -47,19 +47,19 @@
             <p id="AjTitre"><label for="AjChampTitre">Titre: </label><?php
 
                echo empty($info) && empty($this->params['data']['isbntitre']) ?
-                                  /* entrée manuelle */
+                                  /* entrÃ©e manuelle */
                                   $html->inputTag('livre/titre', 50, array('id'=>'AjChampTitre','maxlength'=>'250'))
 
-                                  /* entrée automatique */
+                                  /* entrÃ©e automatique */
                                  : $html->hiddenTag('isbntitre', '1').(empty($this->params['data']['isbntitre']) ?
 
-                                  /* première entrée automatique */
+                                  /* premiÃ¨re entrÃ©e automatique */
                                     $html->hiddenTag('titre', $info['titre']).
-                                      "<span class=\"isbnInfo\">".htmlentities($info['titre'])."</span>"
+                                      "<span class=\"isbnInfo\">{$info['titre']}</span>"
 
-                                  /* entrée automatique subséquente */
+                                  /* entrÃ©e automatique subsÃ©quente */
                                       : $html->hiddenTag('titre', $this->params['data']['titre']).
-                                      "<span class=\"isbnInfo\">".htmlentities($this->params['data']['titre']))."</span>"
+                                      "<span class=\"isbnInfo\">{$this->params['data']['titre']}")."</span>"
                ?><?php
 
                echo $html->tagErrorMsg('livre/titre', 'Le titre est requis.') ?></p>
@@ -72,7 +72,7 @@
               echo $html->inputTag('livre/cours', 10, $cours_array)
                               
                ?></p>
-            <p id="AjGenie"><label for="AjChampGenie">G&eacute;nie: </label><?php
+            <p id="AjGenie"><label for="AjChampGenie">GÃ©nie: </label><?php
 
               $sel_genie = empty($info['cours']) ? $html->tagValue('genie') : $this->livre->cours2genie($genie, $info['cours']);
 
@@ -83,7 +83,7 @@
               echo $html->submitTag('Ajouter')
               ?>&nbsp;<?php
               
-              echo $html->linkTo(htmlentities('Annuler et revenir à la liste'), '/livres', array('id' => 'AjAnnuler'), htmlentities('Voulez-vous vraiment annuler et retourner à la liste de livre ?'))
+              echo $html->linkTo('Annuler et revenir Ã  la liste', '/livres', array('id' => 'AjAnnuler'), 'Voulez-vous vraiment annuler et retourner Ã  la liste de livre ?')
               ?></p>
     </form>
 

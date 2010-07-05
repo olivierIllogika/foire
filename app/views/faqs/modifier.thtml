@@ -1,4 +1,4 @@
-<h2><?=htmlentities("Modifier une entr�e de FAQ")?></h2>
+<h2>Modifier une entrée de FAQ</h2>
 <pre><?/*=print_r($data, true)*/?></pre>
   <?=$html->formTag('/faqs/modifier/'.$html->tagValue('id')) ?>
 
@@ -6,5 +6,5 @@
 
   </form>
 
-  <?=$html->linkTo('Supprimer', '/faqs/supprimer/'.$html->tagValue('id'), null, "Voulez-vous vraiment supprimer cette entr&eacute;e ?")?>
+  <?=$html->linkTo('Supprimer', '/faqs/supprimer/'.$html->tagValue('id'), null, "Voulez-vous vraiment supprimer cette entrée ?")?>
 

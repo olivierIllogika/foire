@@ -115,10 +115,10 @@
       if ($this->livre->validationErrors)
       {
         echo "<tr class=\"rowCommand\"><td colspan=\"4\">";
-        echo strip_tags($html->tagErrorMsg('livre/methode_inconnue', htmlentities('MÈthode de sortie du reÁu inconnue')));
-        echo strip_tags($html->tagErrorMsg('livre/methode', htmlentities('MÈthode de sortie du reÁu non spÈcifiÈe')));
-        echo strip_tags($html->tagErrorMsg('livre/recu', htmlentities('Aucun livres ‡ imprimer sur le reÁu')));
-        echo strip_tags($html->tagErrorMsg('livre/codebar', htmlentities('Consignataire inconnu')));
+        echo strip_tags($html->tagErrorMsg('livre/methode_inconnue', 'M√©thode de sortie du re√ßu inconnue'));
+        echo strip_tags($html->tagErrorMsg('livre/methode', 'M√©thode de sortie du re√ßu non sp√©cifi√©e'));
+        echo strip_tags($html->tagErrorMsg('livre/recu', 'Aucun livres √† imprimer sur le re√ßu'));
+        echo strip_tags($html->tagErrorMsg('livre/codebar', 'Consignataire inconnu'));
         echo "</td></tr>";
       }
       ?>
@@ -129,14 +129,14 @@
   <hr>
   
   <div id="cueilLegende">
-  L&eacute;gende:
+  L√©gende:
   <table>
     <tr>
       <td class="rowLoading">Chargement</td>
-      <td class="rowConsigne">Livre consign&eacute;</td>
-      <td class="rowUsager">Livre NON consign&eacute;</td>
+      <td class="rowConsigne">Livre consign√©</td>
+      <td class="rowUsager">Livre NON consign√©</td>
       <td class="rowCommand">Commande</td>
-      <td class="rowInvalid">Entr&eacute;e non valide</td>
+      <td class="rowInvalid">Entr√©e non valide</td>
     </tr>
   </table>
   Pour une liste des commandes, tapez "commandes"

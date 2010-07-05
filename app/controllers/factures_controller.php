@@ -8,7 +8,7 @@ class FacturesController extends FacturesHelper
 {
   function index()
   {
-    $this->pageTitle .= htmlentities(" - Impression de facture");
+    $this->pageTitle .= " - Impression de facture";
 
   }
 
@@ -46,7 +46,7 @@ class FacturesController extends FacturesHelper
     }
     else
     {
-      $this->models['evlivre']->logEvent(652,0,0,"mauvaise entré facture '$references'");
+      $this->models['evlivre']->logEvent(652,0,0,"mauvaise entrï¿½ facture '$references'");
 
       $this->models['facture']->validationErrors['references'] = 2;
       $this->render('index');
@@ -57,7 +57,7 @@ class FacturesController extends FacturesHelper
 
     if (!$ret)
     {
-      $this->models['evlivre']->logEvent(651,0,0,"mauvaises références facture '$references'");
+      $this->models['evlivre']->logEvent(651,0,0,"mauvaises rï¿½fï¿½rences facture '$references'");
 
       $this->models['facture']->validationErrors['references'] = 3;
       $this->render('index');

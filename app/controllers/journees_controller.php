@@ -15,9 +15,9 @@ class JourneesController extends JourneesHelper
     $this->set('data', $this->models['journee']->findAll("session=$foire",null,'date'));
 
 		// some string arrays
-    $literals = array(1=>'hiver',2=>'&;eacute;t&eacute;',3=>'automne');
-    $month_fr = array('janvier','f&eacute;vrier','mars','avril','mai','juin',
-                    'juillet','ao&ucirc;t','septembre','octobre','novembre','d&eacute;cembre');
+    $literals = array(1=>'hiver',2=>'été',3=>'automne');
+    $month_fr = array('janvier','février','mars','avril','mai','juin',
+                    'juillet','août','septembre','octobre','novembre','décembre');
     $this->set('month_fr', $month_fr);
 
 		// extract number from full session number (3 from 20053) and get $literals[]

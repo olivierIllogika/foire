@@ -1,6 +1,6 @@
 <h2>Foire aux Questions</h2>
 
-<?=(!empty($canMod) ? ' ['.$html->linkTo('Ajouter','/faqs/creer', array('class'=>'godLink', 'title'=>'Ajouter une entr&eacute;e')).']' :'')?>
+<?=(!empty($canMod) ? ' ['.$html->linkTo('Ajouter','/faqs/creer', array('class'=>'godLink', 'title'=>'Ajouter une entrée')).']' :'')?>
 <?=(!empty($canMod) ? '[<a class="godLink" href="#qaCachees">Questions cachées</a>]' : '')?>
 
 <a name="faqTop" id="faqTop"></a>
@@ -21,7 +21,7 @@
     
   </ul>
   <?php if (!empty($_SESSION['etudiant']['id'])) : ?>
-  &nbsp;<?=$html->linkTo('Poser votre question', '/faqs/poser', array('class' => 'userLink'))?>&nbsp;si elle est toujours sans r&eacute;ponse
+  &nbsp;<?=$html->linkTo('Poser votre question', '/faqs/poser', array('class' => 'userLink'))?>&nbsp;si elle est toujours sans réponse
   <?php endif; ?>
 </div>
 
@@ -59,7 +59,7 @@
 
       <a name="qa<?=$qa['id']?>" id="qa<?=$qa['id']?>"></a>
       <p class="<?=$qClass?>"><?=$qa['question']?></p>
-      <p class="<?=$rClass?>"><?=$qa['reponse'].' [<a href="#faqTop" title="Retour &agrave; la liste">^</a>] '.(!empty($canMod) ? ' ['.$html->linkTo('modifier','/faqs/modifier/'.$qa['id'], array('class'=>'godLink', 'title'=>'Modifier cette entr&eacute;e')).']' :'')?></p>
+      <p class="<?=$rClass?>"><?=$qa['reponse'].' [<a href="#faqTop" title="Retour à la liste">^</a>] '.(!empty($canMod) ? ' ['.$html->linkTo('modifier','/faqs/modifier/'.$qa['id'], array('class'=>'godLink', 'title'=>'Modifier cette entrée')).']' :'')?></p>
 
 
     <?php endforeach; ?>

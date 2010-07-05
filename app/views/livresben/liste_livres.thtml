@@ -1,6 +1,6 @@
-<h2 id="livresTitre"><?=htmlentities("Liste de livres")?></h2>
-<h3><?=htmlentities("Sur présentation d'une carte d'identité seulement")?></h3>
-<h3><?=htmlentities("Rayez une fois passé, mais le nom doit être encore lisible!")?></h3>
+<h2 id="livresTitre">Liste de livres</h2>
+<h3>Sur prÃ©sentation d'une carte d'identitÃ© seulement</h3>
+<h3>Rayez une fois passÃ©, mais le nom doit Ãªtre encore lisible!</h3>
 <pre><?/*print_r($data,true)*/?></pre>
 
 <table>

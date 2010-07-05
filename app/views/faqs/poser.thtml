@@ -9,8 +9,8 @@
     <?php
       echo $html->tagErrorMsg('faq/sujet', 'Vous devez indiquer un sujet');
 
-      $options['foire'] = htmlentities("Question concernant la Foire aux Livres en général: cueillette, vente, etc.");
-      $options['site'] = htmlentities("Question concernant le site internet de la Foire");
+      $options['foire'] = "Question concernant la Foire aux Livres en gÃ©nÃ©ral: cueillette, vente, etc.";
+      $options['site'] = "Question concernant le site internet de la Foire";
       echo $html->radioTags('sujet', $options,'<br />',array());
     ?>
   </p>
@@ -18,7 +18,7 @@
   <?php if (empty($_SESSION['etudiant']['id'])) : ?>
     <p id="faqInOrigine">
 
-      <label for="faqOrigine">Votre adresse de courrier &eacute;lectronique: </label><br />
+      <label for="faqOrigine">Votre adresse de courrier Ã©lectronique: </label><br />
       <?=$html->inputTag('faq/courriel', 40, array('id'=>'faqOrigine','maxlength'=>'70'))?>
     </p>
   <?php endif; ?>

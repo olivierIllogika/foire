@@ -10,7 +10,7 @@ class LivresController extends LivresHelper
 
   function index()
   {
-    $this->pageTitle .= htmlentities(" - Mes livres");
+    $this->pageTitle .= " - Mes livres";
 
     if (!$this->sessionCheck()) return;
     $this->loadCache();
@@ -67,7 +67,7 @@ print_r($this->params['data']);
 echo '</pre>';
 */
         $this->models['evlivre']->logEvent(431, $d['id'], $d['codebar'], "ajout livre [isbn:{$d['isbn']} titre:{$d['titre']}]");
-        $this->flash(htmlentities('Livre ajoutÈ'),'/livres');
+        $this->flash('Livre ajout√©','/livres');
       }
 
     }
@@ -87,11 +87,11 @@ echo '</pre>';
     }
     $d = $ret[0];
 
-    $this->models['evlivre']->logEvent(434, $d['id'], $d['codebar'], "livre supprimÈ");
+    $this->models['evlivre']->logEvent(434, $d['id'], $d['codebar'], "livre supprimÔøΩ");
     
     if ($this->models['livre']->del($id))
     {
-      $this->flash(htmlentities('Livre supprimÈ'), '/livres');
+      $this->flash('Livre supprim√©', '/livres');
     }
   }
 
@@ -141,7 +141,7 @@ echo '</pre>';
 
       if ($this->params['data'])
       {
-        $this->flash(htmlentities('Livre mis ‡ jour'),'/livres');
+        $this->flash('Livre mis √† jour','/livres');
         $this->models['evlivre']->logEvent(433, $d['id'], $d['codebar'], "modif. livre");
       }
     }
@@ -149,7 +149,7 @@ echo '</pre>';
 
   function recherche()
   {
-    $this->pageTitle .= htmlentities(" - Recherche");
+    $this->pageTitle .= " - Recherche";
     //$this->set('totaux', $this->models['livre']->findBySql("SELECT COUNT(*) as total, en_consigne FROM livres WHERE codebar != 29334000487074 GROUP BY en_consigne ORDER BY en_consigne"));
     $total = $this->models['livre']->findBySql("SELECT COUNT(*) as total FROM livres as l join evlivres as evl on l.id=evl.id WHERE l.codebar != 29334000487074 AND evenement=101 AND evl.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND en_consigne=1");
     $this->set('total', $total[0][0]);
@@ -217,7 +217,7 @@ print_r($matches);
 echo '</pre>';
 die();
 */
-      // seulement 4 ou 10 caractËres
+      // seulement 4 ou 10 caractÔøΩres
       if (!preg_match('/^([0-9]{4,5}$)|([0-9]{9}[0-9X]$)/', $isbn_code4))
       {
         $this->models['livre']->validationErrors['isbn_rech'] = 1;
@@ -244,8 +244,8 @@ die();
 //echo $valid_isbn.'<br />';
         if (!$valid_isbn)
         {
-          // ne peut pas extraire d'ISBN (9 ou 10 caractËres)
-          // (impossible car dÈj‡ validÈ)
+          // ne peut pas extraire d'ISBN (9 ou 10 caractÔøΩres)
+          // (impossible car dÔøΩjÔøΩ validÔøΩ)
           $this->models['livre']->validationErrors['isbn_rech'] = 1;
         }
         else
@@ -254,8 +254,8 @@ die();
 
           if (strlen($valid_isbn) == 9)
           {
-            // checksum non valide, recalcul avec les 9ier caractËres et
-            // suggËre cette information titre
+            // checksum non valide, recalcul avec les 9ier caractÔøΩres et
+            // suggÔøΩre cette information titre
             $isbn10 = $this->models['isbn']->gtin2isbn($valid_isbn, true);
 
             $info = $this->models['isbn']->getInfo($isbn10);

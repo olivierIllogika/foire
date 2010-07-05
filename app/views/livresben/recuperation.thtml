@@ -1,5 +1,5 @@
   <?=$html->javascriptIncludeTag('/js/prototype.js')?>
-  <h2 id="livresTitre"><?=htmlentities("R�cup�ration")?></h2>
+  <h2 id="livresTitre">Récupération</h2>
   <span><?=$_SESSION['etudiant']['prenom']?></span>
 
 
@@ -94,7 +94,7 @@
     re = /rowConsigne/;
     if (re.test(rowText))
     {
-      // d�placement de la ligne
+      // d�placement de la ligne
       tableFrom.childNodes.item(1).removeChild(latestRow);
       tableTo.childNodes.item(1).appendChild(latestRow);
     }
@@ -166,8 +166,8 @@
         }
       }
     ?>
-    <p id="remettre">Remettre <b><?=empty($_SESSION['persistent']['remettre']) ? '':$_SESSION['persistent']['remettre']['argent']?></b>$ et <?=empty($_SESSION['persistent']['remettre']) ? '': $_SESSION['persistent']['remettre']['nb_livre']?> livre(s)  <?=(empty($_SESSION['persistent']['etudiant_nom']) ? '' : '&agrave; '.$_SESSION['persistent']['etudiant_nom'])?></p>
-  &Agrave; donner:
+    <p id="remettre">Remettre <b><?=empty($_SESSION['persistent']['remettre']) ? '':$_SESSION['persistent']['remettre']['argent']?></b>$ et <?=empty($_SESSION['persistent']['remettre']) ? '': $_SESSION['persistent']['remettre']['nb_livre']?> livre(s)  <?=(empty($_SESSION['persistent']['etudiant_nom']) ? '' : 'à '.$_SESSION['persistent']['etudiant_nom'])?></p>
+  À donner:
     <table id="backListe">
 
       <tr id="livresHeadRow">
@@ -182,7 +182,7 @@
     </table>
 
   <hr>
-  Donn&eacute;s:
+  Donnés:
     <table id="userListe">
       <tr id="livresHeadRow">
         <th id="livresHID">id</th>
@@ -213,14 +213,14 @@
   <hr>
   
   <div id="cueilLegende">
-  L&eacute;gende:
+  Légende:
   <table>
     <tr>
       <td class="rowLoading">Chargement</td>
-      <td class="rowConsigne">Retourn&eacute;</td>
-      <td class="rowUsager">&Agrave; retourner</td>
+      <td class="rowConsigne">Retourné</td>
+      <td class="rowUsager">À retourner</td>
       <td class="rowCommand">Commande</td>
-      <td class="rowInvalid">Entr&eacute;e non valide</td>
+      <td class="rowInvalid">Entrée non valide</td>
     </tr>
   </table>
   Pour une liste des commandes, tapez "commandes"

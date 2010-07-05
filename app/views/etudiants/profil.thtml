@@ -1,51 +1,29 @@
   <h2 id="etProfile">Modification de votre profil</h2>
 
-  <?=($this->etudiant->validationErrors ? '<span class="error_message">'.htmlentities('** VÈrifiez le formulaire et corrigez les erreurs **').'</span>' :'')?>
+  <?=($this->etudiant->validationErrors ? '<span class="error_message">** V√©rifiez le formulaire et corrigez les erreurs **</span>' :'')?>
 
   <div id="etProfilFormulaire">
 
-    <?php $email_help = 'Entrez une adresse de courrier &eacute;lectronique valide';
-          $option1 =htmlentities(" J'ai une carte d'identitÈ de Polytechnique ");
-          $option2 = htmlentities(" Je veux utiliser mon permis de conduire ");
-          $option3 = htmlentities(" Donnez-moi un numÈro que je mÈmoriserai et mentionnerai aux bÈnÈvoles ");
-/* <pre><?=print_r($_SERVER)></pre>
-*/
+    <?php $email_help = 'Entrez une adresse de courrier √©lectronique valide';
+          $option1 = " J'ai une carte d'identit√© de Polytechnique ";
+          $option2 = " Je veux utiliser mon permis de conduire ";
+          $option3 = " Donnez-moi un num√©ro que je m√©moriserai et mentionnerai aux b√©n√©voles ";
      ?>
 
     <?php echo $html->formTag('/etudiants/profil') ?>
             
             <p id="etProfilId">
-              <label for="ProfilChampId" title="Num&eacute;ro d'identification">Num&eacute;ro d'identification: </label>
+              <label for="ProfilChampId" title="Num√©ro d'identification">Num√©ro d'identification: </label>
               
             <?php
 
-               echo $html->inputTag('etudiant/id', 15, array('id'=>'ProfilChampId','maxlength'=>'17', 'title'=>"Num&eacute;ro d'identification"))
+               echo $html->inputTag('etudiant/id', 15, array('id'=>'ProfilChampId','maxlength'=>'17', 'title'=>"Num√©ro d'identification"))
                ?>&nbsp;(avec ou sans espaces)<?php
 
-               echo $html->tagErrorMsg('etudiant/id', htmlentities("Un conflit existe entre le numÈro entrÈ et un numÈro existant. Si vous n'avez pas fait d'erreur, continuer d'utiliser votre numÈro actuel jusqu'‡ ce vous puissiez rÈsoudre la situation avec l'aide d'un bÈnÈvole lors d'un ÈvÈnement prochain."))
+               echo $html->tagErrorMsg('etudiant/id', "Un conflit existe entre le num√©ro entr√© et un num√©ro existant. Si vous n'avez pas fait d'erreur, continuer d'utiliser votre num√©ro actuel jusqu'√† ce vous puissiez r√©soudre la situation avec l'aide d'un b√©n√©vole lors d'un √©v√©nement prochain.")
             ?>
             
             </p>
-<?php /*
-            <p id="etRegPrenom"><label for="RegChampPrenom" title="Pr&eacute;nom">Pr&eacute;nom:&nbsp;</label><?php
-
-               echo $html->inputTag('etudiant/prenom', 30, array('id'=>'RegChampPrenom','maxlength'=>'70', 'title'=>'Pr&eacute;nom'))
-               ?><?php
-
-               echo $html->tagErrorMsg('etudiant/prenom', htmlentities('Un prÈnom est requis')) ?></p>
-            <p id="etRegNom"><label for="RegChampNom" title="Nom de famille">Nom: </label><?php
-
-                echo $html->inputTag('etudiant/nom', 30, array('id'=>'RegChampNom','maxlength'=>'70', 'title'=>'Nom de famille'))
-            ?><?php
-
-                echo $html->tagErrorMsg('etudiant/nom', 'Un nom de famille est requis')
-            ?></p>
-            <p id="etRegCourriel"><?php
-               echo '<label for="RegChampCourriel" title="'.$email_help.'">Courriel:&nbsp;</label>'.
-                    $html->inputTag('etudiant/courriel', 50, array('id'=>'RegChampCourriel','maxlength'=>'150', 'title'=>$email_help));
-               echo $html->tagErrorMsg('etudiant/courriel', $email_help)
-               ?></p>
-*/?>
 
             <p id="etRegPold"><label for="RegChampPold" title="Ancien mot de passe">Ancien mot de passe: </label><?php
 
@@ -63,20 +41,20 @@
                 echo $html->tagErrorMsg('etudiant/motpasse', 'Un mot de passe est requis')
             ?></p>
 
-            <p id="etRegP2"><label for="RegChampP2" title="Retappez le mot de passe">R&eacute;p&eacute;tez: </label><?php
+            <p id="etRegP2"><label for="RegChampP2" title="Retappez le mot de passe">R√©p√©tez: </label><?php
 
                 echo $html->passwordTag('motpasse2', 30, array('id'=>'RegChampP2','maxlength'=>'20', 'title'=>'Retappez le mot de passe'))
             ?><?php
 
-                echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent &ecirc;tre identiques')
+                echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent √™tre identiques')
             ?></p>
             
             <p id="AjSubmit"><?php
             
-              echo $html->submitTag('Metttre mon profil &agrave; jour')
+              echo $html->submitTag('Metttre mon profil √† jour')
               ?>&nbsp;<?php
               
-              echo $html->linkTo(htmlentities('Annuler et revenir ‡ la liste'), '/livres', array('id' => 'AjAnnuler'))
+              echo $html->linkTo('Annuler et revenir √† la liste', '/livres', array('id' => 'AjAnnuler'))
               ?></p>
     </form>     
 

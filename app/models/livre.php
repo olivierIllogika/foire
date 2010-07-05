@@ -99,7 +99,7 @@ echo '</pre>';
   {
     return '<acronym title="International Standard Book Number">ISBN</acronym>'.
            '/'.
-           '<acronym title="'.htmlentities('Code à 4 chiffres des polycopiés de Polytechnique').'">code4</acronym>';
+           '<acronym title="Code Ã  4 chiffres des polycopiÃ©s de Polytechnique">code4</acronym>';
   }
 /*
   function titre($data)

@@ -1,4 +1,4 @@
-  <h2 id="livresTitre">Impression d'&eacute;tiquettes</h2>
+  <h2 id="livresTitre">Impression d'√©tiquettes</h2>
 
   <div id="livresEtiquetteDiv">
 
@@ -7,24 +7,24 @@
     </div>
 
     <ol>
-    <li><?=htmlentities("Vos livres doivent dÈj‡ tous Ítre inscrit sur le site de la Foire")?></li>
-    <li><?=htmlentities("Passez le code barre de votre carte sous le laser")?></li>
-    <li><?=htmlentities("N'endommagez pas les Ètiquette inutilisÈes ! Nous les rÈutilisons")?></li>
-    <li><?=htmlentities("S'il n'y a plus de papier, avisez un bÈnÈvole")?></li>
+    <li>Vos livres doivent d√©j√† tous √™tre inscrit sur le site de la Foire</li>
+    <li>Passez le code barre de votre carte sous le laser</li>
+    <li>N'endommagez pas les √©tiquette inutilis√©es ! Nous les r√©utilisons</li>
+    <li>S'il n'y a plus de papier, avisez un b√©n√©vole</li>
     </ol>
 
     <?=$html->formTag('/livresben/etiquettes') ?>
 <!-- <pre><?/*=print_r($this,true)*/?></pre> -->
     <?php
     
-    echo $html->tagErrorMsg('livre/inscription', htmlentities('Vous n\'Ítes pas inscrit ‡ la Foire aux Livres. Allez sur un AUTRE ordinateur et consultez le www.foire.polymtl.ca'));
-    echo $html->tagErrorMsg('livre/confirmation', htmlentities('Votre inscription n\'est pas confirmÈe. Allez lire votre courriel de confirmation et entrez ensuite vos livres (SUR UN AUTRE ORDINATEUR)'));
-    echo $html->tagErrorMsg('livre/etiquettes', htmlentities('Aucune Ètiquettes ‡ imprimer'));
+    echo $html->tagErrorMsg('livre/inscription', "Vous n'√™tes pas inscrit √† la Foire aux Livres. Allez sur un AUTRE ordinateur et consultez le site {$_SERVER['SERVER_NAME']}");
+    echo $html->tagErrorMsg('livre/confirmation', "Votre inscription n'est pas confirm√©e. Allez lire votre courriel de confirmation et entrez ensuite vos livres (SUR UN AUTRE ORDINATEUR)");
+    echo $html->tagErrorMsg('livre/etiquettes', 'Aucune √©tiquettes √† imprimer');
 
-    echo $html->tagErrorMsg('livre/id', htmlentities('Impression en cours...  prÍt pour la carte suivante'));
+    echo $html->tagErrorMsg('livre/id', 'Impression en cours...  pr√™t pour la carte suivante');
     ?>
 
-      <p id="ettCodebar"><label for="ettInCodebar">Num&eacute;ro d'identification: </label><?php
+      <p id="ettCodebar"><label for="ettInCodebar">Num√©ro d'identification: </label><?php
 
           echo $html->inputTag('livre/codebar', 30, array('id'=>'ettInCodebar','maxlength'=>'17'));
           echo $html->inputTag('livre/nb_etiquettes', 1, array('id'=>'nb_etiquettes', 'onclick'=>"document.getElementById('nb_etiquettes').select();"));

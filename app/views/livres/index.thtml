@@ -24,9 +24,9 @@
           foreach ($data as $livre):
         
           $realTitle = $livre['titre'];
-          $fullTitle = htmlentities( $realTitle );
+          $fullTitle = htmlspecialchars( $realTitle );
           $lenLimit = 36;
-          $shortTitle = strlen($realTitle) < $lenLimit ? $fullTitle : htmlentities(substr($realTitle,0,$lenLimit)).'...';
+          $shortTitle = strlen($realTitle) < $lenLimit ? $fullTitle : htmlspecialchars(substr($realTitle,0,$lenLimit)).'...';
           
           ?>
         <tr class="<?=$rowClasses[] = array_shift($rowClasses)?>">
@@ -49,9 +49,9 @@
             <td class="livreSup disabled"><?=$html->linkTo('Supprimer', '#', array('title'=>$help)) ?></td>
           <?php } else { ?>
 
-            <?php $help = htmlentities("Cliquez pour modifier les données du livre") ?>
+            <?php $help = "Cliquez pour modifier les données du livre" ?>
             <td class="livreMod"><?=$html->linkTo('Modifier', "/livres/modifier/{$livre[0]}", array('title'=>$help)) ?></td>
-            <?php $help = htmlentities("Cliquez pour supprimer ce livre") ?>
+            <?php $help = "Cliquez pour supprimer ce livre" ?>
             <td class="livreSup"><?=$html->linkTo('Supprimer', "/livres/supprimer/{$livre[0]}", array('title'=>$help), "Voulez-vous vraiment supprimer ce livre ?") ?></td>
           <?php } ?>
 
@@ -59,7 +59,7 @@
         <?php endforeach; ?>
     </table>
     <?php } else { // countLastFind ?>
-    <p id="livresAucun">Aucun livres &agrave; afficher</p>
+    <p id="livresAucun">Aucun livres à afficher</p>
     <?php } //if countLastFind ?>
   </div><!-- livresListeDiv -->
 

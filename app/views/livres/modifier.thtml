@@ -3,7 +3,7 @@
 
   <div id="livresModFormulaire">
 
-    <?php $isbn_help = 'Ce champ doit contenir 4 ou 10 caract&egrave;res<br />(Le dernier caract&egrave;re d\'un ISBN peut &ecirc;tre "X")' ?>
+    <?php $isbn_help = 'Ce champ doit contenir 4 ou 10 caractères<br />(Le dernier caractère d\'un ISBN peut être "X")' ?>
     <?php $prix_help = 'Le prix auquel VOUS estimez la valeur de revente du livre' ?>
 
     <?php echo $html->formTag('/livres/modifier/'.$html->tagValue('id')) ?>
@@ -20,12 +20,12 @@
                 echo $html->inputTag('livre/prix', 3, array('id'=>'ModChampPrix','maxlength'=>'3', 'title'=>$prix_help))
             ?>&nbsp;$<?php
             
-                echo $html->tagErrorMsg('livre/prix', 'Le prix est requis (sans d&eacute;cimales)')
+                echo $html->tagErrorMsg('livre/prix', 'Le prix est requis (sans décimales)')
             ?></p>
             <p id="ModTitre"><label for="ModChampTitre">Titre:&nbsp;</label><?php
                if ($html->tagValue('isbn'))
                {
-                 echo '<span id="ModChampTitre" title="Impossible de modifier le titre lorsqu\'un ISBN est d&eacute;fini">'.$html->tagValue('titre').'</span>';
+                 echo '<span id="ModChampTitre" title="Impossible de modifier le titre lorsqu\'un ISBN est défini">'.$html->tagValue('titre').'</span>';
                }
                else
                {
@@ -38,7 +38,7 @@
 
                echo $html->inputTag('livre/cours', 10, array('id'=>'ModChampCours','maxlength'=>'10'))
                ?></p>
-            <p id="ModGenie"><label for="ModChampGenie">G&eacute;nie:&nbsp;</label><?php
+            <p id="ModGenie"><label for="ModChampGenie">Génie:&nbsp;</label><?php
 
                echo $html->selectTag('genie', $genie, $html->tagValue('genie'), array('id'=>'ModChampGenie'))
                ?></p>
@@ -47,7 +47,7 @@
               echo $html->submitTag('Modifier')
               ?>&nbsp;<?php
               
-              echo $html->linkTo(htmlentities('Annuler et revenir � la liste'), '/livres', array('id' => 'ModAnnuler'), htmlentities('Voulez-vous vraiment annuler et retourner � la liste de livre ?'))
+              echo $html->linkTo('Annuler et revenir à la liste', '/livres', array('id' => 'ModAnnuler'), 'Voulez-vous vraiment annuler et retourner à la liste de livre ?')
               ?></p>
     </form>
 

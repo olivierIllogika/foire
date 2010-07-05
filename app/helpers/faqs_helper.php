@@ -5,7 +5,7 @@ class FaqsHelper extends AppController
   function load_sections()
   {
     $sections = $this->models['faq']->findBySql("SELECT DISTINCT section FROM faqs");
-    $html_sections = array_map(create_function('$v', 'return htmlentities(substr($v[0],1));'),$sections);
+    $html_sections = array_map(create_function('$v', 'return substr($v[0],1);'),$sections);
     $sql_sections = array_map(create_function('$v', 'return $v[0];'),$sections);
     $this->set('sections', $html_sections);
 

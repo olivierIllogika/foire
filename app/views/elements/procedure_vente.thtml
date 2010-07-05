@@ -1,4 +1,4 @@
-  <h2><?=htmlentities("Proc�dure � suivre pour la vente de livres") ?></h2>
+  <h2>Procédure à suivre pour la vente de livres</h2>
 
   <div id="venteProcedure">
 
@@ -14,10 +14,10 @@
         <li>Entrez par la section &lt;&lt;<?=$html->linkTo('Mes livres', "/livres") ?>&gt;&gt;</li>
         <li>Ajoutez vos livres en fixant votre prix de vente</li>
       </ol></li>
-      <li>Pr&eacute;sentez-vous &agrave; la cueillette
+      <li>Présentez-vous à la cueillette
       <ol>
-        <li>Imprimez et collez vos &eacute;tiquettes au poste d'impression</li>
-        <li>Faites valider vos livres identifi&eacute;s par un b&eacute;n&eacute;vole</li>
+        <li>Imprimez et collez vos étiquettes au poste d'impression</li>
+        <li>Faites valider vos livres identifiés par un bénévole</li>
       </ol></li>
     </ol>
   </div><!-- venteProcedure -->

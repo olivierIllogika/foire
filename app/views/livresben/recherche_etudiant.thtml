@@ -1,11 +1,11 @@
   <h2 id="etTitre">Recherche de consignataire</h2>
 
-  <?=$html->tagErrorMsg('etudiant/id', array(htmlentities("Le code d'identification doit contenir des chiffres"),
-                                             htmlentities("Le code entré est inconnu; êtes-vous inscrit ?")))?>
+  <?=$html->tagErrorMsg('etudiant/id', array("Le code d'identification doit contenir des chiffres",
+                                             "Le code entrÃ© est inconnu; Ãªtes-vous inscrit ?"))?>
 
-  <?=$html->tagErrorMsg('etudiant/motpasse', htmlentities("Le mot de passe entré n'est pas valide"))?>
+  <?=$html->tagErrorMsg('etudiant/motpasse', "Le mot de passe entrÃ© n'est pas valide")?>
 
-  <?=$html->tagErrorMsg('etudiant/confirme', htmlentities("Votre inscription n'est pas confirmée; vous devez cliquer sur le lien dans le courriel envoyé"))?>
+  <?=$html->tagErrorMsg('etudiant/confirme', "Votre inscription n'est pas confirmÃ©e; vous devez cliquer sur le lien dans le courriel envoyÃ©")?>
 
   <div id="etSearchForm">
 

@@ -1,4 +1,4 @@
-<?php     $this->pageTitle = htmlentities("Foire aux Livres - Comment imprimer automatiquement");
+<?php     $this->pageTitle = "Foire aux Livres - Comment imprimer automatiquement";
 ?>
 <h2>Comment imprimer automatiquement</h2>
 
@@ -7,10 +7,10 @@
 <ol>
 <li><a href="#concept">Concept</a></li>
 <li><a href="#firefox">Firefox</a></li>
-<li><a href="#imprimante">Imprimante par défaut</a></li>
+<li><a href="#imprimante">Imprimante par dÃ©faut</a></li>
 <li><a href="#programme">Programme d'impression</a></li>
 <li><a href="#poste">Poste d'impression automatique</a></li>
-<li><a href="#recuperation">Comment réutiliser les pages d'étiquettes</a></li>
+<li><a href="#recuperation">Comment rÃ©utiliser les pages d'Ã©tiquettes</a></li>
 </ol>
 
 </div> <!-- toc -->
@@ -18,41 +18,41 @@
 <a name="concept"></a>
 <div id="divConcept">
 <h3>Concept</h3>
-<p>Imprimer directement d'Internet est impossible, mais voici un moyen pour s'en approcher. Il suffit d'utiliser Firefox pour télécharger automatiquement et silencieusement les fichiers pdf dans un répertoire donné qui est examiné par un programme envoyant les fichiers à l'imprimante.  Il serait peut-être possible "d'ouvrir" les fichiers avec ce programme, mais cette méthode asynchrone libère rapidement le navigateur.
+<p>Imprimer directement d'Internet est impossible, mais voici un moyen pour s'en approcher. Il suffit d'utiliser Firefox pour tÃ©lÃ©charger automatiquement et silencieusement les fichiers pdf dans un rÃ©pertoire donnÃ© qui est examinÃ© par un programme envoyant les fichiers Ã  l'imprimante.  Il serait peut-Ãªtre possible "d'ouvrir" les fichiers avec ce programme, mais cette mÃ©thode asynchrone libÃ¨re rapidement le navigateur.
 </p>
 </div>
 
 <a name="firefox"></a>
 <div id="divFirefox">
 <h3>Firefox</h3>
-<p>Pour configurer Firefox, il faut se rendre dans l'onglet Download des options.  Il faut spécifier un répertoire de téléchargement automatique, ne pas afficher le "Download manaer" et désactiver le plugin qui gère les PDFs.  Une fois cette configuration effectuée, le téléchargement des pdfs peut déjà être testé.  Si cliquer sur le lien d'un document pdf télécharge le fichier silencieusement dans le répertoire spécifié, c'est gagné; sinon, il faudra vérifier et creuser un peu plus.  Mais ça fonctionne vraiment.  Les pdfs "générés à la volée" vont toujours afficher la boîte de dialogue de Firefox pour des raisons de sécurité, mais les pdfs d'étiquettes et de reçu sont générés en fichiers réels sur le serveur avant d'être envoyés; donc, ça marche!
+<p>Pour configurer Firefox, il faut se rendre dans l'onglet Download des options.  Il faut spÃ©cifier un rÃ©pertoire de tÃ©lÃ©chargement automatique, ne pas afficher le "Download manaer" et dÃ©sactiver le plugin qui gÃ¨re les PDFs.  Une fois cette configuration effectuÃ©e, le tÃ©lÃ©chargement des pdfs peut dÃ©jÃ  Ãªtre testÃ©.  Si cliquer sur le lien d'un document pdf tÃ©lÃ©charge le fichier silencieusement dans le rÃ©pertoire spÃ©cifiÃ©, c'est gagnÃ©; sinon, il faudra vÃ©rifier et creuser un peu plus.  Mais Ã§a fonctionne vraiment.  Les pdfs "gÃ©nÃ©rÃ©s Ã  la volÃ©e" vont toujours afficher la boÃ®te de dialogue de Firefox pour des raisons de sÃ©curitÃ©, mais les pdfs d'Ã©tiquettes et de reÃ§u sont gÃ©nÃ©rÃ©s en fichiers rÃ©els sur le serveur avant d'Ãªtre envoyÃ©s; donc, Ã§a marche!
 </p>
 </div>
 
 <a name="imprimante"></a>
 <div id="divImprimante">
 <h3>Imprimante</h3>
-<p>L'imprimante utilisé sera celle définie par défaut dans Windows.  Les paramètres des impressions peuvent être configurée dans les fenêtres de propriété de l'imprimante... oui, oui.
+<p>L'imprimante utilisÃ© sera celle dÃ©finie par dÃ©faut dans Windows.  Les paramÃ¨tres des impressions peuvent Ãªtre configurÃ©e dans les fenÃªtres de propriÃ©tÃ© de l'imprimante... oui, oui.
 </p>
 </div>
 
 <a name="programme"></a>
 <div id="divProgramme">
 <h3>Programme</h3>
-<p>Le programme d'impression peut être téléchargé <a href="http://foire.aep.polymtl.ca/files/auto_print_daemon.zip">ici</a>, mais la version sur les ordinateurs du service informatique pourrait être plus récente. Si les programmes diffèrent, préférez la version des ordinateurs des SI. Le programme examine le sous-répertoire "in" toutes les 2 secondes (la version installée pourrait se comporter différemment).
+<p>Le programme d'impression peut Ãªtre tÃ©lÃ©chargÃ© <a href="http://foire.aep.polymtl.ca/files/auto_print_daemon.zip">ici</a>, mais la version sur les ordinateurs du service informatique pourrait Ãªtre plus rÃ©cente. Si les programmes diffÃ¨rent, prÃ©fÃ©rez la version des ordinateurs des SI. Le programme examine le sous-rÃ©pertoire "in" toutes les 2 secondes (la version installÃ©e pourrait se comporter diffÃ©remment).
 </p>
 </div>
 
 <a name="poste"></a>
 <div id="divPoste">
 <h3>Poste d'impression</h3>
-<p>Dans le menu bénévole existe un lien pour afficher la page du poste d'impression automatique.  La session courante sera automatiquement terminée à son affichage. La page peut être obtenue directement.  Il est conseiller de modifier l'apparence du navigateur et de Windows (retirer la barre d'adresse, les boutons de navigation, la barre des tâches de Windows) afin d'éviter que les utilisateurs soient tantés d'utiliser le poste pour entrer leurs propres livres ou vérifier leurs courriels (ça c'est déjà vu).
+<p>Dans le menu bÃ©nÃ©vole existe un lien pour afficher la page du poste d'impression automatique.  La session courante sera automatiquement terminÃ©e Ã  son affichage. La page peut Ãªtre obtenue directement.  Il est conseiller de modifier l'apparence du navigateur et de Windows (retirer la barre d'adresse, les boutons de navigation, la barre des tÃ¢ches de Windows) afin d'Ã©viter que les utilisateurs soient tantÃ©s d'utiliser le poste pour entrer leurs propres livres ou vÃ©rifier leurs courriels (Ã§a c'est dÃ©jÃ  vu).
 </p>
 </div>
 
 <a name="recuperation"></a>
 <div id="divRecuperation">
-<h3>Réutiliser d'étiquettes</h3>
-<p>Dans la page du poste d'impression automatique, il existe une boîte de texte dissimulée entre la boîte de texte principale et le bouton 'Imprimer'; cette boîte ressemble à un carré au contour gris.  Pour modifier le contenu, il suffit de cliquer à l'intérieur une fois, d'entré le chiffre désiré et appuyer sur 'Enter' (ou cliquer sur 'Imprimer'); il est normal que vous ne voyer pas la valeur entrée.  La valeur par défaut de cette boîte est 0.  Pour passer une pile de feuille contenant 12 étiquettes, aligner les pages de façon identique, charger l'imprimante avec ces feuilles uniquement, et ce, dans le bon sens d'impression (les étiquettes vierges seront sautés en haut de la page) et entrer le chiffre 12 dans la boîte cachée.
+<h3>RÃ©utilisation d'Ã©tiquettes</h3>
+<p>Dans la page du poste d'impression automatique, il existe une boÃ®te de texte dissimulÃ©e entre la boÃ®te de texte principale et le bouton 'Imprimer'; cette boÃ®te ressemble Ã  un carrÃ© au contour gris.  Pour modifier le contenu, il suffit de cliquer Ã  l'intÃ©rieur une fois, d'entrer le chiffre dÃ©sirÃ© et appuyer sur 'Enter' (ou cliquer sur 'Imprimer'); il est normal que vous ne voyer pas la valeur entrÃ©e.  La valeur par dÃ©faut de cette boÃ®te est 0.  Pour passer une pile de feuille contenant 12 Ã©tiquettes, aligner les pages de faÃ§on identique, charger l'imprimante avec ces feuilles uniquement, et ce, dans le bon sens d'impression (les Ã©tiquettes vierges seront sautÃ©s en haut de la page) et entrer le chiffre 12 dans la boÃ®te cachÃ©e.
 </p>
 </div>
