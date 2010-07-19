@@ -1,4 +1,3 @@
-<?php header('Content-Type: text/html; charset=utf-8'); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
 <head>
@@ -11,16 +10,15 @@
   <meta name="robots" content="all" />
 
   <?=$html->cssTag('foire')?>
-
 </head>
 <body onload="if (top!=self && top.location.href.indexOf('notes.html') == -1) top.location=self.location;">
+<div class="cont-margin"></div>
 <div id="container">
-
 <?php if (empty($compact_header) || !$compact_header): ?>
   <div id="mainTitle">
     <?php 
 //    echo isset($_SESSION['etudiant']['id']) ? '<div id="sessionMenu"><p>'.$html->linkTo('Terminer la session', '/etudiants/logout').'</p><p>'.$html->linkTo('Modifier profil', '/etudiants/profil').'</p></div>' : null;
-    echo isset($_SESSION['etudiant']['id']) ? '<div id="sessionMenu"><p>'.$html->linkTo('Terminer la session', '/etudiants/logout').'</p></div>' : null; ?>
+    echo isset($_SESSION['etudiant']['id']) ? '<div id="sessionMenu">'.$html->linkTo('Terminer la session', '/etudiants/logout').'</div>' : null; ?>
 
     <h1><span id="l1">F</span>oire aux <span id="l2">L</span>ivres</h1>
   </div>
@@ -38,21 +36,21 @@
 
   <div id="menu">
 
-    <?=$html->linkTo('Horaire', "/") ?>
+    <div class="elem"><?=$html->linkTo('Horaire', "/") ?></div>
 
-    <?=$html->linkTo('Inscription', "/etudiants/inscription_choix") ?>
+    <div class="elem"><?=$html->linkTo('Inscription', "/etudiants/inscription_choix") ?></div>
 
-    <?=$html->linkTo('Mes livres', "/livres") ?>
+    <div class="elem"><?=$html->linkTo('Mes livres', "/livres") ?></div>
     
-    <?=$html->linkTo('Recherche', "/livres/recherche") ?>
+    <div class="elem"><?=$html->linkTo('Recherche', "/livres/recherche") ?></div>
 
-    <?=$html->linkTo('FAQ', "/faqs") ?>
+    <div class="elem"><?=$html->linkTo('FAQ', "/faqs") ?></div>
 
-    <?=$html->linkTo('Factures', "/factures") ?>
+    <div class="elem"><?=$html->linkTo('Factures', "/factures") ?></div>
 
-    <?=(!empty($_SESSION['etudiant']) && $_SESSION['etudiant']['niveau'] > 1 ?
+    <div class="elem"><?=(!empty($_SESSION['etudiant']) && $_SESSION['etudiant']['niveau'] > 1 ?
           $html->linkTo("BÉNÉVOLES", "/pages/menu_ben", array('class' => 'benLink'))
-        : $html->linkTo('À propos...', "/pages/apropos")) ?>
+        : $html->linkTo('À propos...', "/pages/apropos")) ?></div>
 
   </div>
   <?php endif; ?>
@@ -64,5 +62,6 @@
   <div id="liensValidation">
   </div>
 </div> <!-- container -->
+<div class="cont-margin"></div>
 </body>
 </html>
