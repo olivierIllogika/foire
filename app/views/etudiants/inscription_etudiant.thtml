@@ -20,7 +20,7 @@
               <?php
                echo $html->inputTag('etudiant/id', 15, array('id'=>'RegChampCode','maxlength'=>School::Get()->BarCodeFieldSize(), 'title'=>School::Get()->BarCodeTitle(), 'value'=>($html->tagValue('id') ? $html->tagValue('id') : School::Get()->BarCodePrefix() )));
 
-               echo $html->tagErrorMsg('etudiant/id', 'Le numéro de code barre contient '.School::Get()->BarCodeDataSize().' chiffres');
+               echo $html->tagErrorMsg('etudiant/id', School::Get()->BarCodeError());
 			  ?>			               
 
             <p id="etRegCourriel"><?php

@@ -4,19 +4,26 @@
 
     <?php 
 
+	$box = array('<div class="bl"><div class="br"><div class="tl"><div class="tr">', 
+			'</div></div></div></div>' 
+			.'<div class="clear">&nbsp;</div>');
+
 	$eLink = "
-    <div id=\"etPoly\">
+    <div id=\"etPoly\" class=\"fadeBtnLink\">
+	  {$box[0]}
       <h3>Étudiant</h3>
       <ul>Prérequis:
         <li>Carte étudiante</li>
         <li>Code barre en état</li>
         <li>Adresse courriel de ".School::Get()->Name(School::ShortName, true)."</li>
       </ul>
+	  {$box[1]}
     </div>
     ";
 
     $aLink = "
-    <div id=\"etAutre\">
+    <div id=\"etAutre\" class=\"fadeBtnLink\">
+	  {$box[0]}
       <h3>Autre</h3>
       <ul>Prérequis:
         <li>Livres <b>d'intérêt</b> à vendre</li>
@@ -25,14 +32,17 @@
           <li>Professeurs</li>
           <li>Personnel de ".School::Get()->Name(School::ShortName, true)."</li>
           <li>Parents / amis</li>
+          <li>Diplômés sans carte</li>
         </ul>
       </ul>
+	  {$box[1]}
     </div>
 	";
 
     ?>
     <?=$html->linkTo($eLink,'/etudiants/inscription_etudiant')?>
     <?=$html->linkTo($aLink,'/etudiants/inscription_autre') ?>
-
-
+	
+	
+  
   </div><!-- etChoix -->
