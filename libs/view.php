@@ -468,7 +468,7 @@ class View extends Object
 		{
 			foreach ($this->helpers as $helper)
 			{
-				$helperFn = LIBS.'helpers'.DS.Inflector::underscore($helper).'.php';
+				$helperFn = VIEWS.'helpers'.DS.Inflector::underscore($helper).'.php';
 				$helperCn = ucfirst($helper).'Helper';
 
 				if (is_file($helperFn))
