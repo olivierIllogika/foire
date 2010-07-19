@@ -1,12 +1,12 @@
-<h2>Comment trouver l'ISBN ou le code4 d'un livre</h2>
+<h2>Comment trouver l'ISBN ou le <?=School::Get()->PolycopIdName(School::ShortName)?> d'un livre</h2>
 
 <?php $polyc="polycopié"?>
 
-<ul>Code4 (polycopiés)
-<li><a href="#code4_cover1">Couverture d'un vieux polycopié</a></li>
-<li><a href="#code4_cover2">Couverture intérieure d'un vieux polycopié</a></li>
-<li><a href="#code4-2_cover1">Couverture d'un nouveau polycopié</a></li>
-<li><a href="#code4-2_cover4">Couverture arrière d'un nouveau polycopié</a></li>
+<ul><?=School::Get()->PolycopIdName(School::ShortName)?> (<?=School::Get()->PolycopIdName(School::MediumName)?>)
+<li><a href="#code4_cover1">Couverture d'un vieux <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a></li>
+<li><a href="#code4_cover2">Couverture intérieure d'un vieux <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a></li>
+<li><a href="#code4-2_cover1">Couverture d'un nouveau <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a></li>
+<li><a href="#code4-2_cover4">Couverture arrière d'un nouveau <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a></li>
 </ul>
 <ul>ISBN (manuels)
 <li><a href="#isbn_cover1">Couverture d'un livre banal</a></li>
@@ -14,14 +14,14 @@
 <li><a href="#isbn_cover2">Couverture intérieure d'un livre</a></li>
 </ul>
 <div id="trouvercode4">
-<h3>Trouver le code4</h3>
-<a name="code4_cover1">Couverture d'un vieux polycopié</a>
+<h3>Trouver le <?=School::Get()->PolycopIdName(School::ShortName)?></h3>
+<a name="code4_cover1">Couverture d'un vieux <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a>
 <?=$html->imageTag('code4_cover1.jpg', '[couverture 1 - vieux polycopié]')?>
-<a name="code4_cover2">Couverture intérieure d'un vieux polycopié</a>
+<a name="code4_cover2">Couverture intérieure d'un vieux <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a>
 <?=$html->imageTag('code4_cover2.jpg', '[couverture 2 - vieux polycopié]')?>
-<a name="code4-2_cover1">Couverture d'un nouveau polycopié</a>
+<a name="code4-2_cover1">Couverture d'un nouveau <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a>
 <?=$html->imageTag('code4-2_cover1.jpg', '[couverture 1 - nouveau polycopié]')?>
-<a name="code4-2_cover4">Couverture arrière d'un nouveau polycopié</a>
+<a name="code4-2_cover4">Couverture arrière d'un nouveau <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a>
 <?=$html->imageTag('code4-2_cover4.jpg', '[couverture 4 - nouveau polycopié]')?>
 
 </div><!-- trouvercode4 -->

@@ -99,7 +99,7 @@ echo '</pre>';
   {
     return '<acronym title="International Standard Book Number">ISBN</acronym>'.
            '/'.
-           '<acronym title="Code à 4 chiffres des polycopiés de Polytechnique">code4</acronym>';
+           '<acronym title="'.School::Get()->PolycopIdName(School::LongName).'">'.School::Get()->PolycopIdName(School::ShortName).'</acronym>';
   }
 /*
   function titre($data)

@@ -3,7 +3,7 @@
   <div id="livresRechForm">
     <span><span class="livresCueillis"><?=$total ?></span> livres cueillis</span>
 
-    <?php $isbn_help = 'ISBN non valide; 4 ou 10 caractères (Le dernier caractère d\'un ISBN peut être "X")' ?>
+    <?php $isbn_help = 'ISBN non valide; '.School::Get()->PolycopIdSize().' ou 10 caractères (Le dernier caractère d\'un ISBN peut être "X")' ?>
 
     <?php echo $html->formTag('/livres/recherche') ?>
 
@@ -15,7 +15,7 @@
             <p><?php
                echo '<label for="RechISBN">'.$this->livre->isbn10_code4_Html().': </label>'.
                     $html->inputTag('livre/isbn', 12, array('id'=>'RechISBN','maxlength'=>'13', 'title'=>$isbn_help));
-                echo '&nbsp;&nbsp;( '.$html->linkTo('Comment trouver l\'ISBN ou le code4 d\'un livre ?', '/pages/isbn_code4').' )';
+                echo '&nbsp;&nbsp;(&nbsp;'.$html->linkTo('Comment trouver l\'ISBN ou '.School::Get()->PolycopIdName(School::ShortName).' d\'un livre ?', '/pages/isbn_code4').'&nbsp;)';
                echo $html->tagErrorMsg('livre/isbn', $isbn_help);
 
                ?></p>

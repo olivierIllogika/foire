@@ -5,20 +5,20 @@
 
   <div id="livresAjFormulaire">
 
-    <?php $isbn_help = "4 ou 10 caractères (Le dernier caractère d'un ISBN peut être \"X\")" ?>
+    <?php $isbn_help = School::Get()->PolycopIdSize()." ou 10 caractères (Le dernier caractère d'un ISBN peut être \"X\")" ?>
     <?php $prix_help = 'Le prix auquel VOUS estimez la valeur de revente du livre' ?>
 
     <?php echo $html->formTag('/livres/rech_isbn') ?>
-            <p>Entrez un ISBN/code4 et cliquez sur le bouton 'Trouver le titre'.  Si l'information est disponible, quelques champs pourront être remplis pour vous!</p>
+            <p>Entrez un ISBN/<?=School::Get()->PolycopIdName(School::ShortName)?> et cliquez sur le bouton 'Trouver le titre'.  Si l'information est disponible, quelques champs pourront être remplis pour vous!</p>
             
             <p id="AjISBN"><?php
-               echo $html->tagErrorMsg('livre/isbn_rech', 'ISBN/code4 non valide; '.$isbn_help);
+               echo $html->tagErrorMsg('livre/isbn_rech', 'ISBN/'.School::Get()->PolycopIdName(School::ShortName).' non valide; '.$isbn_help);
                echo '<label for="AjChampISBN">'.$this->livre->isbn10_code4_Html().': </label>'.
                     '<input type="text" name="data[isbn_rech]" id="AjChampISBN" maxlength="14" title="'.$isbn_help.'" size="10" value="'.$this->isbn->isbn2formated($html->tagValue('isbn_rech')).'"  />';
 
                echo (!empty($info) || $html->tagValue('titre') || $html->tagValue('isbntitre') ? '&nbsp;&nbsp;&nbsp;' : '<blink>&gt;&gt;</blink>');
                echo $html->submitTag('Trouver le titre');
-               ?> ( <?=$html->linkTo('Comment trouver l\'ISBN ou le code4 ?', '/pages/isbn_code4')?> )</p>
+               ?> (&nbsp;<?=$html->linkTo('Comment trouver l\'ISBN ou '.School::Get()->PolycopIdName(School::ShortName).' ?', '/pages/isbn_code4')?>&nbsp;)</p>
     </form>
     
     <?php echo $html->formTag('/livres/ajouter_nouveau') ?>
