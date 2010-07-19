@@ -822,8 +822,6 @@ class LivresbenController extends LivresbenHelper
       return;
     }
 
-    $_SESSION['persistent']['dernier_codebar'] = $codebar;
-
     $ret = $this->models['livre']->findAll("codebar = $codebar AND en_consigne=0",null,'created DESC', null);
 
     $this->loadCache();
@@ -849,6 +847,7 @@ class LivresbenController extends LivresbenHelper
         $this->models['livre']->validationErrors['etiquettes'] = 1;
         $this->models['evlivre']->logEvent(453,0,$codebar,"pas d'�tiquettes");
       }
+      $_SESSION['persistent']['dernier_codebar'] = '';
       $this->render('etiquettes_html');
       return;
     }
@@ -860,6 +859,8 @@ class LivresbenController extends LivresbenHelper
       $this->render('etiquettes_html');
       return;
     }
+    $_SESSION['persistent']['dernier_codebar'] = $codebar;
+
     
     $this->models['evlivre']->logEvent(421,$ret[0]['id'],$codebar,"impression etiquettes");
     
@@ -870,8 +871,12 @@ class LivresbenController extends LivresbenHelper
     $abs_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_FILENAME']);
     $rel_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_NAME']);
 
-    $this->set('filename', "$abs_root/pdf-down/etiquettes_$codebar.pdf");
-    $this->set('downloadfile', "$rel_root/pdf-down/etiquettes_$codebar.pdf");
+    $file = "../Impressions/etiquettes_$codebar.pdf";
+    $absPath = ROOT.$file;
+    $relPath = "$rel_root/$file";
+    
+    $this->set('filename', $absPath);
+    $this->set('downloadfile', $relPath);
     $this->set('redirect', "{$this->base}/livresben/etiquettes_flash");
     $this->render('etiquettes_pdf','back_download');
 
@@ -1021,8 +1026,8 @@ class LivresbenController extends LivresbenHelper
     $abs_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_FILENAME']);
     $rel_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_NAME']);
 
-    $this->set('filename', "$abs_root/pdf-down/recu_$codebar.pdf");
-    $this->set('downloadfile', "$rel_root/pdf-down/recu_$codebar.pdf");
+    $this->set('filename', "$abs_root/Impressions/recu_$codebar.pdf");
+    $this->set('downloadfile', "$rel_root/Impressions/recu_$codebar.pdf");
 
     if ($methode == 'imprimer')
     {
