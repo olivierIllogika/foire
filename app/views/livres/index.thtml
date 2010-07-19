@@ -5,7 +5,16 @@
 
   <h2 id="livresTitre">Vos livres</h2>
 
-  <?php echo $html->linkTo('<div id="livresAjoutNeuf"><h4>Ajouter un livre</h4></div>', '/livres/ajouter_nouveau', array('style'=>'text-decoration:none', 'title'=>'Cliquez pour ajouter un livre')) ?>
+  <?php
+	$roundBox = '<div id="livresAjoutNeuf">'
+				.'<div class="bl"><div class="br"><div class="tl"><div class="tr">'
+				.'<h4>Ajouter un livre</h4>' 
+				.'</div></div></div></div>' 
+				.'<div class="clear">&nbsp;</div>'
+				.'</div>';
+  
+  	echo $html->linkTo($roundBox, '/livres/ajouter_nouveau', array('style'=>'text-decoration:none', 'title'=>'Cliquez pour ajouter un livre'));
+  ?>
 
   <div id="livresListeDiv">
    <?php if ($this->livre->countLastFind) { ?>
