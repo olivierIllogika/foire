@@ -384,7 +384,7 @@ echo '</pre>';
       $this->models['etudiant']->insertWithId($this->params['data'],false,$id);
       $this->models['evetudiant']->logEvent(401,$id,"inscription");
 
-      $this->courrielConfirmation($this->params['data']['courriel'],$id,$cartePoly);
+      $this->courrielConfirmation($this->params['data']['courriel'],$this->params['data']['id'],$cartePoly);
 /*
 echo '<pre>';
 print_r($this->params['data']);
@@ -399,19 +399,23 @@ die();
 
   function confirmer($id)
   {
-    $data = $this->models['etudiant']->findAll("id = $id");
+    $id = preg_replace('/[^A-Z0-9]/', '', $id);
+    $letterCount = 0;
+    $convertedId = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $id, -1, $letterCount);
+      
+    $data = $this->models['etudiant']->findAll("id = $convertedId");
     
     if ($data)
     {
       $row = current($data);
       if ($row['confirme'] == 1)
       {
-        $this->models['evetudiant']->logEvent(452,$id,"reconfirmation!");
+        $this->models['evetudiant']->logEvent(452,$convertedId,"reconfirmation!");
         $this->flash('Inscription déjà confirmée','/livres/');
       }
       else
       {
-        $this->models['evetudiant']->logEvent(402,$id,"confirmation");
+        $this->models['evetudiant']->logEvent(402,$convertedId,"confirmation");
         $row['confirme'] = 1;
         $this->models['etudiant']->save($row,false);
         $this->flash('Inscription confirmée','/livres/');
@@ -421,7 +425,7 @@ die();
     else
     {
       // ne devrait jamais venir ici
-      $this->models['evetudiant']->logEvent(451,$id,"conf:identité inconnue");
+      $this->models['evetudiant']->logEvent(451,$convertedId,"conf:identité inconnue");
       $this->flash('Identification inconnue','/etudiants/inscription_choix');
     }
 

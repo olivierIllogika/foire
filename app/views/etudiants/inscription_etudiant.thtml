@@ -7,7 +7,7 @@
 
   <div id="etRegFormulaire">
 
-    <?php $email_help = 'Entrez votre adresse de courrier de Poly' ?>
+    <?php $email_help = 'Entrez votre adresse de courrier de '.School::Get()->Name(School::ShortName, true) ?>
 
     <?=$html->formTag('/etudiants/inscription') ?>
             <?=$html->hiddenTag('source','etudiant')?>

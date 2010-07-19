@@ -71,7 +71,7 @@ function isMultipart ($session) {
  * be encoded.
  */
 function encodeHeader ($string) {
-    $default_charset = 'iso-8859-1';
+    $default_charset = 'UTF-8';
 
     // Encode only if the string contains 8-bit characters or =?
     $j = strlen( $string  );
@@ -155,7 +155,7 @@ function write822Header ($fp, $t, $c, $b, $subject, $from=ORG_EMAIL, $rn="\r\n")
     global $_SERVER;
     global $from_addr;
 
-    $default_charset = 'iso-8859-1';
+    $default_charset = 'UTF-8';
     
     /* get those globals */
 
