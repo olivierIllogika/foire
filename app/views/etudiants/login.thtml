@@ -13,7 +13,7 @@
 
     <div id="etLoginSupport">
       <ul>
-        <li>code barre de <?=School::Get()->Name(School::ShortName, true)?></li>
+        <li>code barre de la carte d'identité de <?=School::Get()->Name(School::ShortName, true)?></li>
         <li># permis de conduire (sans lettre)</li>
         <li>ou # personnel (voir courriel d'inscription)</li>
       </ul>
@@ -27,7 +27,7 @@
             <p id="etLoginCode">
               <label for="LogChampCode" title="Code d'entrée">Code d'identification: </label><?php
 
-                echo $html->inputTag('etudiant/id', 15, array('id'=>'LogChampCode','maxlength'=>'17', 'title'=>'Code barre de Poly, permis de conduire ou numéro personnel (voir courriel d\'inscription)'));
+                echo $html->inputTag('etudiant/id', 15, array('id'=>'LogChampCode','maxlength'=>'17', 'title'=>'Code barre de <?=School::Get()->Name(School::ShortName, true)?>, permis de conduire ou numéro personnel (voir courriel d\'inscription)'));
             ?>
 
               <div id="LogChoix"><?php /*
@@ -61,7 +61,7 @@
  	$coopLink = '';
  	$coopImg = School::Get()->CoopImg($altText, $coopLink);
  ?>
- <a href="<?=$coopLink?>"><img src="../img/<?=$coopImg ?>" alt="<?=$altText ?>" /></a>
+ <a href="<?=$coopLink?>" title="<?=$altText ?>" ><img src="../img/<?=$coopImg ?>" alt="<?=$altText ?>" border="0" /></a>
 </div>
   
 
