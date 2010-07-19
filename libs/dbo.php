@@ -473,22 +473,25 @@ class DBO extends Object
         
         if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')
         {
-					echo "$msg<br /><br />";
-				}
-				else
-				{
+            echo "$msg<br /><br />";
+        }
+        else
+        {
 	        require_once ROOT.'modules/smtp.php';
 	        
-	        $msg = strip_tags(str_replace('<br />', "\n\n", $msg))."\n\n".$_SERVER['QUERY_STRING']."\n\nSession:\n".print_r($_SESSION,true);
+	        $backtrace = debug_backtrace();
+            $location = "\ncaller: {$backtrace[2]['function']} ({$backtrace[1]['file']}, ligne {$backtrace[1]['line']})\n\n";
+            
+	        $msg = strip_tags(str_replace('<br />', "\n\n", $msg))."\n\n$location{$_SERVER['QUERY_STRING']}\n\nSession:\n".print_r($_SESSION,true);
 
 	//        $mailed = @mail('lope@step.polymtl.ca', 'RAPPORT D\'ERREUR', strip_tags($msg)."\n\n".$_SERVER['QUERY_STRING']);
-	        $mailed = sendSMTP('lope@step.polymtl.ca','','','RAPPORT D\'ERREUR', $msg, false,'foire-noreply@step.polymtl.ca');
+	        $mailed = sendSMTP($GLOBALS['gDevErrorEmail'],'','',"RAPPORT D'ERREUR", $msg, false,$GLOBALS['gNoReplyEmail']);
 	
 	
 	        echo "<div class=\"error\"><span class=\"error_message\">Une erreur s'est produite.</span>";
 	        if ($mailed)
 	        {
-	          echo "<br /><span class=\"error_message\">".htmlentities("Un courriel à été envoyé pour tenter de corriger le problème le plus rapidement possible")."</span>";
+	          echo "<br /><span class=\"error_message\">Un courriel &agrave; &eacute;t&eacute; envoy&eacute; pour tenter de corriger le probl&egrave;me le plus rapidement possible</span>";
 	
 	        }
 	        else
