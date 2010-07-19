@@ -12,7 +12,7 @@
 <?/*=current($data).' = '.$section['section'].'<br />'*/?>
           <?php while(($qa = current($data)) && $qa['section']==$section['section']) { ?>
 
-            <li><a href="#qa<?=$qa['id']?>"><?=$qa['question']?></a></li>
+            <li><a href="#qa<?=$qa['id']?>"><?=$Faq->processKeywords($qa['question'])?></a></li>
 
             <?php next($data);
                 }?>
@@ -58,8 +58,8 @@
       ?>
 
       <a name="qa<?=$qa['id']?>" id="qa<?=$qa['id']?>"></a>
-      <p class="<?=$qClass?>"><?=$qa['question']?></p>
-      <p class="<?=$rClass?>"><?=$qa['reponse'].' [<a href="#faqTop" title="Retour à la liste">^</a>] '.(!empty($canMod) ? ' ['.$html->linkTo('modifier','/faqs/modifier/'.$qa['id'], array('class'=>'godLink', 'title'=>'Modifier cette entrée')).']' :'')?></p>
+      <p class="<?=$qClass?>"><?=$Faq->processKeywords($qa['question'])?></p>
+      <p class="<?=$rClass?>"><?=$Faq->processKeywords($qa['reponse']).' [<a href="#faqTop" title="Retour à la liste">^</a>] '.(!empty($canMod) ? ' ['.$html->linkTo('modifier','/faqs/modifier/'.$qa['id'], array('class'=>'godLink', 'title'=>'Modifier cette entrée')).']' :'')?></p>
 
 
     <?php endforeach; ?>
