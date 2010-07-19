@@ -33,6 +33,7 @@
 $url = empty($_GET['url'])? null: $_GET['url'];
 
 session_start();
+header('Content-Type: text/html; charset=utf-8');
 
 /**
  * Get Cake's root directory
