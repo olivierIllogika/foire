@@ -12,6 +12,16 @@ class FaqsHelper extends AppController
     return array('html' => $html_sections, 'sql' => $sql_sections);
   }
   
+
+  function loadCache()
+  {
+    if (empty($_SESSION['foire']))
+    {
+      $_SESSION['foire'] = $this->models['foire']->find(null,null,'session DESC');
+    }
+    $this->set('foire', $_SESSION['foire']);
+  }
+    
   function courrielQuestion($question, $provenance, $destination)
   {
 
