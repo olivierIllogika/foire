@@ -4,6 +4,8 @@ require_once ROOT.'modules/smtp.php';
 
 class FaqsController extends FaqsHelper
 {
+  var $helpers = array('html', 'ajax', 'Faq');
+    
   function index()
   {
     $this->pageTitle .= " - Foire aux questions";
@@ -18,6 +20,7 @@ class FaqsController extends FaqsHelper
     {
       $this->set('canMod', ($_SESSION['etudiant']['niveau'] > 8));
     }
+    $this->loadCache();    
   }
 
   function poser()
