@@ -30,8 +30,10 @@ class EtudiantsController extends EtudiantsHelper
       {
         $this->params['data']['id'] = substr($this->params['data']['id'],0,strlen($this->params['data']['id'])-1);
       }
-      $id = $this->params['data']['id'] = preg_replace('/[^0-9]/', '', $this->params['data']['id']);
-
+      $this->params['data']['id'] = preg_replace('/[^A-Z0-9]/', '', strtoupper($this->params['data']['id']));
+      $letterCount = 0;
+      $id = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $this->params['data']['id'], -1, $letterCount);
+      
       if (empty($id))
       {
         $this->models['etudiant']->validationErrors['id'] = 1;
@@ -112,8 +114,10 @@ class EtudiantsController extends EtudiantsHelper
     else
     {
       $id = $_SESSION['etudiant']['id'];
-      $this->params['data']['id'] = preg_replace('/[^0-9]/', '', $this->params['data']['id']);
-
+      $this->params['data']['id'] = preg_replace('/[^A-Z0-9]/', '', strtoupper($this->params['data']['id']));
+      $letterCount = 0;
+      $convertedId = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $this->params['data']['id'], -1, $letterCount);
+      
       $this->params['data']['ancienmotpasse'] = $this->db->prepare($this->params['data']['ancienmotpasse']);
       $etudiant = $this->models['etudiant']->find(
           "confirme =1 AND id=$id".
@@ -121,8 +125,8 @@ class EtudiantsController extends EtudiantsHelper
           array('id'));
         
       $duplicate = '';
-      if ($id != $this->params['data']['id'] && $this->params['data']['id'] != '') {
-        $duplicate = $this->checkDuplicates('-',$this->params['data']['id']);
+      if ($id != $convertedId && $this->params['data']['id'] != '') {
+        $duplicate = $this->checkDuplicates('-',$convertedId);
       }
       
       if ($duplicate)
@@ -143,16 +147,16 @@ class EtudiantsController extends EtudiantsHelper
       {
         $modifiedFields = '';
 
-        if ($this->params['data']['id'] && $this->params['data']['id'] != $id) {
-          $this->models['evetudiant']->logEvent(411,$this->params['data']['id'],"$id -ancien changement id");
+        if ($this->params['data']['id'] && $convertedId != $id) {
+          $this->models['evetudiant']->logEvent(411,$convertedId,"$id -ancien changement id");
           
-          $modifiedFields = 'id='.$this->params['data']['id'];
-          $_SESSION['etudiant']['id'] = $this->params['data']['id'];
+          $modifiedFields = 'id='.$convertedId;
+          $_SESSION['etudiant']['id'] = $convertedId;
 
           $this->models['evetudiant']->logEvent(406,$_SESSION['etudiant']['id'],"login");
 
           // UPDATING owned books
-          $this->db->query("UPDATE livres SET codebar={$this->params['data']['id']} WHERE codebar=$id");
+          $this->db->query("UPDATE livres SET codebar=$convertedId WHERE codebar=$id");
         }
         
         if ($this->params['data']['motpasse'] != '') {
@@ -253,7 +257,7 @@ class EtudiantsController extends EtudiantsHelper
     /* pre-processing de donn�es */
     if ($this->params['data']['source'] == 'etudiant')
     {
-      $this->params['data']['courriel'] = preg_replace('/@.+/', '', $this->params['data']['courriel']).'@polymtl.ca';
+      $this->params['data']['courriel'] = preg_replace('/@.+/', '', $this->params['data']['courriel']).'@'.$GLOBALS['gStudSufixEmail'];
     }
     else
     {
@@ -261,10 +265,10 @@ class EtudiantsController extends EtudiantsHelper
       
       // pre-processing
       $this->params['data']['id_poly'] = (!empty($this->params['data']['id_poly']) ?
-                preg_replace('/[^0-9]/', '', $this->params['data']['id_poly']) : '');
+                preg_replace('/[^A-Z0-9]/', '', strtoupper($this->params['data']['id_poly'])) : '');
                 
       $this->params['data']['id_permis'] = (!empty($this->params['data']['id_permis']) ?
-                preg_replace('/[^0-9]/', '', $this->params['data']['id_permis']) : '');
+                preg_replace('/[^A-Z0-9]/', '', strtoupper($this->params['data']['id_permis'])) : '');
 
       // try to identify id source by content
       if ($this->params['data']['id_poly'] != '' && $this->params['data']['id_poly'] != '29334')
@@ -299,7 +303,10 @@ class EtudiantsController extends EtudiantsHelper
 
     }//etudiants vs autres
 
-    $this->params['data']['id'] = preg_replace('/[^0-9]/', '', $this->params['data']['id']);
+    $this->params['data']['id'] = preg_replace('/[^A-Z0-9]/', '', strtoupper($this->params['data']['id']));
+    $letterCount = 0;
+    $convertedId = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $this->params['data']['id'], -1, $letterCount);
+
 /*
 echo '<pre>';
 print_r($this->models['etudiant']->validate);
@@ -320,7 +327,7 @@ echo '</pre>';
     }
 
     if ($this->params['data']['source'] == 'etudiant' &&
-        ($this->params['data']['id'] == '' || strlen($this->params['data']['id']) != 14))
+        !School::Get()->BarCodeValidate($this->params['data']['id'], $letterCount))
     {
       $this->models['etudiant']->validationErrors['id'] = 1;
     }
@@ -347,7 +354,7 @@ echo '</pre>';
     {
       if ($this->params['data']['id']) // id sugg�r� (carte/permis)
       {
-        $id = $this->params['data']['id'];
+        $id = $convertedId;
         
       } else { // aucun id, attribuer en fonction de la session de la Foire
         $foire = $this->models['foire']->find(null,'session','session DESC');
@@ -384,7 +391,7 @@ print_r($this->params['data']);
 echo '</pre>';
 die();
 */
-      $this->flash("Courriel d'inscription envoyé",'/etudiants/inscription_choix',3);
+      $this->flash("Courriel d'inscription envoyé",'/etudiants/inscription_choix',4);
       
     }
 
@@ -489,7 +496,9 @@ die();
         if (empty($this->params['data']))
         {
             // find the data and display it
-            $id = preg_replace('/[^0-9]/','',$id);
+            $id = preg_replace('/[^A-Z0-9]/', '', strtoupper($id));
+            $letterCount = 0;
+            $convertedId = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $id, -1, $letterCount);
             $this->models['etudiant']->setId($id);
             $this->params['data']= $this->models['etudiant']->read();
             $this->set('canModify', true);
@@ -505,15 +514,18 @@ die();
             // apply modification to the data
             $this->set('canModify', true);
 
-            $newId = preg_replace('/[^0-9]/','',$this->params['data']['id']);
-            $oldId = $this->params['data']['modifId'];
-            $this->models['etudiant']->setId($oldId);
+            $newId = preg_replace('/[^A-Z0-9]/', '', strtoupper($this->params['data']['id']));
+            $letterCount = 0;
+            $convertedId = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $newId, -1, $letterCount);
+
+            $oldConvertedId = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $this->params['data']['modifId'], -1, $letterCount);
+            $this->models['etudiant']->setId($oldConvertedId);
             $this->models['etudiant']->read();
             
-            if ($oldId != $newId && $newId != 0 && $oldId != 0)
+            if ($oldConvertedId != $convertedId && $convertedId != 0 && $oldConvertedId != 0)
             {
                 // changing id => 1-check if already used; 2-update existing books
-                $duplicate = $this->checkDuplicates('', $newId);
+                $duplicate = $this->checkDuplicates('', $convertedId);
                 
                 if($duplicate)
                 {
@@ -523,9 +535,10 @@ die();
                     return;
                 }
                 
-                $this->db->query("UPDATE livres SET codebar=$newId WHERE codebar=$oldId");
-
-                $this->params['data']['id'] = $newId;
+                $this->db->query("UPDATE livres SET codebar=$convertedId WHERE codebar=$oldConvertedId");
+                $this->db->query("UPDATE etudiants SET id=$convertedId WHERE id=$oldConvertedId");
+                
+                $this->params['data']['id'] = $convertedId;
             } // $oldId != $newId
 
 
@@ -543,7 +556,10 @@ die();
             $condition = '';
             
             // id
-            $id = $this->params['data']['id'] ? preg_replace('/[^0-9]/','',$this->params['data']['id']) : 0;
+            $this->params['data']['id'] = preg_replace('/[^A-Z0-9]/', '', strtoupper($this->params['data']['id']));
+            $letterCount = 0;
+            $id = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $this->params['data']['id'], -1, $letterCount);
+            $id = $id ? $id : 0;
             
             if ($id)
             {
