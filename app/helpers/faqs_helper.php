@@ -2,6 +2,8 @@
 
 class FaqsHelper extends AppController
 {
+  var $uses = array('faq','foire');
+    
   function load_sections()
   {
     $sections = $this->models['faq']->findBySql("SELECT DISTINCT section FROM faqs");
