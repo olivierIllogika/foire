@@ -89,7 +89,7 @@ class HtmlHelper
 			$out = $this->base . '/' . strtolower($this->params['controller']) . '/' . $url;
 		}
 
-		return ereg_replace('&([^a])', '&amp;\1', $out);
+		return preg_replace('/&([^a])/', '&amp;$1', $out);
 	}
 
 	/**
@@ -150,7 +150,7 @@ class HtmlHelper
 	function linkOut($title, $url=null, $html_options=null)
 	{
 		$url = $url? $url: $title;
-		return sprintf(TAG_LINK, ereg_replace('&([^a])', '&amp;\1', $url), $this->parseHtmlOptions($html_options), $title);
+		return sprintf(TAG_LINK, preg_replace('/&([^a])/', '&amp;$1', $url), $this->parseHtmlOptions($html_options), $title);
 	}
 
 	/**

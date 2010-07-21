@@ -104,7 +104,7 @@ class DBO_MySQL extends DBO
   */
 	function tablesList () 
 	{
-		$result = mysql_list_tables($this->config['database']);
+		$result = mysql_query("SHOW TABLES FROM {$this->config['database']}");
 
 		if (!$result) 
 		{

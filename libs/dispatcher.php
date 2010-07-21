@@ -159,7 +159,7 @@ class Dispatcher extends Object
 		$controller->passed_args = empty($params['pass'])? null: $params['pass'];
 
 		// EXECUTE THE REQUESTED ACTION
-		call_user_func_array(array(&$controller, $params['action']), empty($params['pass'])? null: $params['pass']);
+		call_user_func_array(array(&$controller, $params['action']), empty($params['pass'])? array(): $params['pass']);
 
 		$isFatal = isset($controller->isFatal) ? $controller->isFatal : false;
 
@@ -232,7 +232,7 @@ class Dispatcher extends Object
 
 		// if document root ends with 'public', it's probably correctly set
 		$r = null;
-		if (ereg('/^.*/public(\/)?$/', $doc_root))
+		if (preg_match('#/^.*/public(\/)?$/#', $doc_root))
 		return preg_match('/^(.*)\/index\.php$/', $script_name, $r)? $r[1]: false;
 		else
 		// document root is probably not set to Cake 'public' dir

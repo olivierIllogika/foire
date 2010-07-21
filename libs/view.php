@@ -164,7 +164,7 @@ class View extends Object
 		static $instance;
 		if (!isset($instance))
 		{
-			$instance[0] =& new View();
+			$instance[0] = new View();
 		}
 		return $instance[0];
 	}
