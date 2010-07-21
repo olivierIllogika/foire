@@ -27,7 +27,7 @@
             <p id="etLoginCode">
               <label for="LogChampCode" title="Code d'entrée">Code d'identification: </label><?php
 
-                echo $html->inputTag('etudiant/id', 15, array('id'=>'LogChampCode','maxlength'=>'17', 'title'=>'Code barre de <?=School::Get()->Name(School::ShortName, true)?>, permis de conduire ou numéro personnel (voir courriel d\'inscription)'));
+                echo $html->inputTag('etudiant/id', 15, array('id'=>'LogChampCode','maxlength'=>'17', 'title'=>'Code barre de '.School::Get()->Name(School::ShortName, true).', permis de conduire ou numéro personnel (voir courriel d\'inscription)'));
             ?>
 
               <div id="LogChoix"><?php /*

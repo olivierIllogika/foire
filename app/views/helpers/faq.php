@@ -2,6 +2,19 @@
 
 class FaqHelper
 {
+    
+    function __construct() {
+        $foire = $_SESSION['foire'];
+        
+        $this->replacements = array(
+//                    "site" => "<a href=\"{$this->base}\">{$_SERVER['SERVER_NAME']}{$this->base}</a>",
+        			"foireEmail" => $this->makeMailLink($GLOBALS['gFoireEmail']),
+                    "code4" => School::Get()->PolycopIdName(School::ShortName),
+        			"taux_retard" => "<span class=\"livresPourcent\">{$foire['taux_retard']}%</span>",
+                    "taux_comission" => "<span class=\"livresPourcent\">{$foire['taux_comission']}%</span>",
+        );
+    }
+    
     function makeLink($keyText)
     {
         $sepPos = strpos($keyText, ' ');
@@ -21,30 +34,36 @@ class FaqHelper
         return $link;
     }
     
+    function makeMailLink($mail)
+    {
+		return "<a href=\"mailto:$mail\">$mail</a>";                
+    }
+    
     function keywordMap($match)
     {
         $key = $match[1];
-        $foire = $_SESSION['foire'];
         
-        $replacements = array(
-//                    "site" => "<a href=\"{$this->base}\">{$_SERVER['SERVER_NAME']}{$this->base}</a>",
-        			"foireEmail" => "<a href=\"mailto:{$GLOBALS['gFoireEmail']}\">{$GLOBALS['gFoireEmail']}</a>",
-                    "code4" => School::Get()->PolycopIdName(School::ShortName),
-        			"taux_retard" => "<span class=\"livresPourcent\">{$foire['taux_retard']}%</span>",
-                    "taux_comission" => "<span class=\"livresPourcent\">{$foire['taux_comission']}%</span>",
-        );
         
         if (substr($key, 0, 1) == '[')
         {
+            // wiki style link
             return $this->makeLink($key);
         }
         
-        if (array_key_exists($key, $replacements))
+        if (strpos($key, '@'))
         {
-            return $replacements[$key];
+            // email
+            return $this->makeMailLink($key);
+        }
+        
+        if (array_key_exists($key, $this->replacements))
+        {
+            // keyword
+            return $this->replacements[$key];
         }        
         else
         {
+            // unhandled key
             return "**$key**";
         }
     }
