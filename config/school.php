@@ -10,9 +10,13 @@ abstract class School
     const ShortName = 0;
     const MediumName = 1;
     const LongName = 2;
-
+    
+    var $id = School::Dev;
+    
     public static $instance = null;
     public static function Get() { return School::$instance; }
+    public function Id() { return $this->id; }
+    
 
     abstract public function Name($size, $article=false);
     abstract public function GetBarCodeImg();
@@ -20,6 +24,8 @@ abstract class School
     abstract public function TagLine($html, $kiosk);
     abstract public function PolycopIdName($size);
     abstract public function PolycopIdSize();
+    public function IsbnClass() { return 'IsbnWrapper'; }
+    
     
     abstract public function BarCodePrefix();
     abstract public function BarCodeDataSize();
@@ -31,6 +37,8 @@ abstract class School
 
 class SchoolPoly extends School
 {
+    var $id = School::Poly;
+    
     public function TagLine($html, $kiosk)
     {
         $AEP = (empty($kiosk) || !$kiosk ? $html->linkOut("AEP", "http://www.aep.polymtl.ca", array('title'=>'Association des Étudiants de Polytechnique')) : 'AEP' );
@@ -81,6 +89,8 @@ class SchoolPoly extends School
 
 class SchoolETS extends School
 {
+    var $id = School::ETS;
+    
     public function TagLine($html, $kiosk)
     {
         $TribuTerre = (empty($kiosk) || !$kiosk ? $html->linkOut("TribuTerre", "http://tributerre.aeets.com", array('title'=>'TribuTerre')) : 'TribuTerre' );
@@ -112,6 +122,8 @@ class SchoolETS extends School
         return $names[$size];
     }
     public function PolycopIdSize() { return 6; }
+    
+    public function IsbnClass() { return 'IsbnEts'; }
     
     public function BarCodePrefix() { return ''; }
     public function BarCodeDataSize() { return 8; }
