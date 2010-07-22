@@ -33,9 +33,9 @@
           foreach ($data as $livre):
         
           $realTitle = $livre['titre'];
-          $fullTitle = htmlspecialchars( $realTitle );
+          $fullTitle =  $realTitle;
           $lenLimit = 36;
-          $shortTitle = strlen($realTitle) < $lenLimit ? $fullTitle : htmlspecialchars(substr($realTitle,0,$lenLimit)).'...';
+          $shortTitle = strlen($realTitle) < $lenLimit ? $fullTitle : substr($realTitle,0,$lenLimit).'...';
           
           ?>
         <tr class="<?=$rowClasses[] = array_shift($rowClasses)?>">
@@ -43,10 +43,10 @@
           <td class="livrePrix"><?php echo $livre['prix'] ?>&nbsp;$</td>
           <?php if ($livre['count']): /*<?=$html->imageTag('window_383.gif')*/ ?>
           <?php
-            $statsClick = "window.open('".$html->urlFor("/isbnstats/afficher/{$livre['isbn']}")."','Statistiques de livre','width=300,height=350,screenX=300,screenY=300,top=300,left=300'); return false;";
+            $statsClick = "window.open('".$html->urlFor("/isbnstats/afficher/{$livre['isbn']}")."','Statistiques de livre','width=350,height=400,screenX=300,screenY=300,top=300,left=300'); return false;";
             /* status=no,menubar=no,resizable=no,scrollbars=no */
           ?>
-          <td class="livreISBN "><?=$html->linkTo($this->isbn->isbn2formated($livre['isbn']),"/isbnstats/afficher/{$livre['isbn']}", array('class'=>"isbnStats", 'title'=>"Statistiques disponibles", 'target'=>'stats', 'onclick'=>$statsClick))?></td>
+          <td class="livreISBN "><?=$html->linkTo($livre['isbn'],"/isbnstats/afficher/{$livre['isbn']}", array('class'=>"isbnStats", 'title'=>"Statistiques disponibles", 'target'=>'stats', 'onclick'=>$statsClick))?></td>
           <?php else: ?>
           <td class="livreISBN "><?=$this->isbn->isbn2formated($livre['isbn'], '-') ?></td>
           <?php endif; ?>

@@ -9,7 +9,7 @@
             <p id="AjISBN"><?php
                echo '<label for="AjChampISBN">ISBN (ou GTIN/EAN/UPC): [format libre]</label>'.
 //               '<input type="text" name="data[id]" id="AjChampISBN" maxlength="14" size="15" value="'.$html->tagValue('id').'"  />';
-               '<input type="text" name="data[id]" id="AjChampISBN" maxlength="14" size="15" value="'.$this->isbn->isbn2formated($html->tagValue('id')).'"  />';
+               '<input type="text" name="data[id]" id="AjChampISBN" maxlength="14" size="15" value="'.$html->tagValue('id').'"  />';
 
                     $html->inputTag('isbn/id', 15, array('id'=>'AjChampISBN','maxlength'=>'14'));
                
@@ -26,7 +26,7 @@
     <tr><td>auteur</td><td><?=$info['auteur']?></td></tr>
     <?php if (!empty($info['metadescription'])): ?>
       <tr><td>meta description</td><td><pre><?=$info['metadescription']?></pre></td></tr>
-      <tr><td>meta keywords</td><td><pre><?=$info['metakeywords']?></pre></td></tr>
+      <tr><td>body</td><td><pre><?=$info['body']?></pre></td></tr>
     <?php endif; ?>
     </table>
     <?php endif; ?>

@@ -14,7 +14,7 @@
             <p id="AjISBN"><?php
                echo $html->tagErrorMsg('livre/isbn_rech', 'ISBN/'.School::Get()->PolycopIdName(School::ShortName).' non valide; '.$isbn_help);
                echo '<label for="AjChampISBN">'.$this->livre->isbn10_code4_Html().': </label>'.
-                    '<input type="text" name="data[isbn_rech]" id="AjChampISBN" maxlength="14" title="'.$isbn_help.'" size="10" value="'.$this->isbn->isbn2formated($html->tagValue('isbn_rech')).'"  />';
+                    '<input type="text" name="data[isbn_rech]" id="AjChampISBN" maxlength="14" title="'.$isbn_help.'" size="10" value="'.$html->tagValue('isbn_rech').'"  />';
 
                echo (!empty($info) || $html->tagValue('titre') || $html->tagValue('isbntitre') ? '&nbsp;&nbsp;&nbsp;' : '<blink>&gt;&gt;</blink>');
                echo $html->submitTag('Trouver le titre');

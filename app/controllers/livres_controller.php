@@ -6,7 +6,7 @@ require_once ROOT.'modules/fpdf_label.inc.php';
 
 class LivresController extends LivresHelper
 {
-  var $minStats = 7;
+  var $minStats = 2;
 
   function index()
   {
@@ -42,6 +42,7 @@ class LivresController extends LivresHelper
 
       if (!empty($this->params['data']['isbntitre']))
       {
+          
         $cleaned = $this->models['livre']->isbnClean($this->params['data']['isbn']);
         
         if ($cleaned > 4)
@@ -209,22 +210,15 @@ echo '</pre>';
     }
     else
     {
-      $isbn_code4 = preg_replace('/[^0-9X]/', '', strtoupper($this->params['data']['isbn_rech']));
-/*
-preg_match('/^([0-9]{4}$)|([0-9]{9}[0-9X]$)/', $isbn_code4,$matches);
-echo '<pre>';
-print_r($matches);
-echo '</pre>';
-die();
-*/
-      // seulement 4 ou 10 caract�res
-      if (!preg_match('/^([0-9]{4,6}$)|([0-9]{9}[0-9X]$)/', $isbn_code4))
+      $isbn = IsbnWrapper::factory($this->params['data']['isbn_rech']);
+      
+      if ($isbn->isMalformed())
       {
         $this->models['livre']->validationErrors['isbn_rech'] = 1;
         $this->render('ajouter_nouveau');
-        return;
+        return;          
       }
-
+/*
       $code4Len = strlen($isbn_code4);
       if ($code4Len == 4 || $code4Len == 5 || $code4Len == 6)
       {
@@ -238,21 +232,12 @@ die();
         $this->set('info', ( $ret ? current($ret) : null ));
 
       }
-      else
+      else*/
       {
         // isbn
-        $valid_isbn = @$this->models['isbn']->is_isbn($isbn_code4);
-//echo $valid_isbn.'<br />';
-        if (!$valid_isbn)
         {
-          // ne peut pas extraire d'ISBN (9 ou 10 caract�res)
-          // (impossible car d�j� valid�)
-          $this->models['livre']->validationErrors['isbn_rech'] = 1;
-        }
-        else
-        {
-          $this->models['evlivre']->logEvent(437, 0, $_SESSION['etudiant']['id'], "rech. isbn $valid_isbn");
-
+          $this->models['evlivre']->logEvent(437, 0, $_SESSION['etudiant']['id'], "rech. isbn {$isbn->getIsbn13()}");
+/*
           if (strlen($valid_isbn) == 9)
           {
             // checksum non valide, recalcul avec les 9ier caract�res et
@@ -261,7 +246,7 @@ die();
 
             $info = $this->models['isbn']->getInfo($isbn10);
 
-            $ret = $this->models['isbnstat']->find("count >= {$this->minStats} AND id = $valid_isbn");
+            $ret = $this->models['isbnstat']->find("count >= {$this->minStats} AND id = {$isbn->getIsbn10(false)}");
             if ($ret)
             {
               $info = array_merge($info,$ret);
@@ -271,22 +256,18 @@ die();
 
             $this->set('info', null);
           }
-          else
+          else*/
           {
-            $info = $this->models['isbn']->getInfo($valid_isbn);
+            $info = $this->models['isbn']->getInfo($isbn);
 
-            $ret = $this->models['isbnstat']->find("count >= {$this->minStats} AND id = ".substr($valid_isbn,0,9));
+            $ret = $this->models['isbnstat']->find("count >= {$this->minStats} AND id = {$isbn->getIsbn10(false)}");
             if ($ret)
             {
               $info = array_merge($info,$ret);
             }
 
             $this->set('info', $info);
-/*
-           echo '<pre>';
-print_r($info);
-echo '</pre>';
-*/
+
           }
 
         }//valid isbn

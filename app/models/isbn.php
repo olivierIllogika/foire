@@ -1,5 +1,171 @@
 <?php
 
+
+class IsbnWrapper
+{
+    var $input;
+    var $inputLen;
+    
+    var $isbn13;
+    var $src10;
+    var $check10;
+    var $src13;
+    var $check13;
+    var $valid = false;
+    var $malformed = false;
+    
+    static function factory($freeForm)
+    {
+        $class = School::Get()->IsbnClass();
+        return new $class($freeForm);        
+    }
+    
+    function __construct($freeForm)
+    {
+        $freeForm = preg_replace('/[^0-9X]/', '', strtoupper($freeForm));
+        $this->input = $freeForm;
+        $len = strlen($freeForm);
+        $this->inputLen = $len;
+        
+        $prefix13 = '978';
+        if ($len == 13 || $len == 12)
+        { 
+            if ($len == 13)
+            {
+                $this->src13 = $freeForm;
+                $prefix13 = substr($freeForm, 0, 3);
+                $this->computeCheck13($this->src13);
+                $this->valid = substr($this->src13, -1) == $this->check13;
+            }
+            else
+            {
+                $this->valid = true;
+                
+                $this->computeCheck13($freeFrom);
+                $this->src13 = $freeForm.$this->check13;
+                $prefix13 = substr($freeForm, 0, 3);
+            }
+            
+            $this->isbn13 = substr($this->src13, 0, 12);
+            $isbn9 = substr($this->src13, 3, 9);
+            $this->computeCheck10($isbn9);
+            $this->isbn10 = $this->src10 = $isbn9.$this->check10;            
+        }
+        elseif ($len == 10)
+        {
+            $this->src10 = $freeForm;
+            $this->computeCheck10($this->src10);
+            $this->valid = substr($this->src10, -1) == $this->check10;
+            
+            $this->isbn13 = $prefix13.substr($this->src10, 0, 9);
+            $this->computeCheck13($this->isbn13);
+            $this->src13 = $this->isbn13.$this->check13;
+        }
+        elseif ($len == 9)
+        {
+            $this->valid = true;
+
+            $this->computeCheck10($freeForm);
+            $this->src10 = $freeForm.$this->check10;
+            
+            $this->isbn13 = $prefix13.substr($this->src10, 0, 9);
+            $this->computeCheck13($this->isbn13);
+            $this->src13 = $this->isbn13.$this->check13;
+        }
+        else 
+        {
+            $this->malformed = true;
+        }
+
+        if ($prefix13 != '978' && $prefix13 != '979' )
+        {
+            $this->malformed = true;
+        }
+    }
+    
+    function computeCheck10($isbn)
+    {
+        $n = substr($isbn, 0, 9);
+        
+        $checksum = 0;
+    
+        for ($i = 0; $i < 9; $i++)
+          $checksum += ($i+1)*$n[$i];
+    
+        $checksum %= 11;
+    
+        $this->check10 = $checksum==10 ? 'X' : $checksum;
+        return $this->check10; 
+    } 
+    
+    function computeCheck13($isbn)
+    {
+        $n = substr($isbn, 0, 12);
+
+        $checksum = 0;
+    
+        $f = 1;
+        for ($i = 0; $i < 12; $i++)
+        {
+          $checksum += $f*$n[$i];
+          $f ^= 2; 
+        }
+    
+        $checksum = 10 - ($checksum % 10);
+        $this->check13 = $checksum==10 ? '0' : $checksum;;
+        return $this->check13;
+    } 
+    
+    function isValid()
+    {
+        return $this->valid;
+    }
+    function isMalformed()
+    {
+        return $this->malformed;
+    }
+    
+    function getIsbn10($checksum=true,$validVersion=true)
+    {
+        $data = $validVersion ? substr($this->isbn13, 3, 9) : substr($this->src10, 0, 9);
+        $check = $validVersion ? $this->check10 : substr($this->src10, -1);
+        return $data.($checksum ? $check : ''); 
+    }
+    
+    function getIsbn13($checksum=true,$validVersion=true)
+    {
+        $data = substr($validVersion ? $this->isbn13 : $this->src13, 0, 12);
+        $check = $validVersion ? $this->check13 : substr($this->src13, -1);
+        return $data.($checksum ? $check : ''); 
+    }
+
+    function getIsbn10Checkdigit()
+    {
+        return $this->check10;
+    }
+
+    function getIsbn13Checkdigit()
+    {
+        return $this->check13;
+    }
+}
+
+class IsbnEts extends IsbnWrapper
+{
+    function __construct($freeForm)
+    {
+        parent::__construct($freeForm);
+        if ($this->inputLen == 6)
+        {
+            parent::__construct('6160000'.$this->input);
+            // overwrite normal isbn analysis 
+            $this->malformed = false;
+            $this->isbn13 = $this->src13;
+            $this->check13 = substr($this->input, -1);
+        }
+    }
+}
+
 class Isbn extends AppModel
 {
   /*
@@ -141,7 +307,7 @@ echo '</pre>';
       return $if_blank;
     }
 
-    if (strlen($isbn) <= 5)
+    if (strlen($isbn) <= 6)
     {
       return $isbn; // code4
     }
@@ -188,12 +354,14 @@ echo '</pre>';
   }
 ////////////////////////////////////////////
 ////////////////////////////////////////////
-  function getInfo($isbn10, $force=false)
+  function getInfo($isbnWrap, $force=false)
   {
 
     // test at http://localhost/foire-work/isbns/outil_insertion
     $try_array = array(
                         $force ? '' : 'local_db_fetch',
+                        'coop_ets',
+                        'coop_poly',
                         'amazon_fr',
                         'amazon_ca',
                         'amazon_com',
@@ -203,57 +371,41 @@ echo '</pre>';
     {
       if ($try != '')
       {
-//echo 'trying '.str_replace('_','.',$try).'<br />';
 
         $info['titre'] = $info['auteur'] = '';
 
-        $ret = call_user_func(array(&$this, $try), $info, $isbn10);
-/*
-        if (!$ret && class_exists('mailmsg'))
-        {
-          // mail report (http get error)
-          $email = new mailmsg();
+        $ret = call_user_func_array(array(&$this, $try), array(&$info, $isbnWrap));
+        
+        $info['titre'] =  html_entity_decode($info['titre'], ENT_QUOTES, 'UTF-8');
+        $info['auteur'] =  html_entity_decode($info['auteur'], ENT_QUOTES, 'UTF-8');
 
-          $email->body = "ISBN wrapper '$try()' might be broken (with $isbn10)\n\n";
-          $email->body .= "Check ".__FILE__." \n\n";
-          $email->body .= "Caller was in {$_SERVER['SCRIPT_NAME']} \n\n";
-
-          if (!$email->send())
-            $this->log_miss("ISBN wrapper '$try()' might be broken (with $isbn10)\r\n");
-        }
-        */
         if (!$ret)
         {
-          $body = "ISBN wrapper '$try()' might be broken (with $isbn10)\n\n";
+          $body = "ISBN wrapper '$try()' might be broken (with {$isbnWrap->getIsbn13()})\n\n";
           $body .= "Check ".__FILE__." \n\n";
           $body .= "Caller was in {$_SERVER['SCRIPT_NAME']} # {$_SERVER['REQUEST_URI']} \n\n";
 
-          @mail('lope@step.polymtl.ca', 'RAPPORT D\'ERREUR', $body);
+          //sendSMTP($GLOBALS['gDevErrorEmail'],'','',"RAPPORT D'ERREUR - ISBN Scraper", $body, false,$GLOBALS['gNoReplyEmail']);
 
-          $this->log_miss("ISBN wrapper '$try()' might be broken (with $isbn10)\r\n");
+          //$this->log_miss("ISBN wrapper '$try()' might be broken (with $isbn10)\r\n");
         }
 
-        $info['id'] = substr($isbn10, 0, 9);
-/*
-        $this->_titre = $info['titre'];
-        $this->_auteur = $info['auteur'];
-*/
+        $info['id'] = $isbnWrap->getIsbn13();
 
         if (($info['titre'] == '' && $info['auteur'] == '')  )
-        {
+        {/*
           // log to file isbn_miss.txt
           if ($try != 'local_db_fetch')
           {
             $this->log_miss("$try could not find $isbn10\r\n");
-          }
+          }*/
         }
         else
         {
-//echo "found @ $try<br />\n";
           // data found
           if ($try != 'local_db_fetch')
           {
-            $this->local_db_cache($info, $force);
+            $this->local_db_cache($info, $isbnWrap, $force);
           }
 
           break;
@@ -283,25 +435,23 @@ echo '</pre>';
 ////////  DB SEARCH BELOW  ////////////////////////////
 ////////////////////////////////////////////////////////
 
-  function local_db_cache($info, $wasForced=false)
+  function local_db_cache($info, $isbnWrap, $wasForced=false)
   {
 	$canInsert = true;
 	if ($wasForced)
 	{
-		$result = $this->findAll("id={$info['id']}", array('titre','auteur','source','link'));
+		$result = $this->findAll("id={$isbnWrap->getIsbn10(false)} or id={$isbnWrap->getIsbn13()}", array('titre','auteur','source','link'));
 		$canInsert = empty($result);
 	}
 	if ($canInsert)
 	{
-		$this->insertWithId($info, false, $info['id']);
+		$this->insertWithId($info, false, $isbnWrap->getIsbn13());
 	}
   }
 
-  function local_db_fetch(&$info, $isbn, $link='')
+  function local_db_fetch(&$info, $isbnWrap, $link='')
   {
-    $isbn = substr($isbn, 0, 9);
-
-    $ret = $this->findAll("id=$isbn", array('titre','auteur','source','link'));
+    $ret = $this->findAll("id={$isbnWrap->getIsbn13()}", array('titre','auteur','source','link'));
 
     if (!$ret) return true;
 
@@ -314,94 +464,121 @@ echo '</pre>';
 ////////  NET SEARCH BELOW  ////////////////////////////
 ////////////////////////////////////////////////////////
 
-  function amazon_ca(&$info, $isbn, $link='')
+  function amazon_ca(&$info, $isbnWrap, $link='')
   {
     $info['source'] = 'amazon.ca';
-    $info['link'] = "http://www.amazon.ca/exec/obidos/ASIN/$isbn";
-    return $this->amazon_fr($info, $isbn, $info['link']);
+    $info['link'] = "http://www.amazon.ca/exec/obidos/ASIN/{$isbnWrap->getIsbn10()}";
+    return $this->amazon_1($info, $isbnWrap, $info['link']);
   }
 
-  function amazon_com(&$info, $isbn, $link='')
+  function amazon_com(&$info, $isbnWrap, $link='')
   {
     $info['source'] = 'amazon.com';
-    $info['link'] = "http://www.amazon.com/exec/obidos/ASIN/$isbn";
-    return $this->amazon_fr($info, $isbn, $info['link']);
+    $info['link'] = "http://www.amazon.com/exec/obidos/ASIN/{$isbnWrap->getIsbn10()}";
+    return $this->amazon_2($info, $isbnWrap, $info['link']);
   }
 
-  function amazon_fr(&$info, $isbn, $link='')
+  function amazon_fr(&$info, $isbnWrap, $link='')
   {
-    // this hack allows for content layout wrapper (like amazon_ca)
-    if ($link == '')
-    {
-      $info['link'] = "http://www.amazon.fr/exec/obidos/ASIN/$isbn";
-      $info['source'] = 'amazon.fr';
-    }
-    else
-      $info['link'] = $link;
+    $info['source'] = 'amazon.fr';
+    $info['link'] = "http://www.amazon.fr/exec/obidos/ASIN/{$isbnWrap->getIsbn10()}";
+    return $this->amazon_1($info, $isbnWrap, $info['link']);
+  }
 
-    $contents = $this->getWebContent($info['link'], '<'.'body');
+  function amazon_getDescription($link)
+  {
+    $contents = $this->getWebContent($link, '<'.'body');
 
     $meta_description = $this->getMetaContent($contents,'description');
-    $meta_keywords = $this->getMetaContent($contents,'keywords');
 
-    $data = $this->amazonParse($meta_description, $meta_keywords, $isbn);
-
-    $info['titre'] = $data[0];
-    $info['auteur'] = $data[1];
-
-    if (($info['titre'] == '' || $info['auteur'] == '') && $meta_description != '' && $meta_keywords != '')
-    {
-      if (0)
-      {
-        $this->log_miss("reading {$info['link']} yields:\r\n".
-          "meta_description:\r\n".
-          "$meta_description\r\n".
-          "meta_keywords:\r\n".
-          "$meta_keywords\r\n".
-          '');
-      }
-      $info['metadescription'] = $meta_description;
-      $info['metakeywords'] = $meta_keywords;
-      return false; // return false if possibly broken
-    }
-    else
-      return true;
+    return $meta_description;
   }
-
-  
-  /*
-  :: best test case found ::
-  $desc = "Amazon.fr: Guide pour lire, comprendre et pratiquer : L'Alimentation ou la Troisi&egrave;me M&eacute;decine: Dominique Seignalet, Anne Seignalet, Henri Joyeux: Livres";
-  $keyw = "Guide pour lire, comprendre et pratiquer : L'Alimentation ou la Troisi&egrave;me M&eacute;decine,Fran&ccedil;ois-Xavier de Guibert,2755401559,Alimentation,Di&eacute;t&eacute;tique,Sant&eacute;-di&eacute;t&eacute;tique-beaut&eacute;";
-  $isbn = '2755401559';
-  */
-  function amazonParse($description, $keywords, $isbn)
+    
+  function amazon_1(&$info, $isbnWrap, $link='')
   {
-    $isbnPos = strpos($keywords, ','.$isbn);
-    if ($isbnPos === false) return array('','','');
+    $desc = $this->amazon_getDescription($link);
     
-    $titlePos = strpos($description, ': ') + 2;
-    if ($titlePos === false) return array('','','');
-    
-    $dtitle = substr($description, $titlePos);
-    $ktitle = substr($keywords, 0, $isbnPos);
-    
-    $max_iter = 8;
-    do
+    if ($desc)
     {
-      $commaPos = strrpos($ktitle, ','); // look for title/author delimiter
-      if ($commaPos)
-        $ktitle = trim(substr($ktitle, 0, $commaPos)); // trim string
+        $src = $info['source'];
+        $divider = ": $src: ";
     
-      $titlePos = strpos($dtitle, $ktitle); // try matching
-    } while($titlePos === false && --$max_iter > 0);
+        $pos = strpos(strtolower($desc), $divider);
+        
+        $info['titre'] = substr($desc, 0, $pos);
+        $authStart = $pos + strlen($divider);
+        $info['auteur'] = substr($desc, $authStart, strrpos($desc, ":") - $authStart);
     
-    $titleLen = strlen($ktitle);
-    $author = trim(substr($dtitle, $titleLen, strrpos($dtitle, ':') - $titleLen), " :");
-    $editor = trim(substr($keywords, $titleLen, $isbnPos - $titleLen), " ,");
-    
-    return array($ktitle, $author, $editor);
+        if ($info['titre'] == '' || $info['auteur'] == '')
+        {
+          $info['desc'] = $desc;
+          return false; // return false if possibly broken
+        }
+    }
+    return true;
   }
+
+  function amazon_2(&$info, $isbnWrap, $link='')
+  {
+    $desc = $this->amazon_getDescription($link);
+
+    if ($desc)
+    {
+        $isbn9 = substr($isbnWrap->getIsbn10(), 0, 9);
+        $pattern = "/ \(\d+$isbn9\d\): /";
+        $parts = preg_split($pattern, $desc);
+        
+        $info['titre'] = substr($parts[0], strpos($desc, ":") + 1);
+        if (count($parts) > 1)
+        {
+            $info['auteur'] = substr($parts[1], 0, strrpos($parts[1], ":"));;
+        }
+    
+        if ($info['titre'] == '' || $info['auteur'] == '')
+        {
+          $info['desc'] = $desc;
+          return false; // return false if possibly broken
+        }
+    }
+    return true;
+  }
+    
+  function coop_poly(&$info, $isbnWrap, $link='')
+  {
+    $info['source'] = 'coopets.ca';
+    $info['link'] = "http://www.coopoly.ca/recherche.php?isbn={$isbnWrap->getIsbn13()}&action=chercher";
+
+    $contents = $this->getWebContent($info['link'], '</'.'body');
+
+    preg_match('#"padding-bottom: 10px"><strong>\s*([^<]+)\s*</strong>\s*\<br />\s*([^<]+)</div>#si', $contents, $match );
+
+    if (count($match) == 3)
+    {
+        $info['titre'] = iconv('iso-8859-1', 'utf-8', $match[1]);
+        $info['auteur'] = iconv('iso-8859-1', 'utf-8', $match[2]);
+        return true;
+    }
+    return false;    
+  }
+  
+  function coop_ets(&$info, $isbnWrap, $link='')
+  {
+    $info['source'] = 'coopets.ca';
+    $info['link'] = "http://www.coopets.ca/webconcepteur/web/Coopsco/fr/ets/service.prt?advancedSearch=true&svcid=CO_CATALOG18&page=productsList.jsp&producttype=librairie&isbn13={$isbnWrap->getIsbn13()}";
+
+    $contents = $this->getWebContent($info['link'], '</'.'body');
+    
+    preg_match('#>([^<]+)</a>\s*<dl>\s*<dt>Auteur :</dt>\s*<dd>([^<]+)</dd>#si', $contents, $match );
+
+    if (count($match) == 3)
+    {
+        $info['titre'] = $match[1];
+        $info['auteur'] = $match[2];
+        return true;
+    }
+    return false;    
+  }
+    
 
   function getWebContent($link, $stop_on='')
   {
@@ -411,7 +588,7 @@ echo '</pre>';
 
     $contents = '';
     while (!feof($handle)) {
-      $buffer = fread($handle, 1024);
+      $buffer = fread($handle, 2048);
       $contents .= $buffer;
 
       if ($stop_on != '' && strstr($buffer, $stop_on)) break;

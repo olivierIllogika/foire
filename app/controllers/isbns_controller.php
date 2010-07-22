@@ -17,27 +17,18 @@ class IsbnsController extends IsbnsHelper
     }
     else
     {
-      $isbn = $this->params['data']['id'];
+      $isbn = IsbnWrapper::factory($this->params['data']['id']);
       
-      $valid_isbn = @$this->models['isbn']->is_isbn($isbn);
-      
-      if (!$valid_isbn)
+      if ($isbn->isMalformed())
       {
         $this->models['isbn']->validationErrors['id'] = 1;
         $this->render();
       }
       else
       {
-        if (strlen($valid_isbn) == 9)
-        {
-
-        }
-        else
-        {
-          $info = $this->models['isbn']->getInfo($valid_isbn, $force=true);
+          $info = $this->models['isbn']->getInfo($isbn, $force=true);
           $this->set('info', $info);
           $this->render();
-        } //len = 9
       }//valid isbn
       
     }//empty data
