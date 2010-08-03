@@ -77,7 +77,9 @@
 
     <p id="livresRecup"><?php echo preg_replace('/récupération/', $html->linkTo('récupération', '/faqs#qa12'), $avis ) ?></p>
 
-    <?php $avis = "Nous ne gardons que {$foire['taux_comission']}% de commission sur le montant de vos livres vendus.  Si la date de récupération n'est pas respectée, vous pouvez toujours vous présenter à l'AEP dans la semaine suivant la journée de récupération.  Nous garderons alors une commission de {$foire['taux_retard']}% pour couvrir le supplément de gestion."; ?>
+    <?php 
+        $lateLocation = School::Get()->Id() == School::ETS ? "au local de Tributerre&nbsp;(A&#8209;1186)" : "à l'AEP";
+        $avis = "Nous ne gardons que {$foire['taux_comission']}% de commission sur le montant de vos livres vendus.  Si la date de récupération n'est pas respectée, vous pouvez toujours vous présenter $lateLocation dans la semaine suivant la journée de récupération.  Nous garderons alors une commission de {$foire['taux_retard']}% pour couvrir le supplément de gestion."; ?>
 
     <p id="livresComission"><?php echo preg_replace('/[0-9]{1,2}[ ]{0,1}%/', '<span class="livresPourcent">$0</span>', preg_replace('/récupération/', $html->linkTo('récupération', '/faqs#qa12'), $avis )) ?></p>
 
