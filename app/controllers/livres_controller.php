@@ -6,7 +6,7 @@ require_once ROOT.'modules/fpdf_label.inc.php';
 
 class LivresController extends LivresHelper
 {
-  var $minStats = 2;
+  var $minStats = 5;
 
   function index()
   {

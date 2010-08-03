@@ -360,6 +360,7 @@ echo '</pre>';
         $foire = $this->models['foire']->find(null,'session','session DESC');
         $foire = $foire['session'];
         $id = $this->newId($foire);
+        $this->params['data']['id'] = $id;
       }
 
       $duplicate = $this->checkDuplicates($this->params['data']['courriel'],$id);
@@ -397,15 +398,18 @@ die();
 
   }
 
-  function confirmer($id)
+  function confirmer($id='')
   {
     $id = preg_replace('/[^A-Z0-9]/', '', $id);
     $letterCount = 0;
     $convertedId = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $id, -1, $letterCount);
-      
-    $data = $this->models['etudiant']->findAll("id = $convertedId");
+     
+    if ($convertedId)
+    {
+        $data = $this->models['etudiant']->findAll("id = $convertedId");
+    }
     
-    if ($data)
+    if ($convertedId && $data)
     {
       $row = current($data);
       if ($row['confirme'] == 1)
@@ -425,8 +429,9 @@ die();
     else
     {
       // ne devrait jamais venir ici
-      $this->models['evetudiant']->logEvent(451,$convertedId,"conf:identité inconnue");
-      $this->flash('Identification inconnue','/etudiants/inscription_choix');
+      $convertedId = $convertedId ? $convertedId : 0;
+      $this->models['evetudiant']->logEvent(451,$convertedId,"conf:identité inconnue;arg:$id");
+      $this->flash('Identification inconnue','/etudiants/inscription_choix',5);
     }
 
   }

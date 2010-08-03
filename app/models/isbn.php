@@ -382,17 +382,18 @@ echo '</pre>';
         if (!$ret)
         {
           $body = "ISBN wrapper '$try()' might be broken (with {$isbnWrap->getIsbn13()})\n\n";
+          $body .= "URL {$info['link']} \n\n";
           $body .= "Check ".__FILE__." \n\n";
           $body .= "Caller was in {$_SERVER['SCRIPT_NAME']} # {$_SERVER['REQUEST_URI']} \n\n";
 
-          //sendSMTP($GLOBALS['gDevErrorEmail'],'','',"RAPPORT D'ERREUR - ISBN Scraper", $body, false,$GLOBALS['gNoReplyEmail']);
+          sendSMTP($GLOBALS['gDevErrorEmail'],'','',"RAPPORT D'ERREUR - ISBN Scraper", $body, false,$GLOBALS['gNoReplyEmail']);
 
           //$this->log_miss("ISBN wrapper '$try()' might be broken (with $isbn10)\r\n");
         }
 
         $info['id'] = $isbnWrap->getIsbn13();
 
-        if (($info['titre'] == '' && $info['auteur'] == '')  )
+        if ($info['titre'] == ''  )
         {/*
           // log to file isbn_miss.txt
           if ($try != 'local_db_fetch')
@@ -558,6 +559,11 @@ echo '</pre>';
         $info['auteur'] = iconv('iso-8859-1', 'utf-8', $match[2]);
         return true;
     }
+    else if (preg_match('#Aucun r&eacute;sultat trouv&eacute;#si', $contents, $match ))
+    {
+        $info['titre'] = $info['auteur'] = '';
+        return true;
+    }
     return false;    
   }
   
@@ -568,12 +574,17 @@ echo '</pre>';
 
     $contents = $this->getWebContent($info['link'], '</'.'body');
     
-    preg_match('#>([^<]+)</a>\s*<dl>\s*<dt>Auteur :</dt>\s*<dd>([^<]+)</dd>#si', $contents, $match );
+    preg_match('#>([^<]+)</a>\s*<dl>\s*<dt>Auteur :</dt>\s*<dd>([^<]*)</dd>#si', $contents, $match );
 
     if (count($match) == 3)
     {
         $info['titre'] = $match[1];
         $info['auteur'] = $match[2];
+        return true;
+    }
+    else if (preg_match('#<strong>0</strong> produit#si', $contents, $match ))
+    {
+        $info['titre'] = $info['auteur'] = '';
         return true;
     }
     return false;    
