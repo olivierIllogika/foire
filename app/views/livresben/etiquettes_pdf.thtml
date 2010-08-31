@@ -28,7 +28,7 @@ foreach($data as $livre)
   $code = $livre['id']. sprintf("%03d",$livre['prix']);
   $ref = substr($livre['id'],-4).'-'.$livre['genie'];
   $prix = $livre['prix'].'$';
-  $titre = substr($livre['titre'],0,150);
+  $titre = iconv("UTF-8", "ISO-8859-1", substr($livre['titre'],0,150));
 //  $titre = $livre['titre'].' '.strlen($livre['titre']);
   $genie = $livre['genie'] == 0 ? '' : $_SESSION['genies_cache'][$livre['genie']];
 
