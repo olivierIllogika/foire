@@ -13,14 +13,14 @@ $fill=0;
 if (empty($data))
 {
   $pdf->AddPage();
-  $pdf->ChequePart($_SESSION['persistent']['etudiant_nom'], $_SESSION['persistent']['remettre']['argent_back']);
+  $pdf->ChequePart( iconv("UTF-8", "ISO-8859-1",$_SESSION['persistent']['etudiant_nom']), $_SESSION['persistent']['remettre']['argent_back']);
 }
 else
 {
   foreach($data as $etudiant)
   {
     $pdf->AddPage();
-    $pdf->ChequePart($etudiant['nom'], $etudiant['montant']);
+    $pdf->ChequePart( iconv("UTF-8", "ISO-8859-1", $etudiant['nom']), $etudiant['montant']);
   }
 }
 
