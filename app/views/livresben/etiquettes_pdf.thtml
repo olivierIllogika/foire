@@ -30,7 +30,7 @@ foreach($data as $livre)
   $prix = $livre['prix'].'$';
   $titre = iconv("UTF-8", "ISO-8859-1", substr($livre['titre'],0,150));
 //  $titre = $livre['titre'].' '.strlen($livre['titre']);
-  $genie = $livre['genie'] == 0 ? '' : $_SESSION['genies_cache'][$livre['genie']];
+  $genie = $livre['genie'] == 0 ? '' : iconv("UTF-8", "ISO-8859-1", $_SESSION['genies_cache'][$livre['genie']]);
 
   if ($label_count == 14)
   {
@@ -69,7 +69,7 @@ foreach($data as $livre)
   $pdf->SetFontSize(10);
   $pdf->SetXY($x,$y+$lh-12.5);
   $pdf->Cell($lw/2, 0, $genie,0,0,'L');
-  $pdf->Cell($lw/2, 0, $livre['cours'],0,0,'R');
+  $pdf->Cell($lw/2, 0, iconv("UTF-8", "ISO-8859-1", $livre['cours']),0,0,'R');
 
   $dim = $pdf->Code39($x+18, $y+$lh-10, $code,false,0.8,6);
   $pdf->SetXY($x,$y+$lh-2.5);
