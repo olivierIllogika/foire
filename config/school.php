@@ -105,7 +105,7 @@ class SchoolETS extends School
     {
         $TribuTerre = (empty($kiosk) || !$kiosk ? $html->linkOut("TribuTerre", "http://tributerre.aeets.com", array('title'=>'TribuTerre')) : 'TribuTerre' );
         $Coop = (empty($kiosk) || !$kiosk ? $html->linkOut("Coop ETS", "http://www.coopets.ca", array('title'=>'Librairie Coop ETS')) : 'Coop ETS' );
-        $AEP = (empty($kiosk) || !$kiosk ? $html->linkOut("Poly", "http://www.aep.polymtl.ca/servicesEnLigne.php", array('title'=>'Association des Étudiants de Polytechnique')) : 'Poly' );
+        $AEP = (empty($kiosk) || !$kiosk ? $html->linkOut("Poly", "http://aep.polymtl.ca", array('title'=>'Association des Étudiants de Polytechnique')) : 'Poly' );
         return "Une collaboration de $TribuTerre, $AEP et la $Coop";
     }
 
