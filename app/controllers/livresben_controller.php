@@ -813,8 +813,11 @@ class LivresbenController extends LivresbenHelper
 
     $codebar = !empty($this->params['data']['codebar']) ? $this->params['data']['codebar'] : $codebar;
 
-    $codebar = preg_replace('/[^0-9]/', '', $codebar);
-
+//    $codebar = preg_replace('/[^0-9]/', '', $codebar);
+    $codebar = preg_replace('/[^A-Z0-9]/', '', strtoupper($codebar));
+    $letterCount = 0;
+    $codebar = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $codebar, -1, $letterCount);
+    
 		// nothing entered
     if (!$codebar)
     {
@@ -871,7 +874,7 @@ class LivresbenController extends LivresbenHelper
     $abs_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_FILENAME']);
     $rel_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_NAME']);
 
-    $file = "../Impressions/etiquettes_$codebar.pdf";
+    $file = "Impressions/etiquettes_$codebar.pdf";
     $absPath = ROOT.$file;
     $relPath = "$rel_root/$file";
     
