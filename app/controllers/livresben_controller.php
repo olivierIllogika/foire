@@ -196,9 +196,14 @@ class LivresbenController extends LivresbenHelper
 
       
       
-      if (strlen($input) > 13)
+      if (strlen($input) != 13)
       {
-        $etudiant = $this->models['etudiant']->find("id = $input", array('id','nom','prenom','niveau'));
+      	$inLetters = strtoupper($modePaiement);
+    	$letterCount = 0;
+    	$codebar = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $inLetters, -1, $letterCount);
+    	$codebar.= $input;
+      	
+    	$etudiant = $this->models['etudiant']->find("id = $codebar", array('id','nom','prenom','niveau'));
         
         if ($etudiant)
         {
@@ -213,7 +218,7 @@ class LivresbenController extends LivresbenHelper
             if ($etudiant['niveau'] < 3 && $_SESSION['persistent']['godspawn'])
             {
               // niveau de s�curit� mis � jour
-              $etudiant['niveau'] = 3;
+              $etudiant['niveau'] = 4;
               $this->models['etudiant']->save($etudiant,false);
             }
             
@@ -260,11 +265,11 @@ class LivresbenController extends LivresbenHelper
           // hijacked !!  || ou pas
           if ($livre['prix'] != $prix )
           {
-            $msg = "prix modifi� !! scann�:$prix ; actuel:{$livre['prix']}";
+            $msg = "prix modifié !! scanné:$prix ; actuel:{$livre['prix']}";
           }
           else
           {
-            $msg = "non consign� !!";
+            $msg = "non consigné !! (bd ajusté)";
           }
 
           $this->models['evlivre']->logEvent(252,$livre['id'],$codebar,"$msg ({$_SESSION['etudiant']['prenom']})");
