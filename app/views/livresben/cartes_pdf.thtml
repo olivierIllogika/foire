@@ -37,7 +37,7 @@ $details = array(
 "4. Lorsque '\$aucune' carte est utilisé, inscrivez le montant donné avant de scanner le mot clef '\$aucune'",
 "5. Le retour d'un livre peu se faire à tout moment, même pendant qu'une facture non reliée est en cours",
 "6. Le commis peu changer sans quitter l'interface; scanner la carte étudiante du nouveau commis",
-"7. Un étudiant inscrit peu être promu bénévole/vendeur en scannant sa carte 2 fois de suite.",
+"7. Un étudiant est promu bénévole/vendeur en scannant la carte d'un gestionnaire et celle de l'étudiant.",
 
 );
 
