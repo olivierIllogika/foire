@@ -702,8 +702,11 @@ class LivresbenController extends LivresbenHelper
 
 
     /// default INPUT is a BOOK ID, a STUDENT ID or a CHEQUE #
-    $input = preg_replace('/[^0-9]/', '', $this->params['data']['scan_box']);
-
+    //$input = preg_replace('/[^0-9]/', '', $this->params['data']['scan_box']);
+    $codebar = preg_replace('/[^A-Z0-9]/', '', strtoupper($this->params['data']['scan_box']));
+    $letterCount = 0;
+    $input = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $codebar, -1, $letterCount);
+    
     if ($input)
     {
       if (!empty($_SESSION['persistent']['remettre']) && 
