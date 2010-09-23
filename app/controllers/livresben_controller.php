@@ -546,10 +546,10 @@ class LivresbenController extends LivresbenHelper
         if ($_SESSION['persistent']['suivant'] > 1)
         {
           // write log line with lost book data
-          $this->logLostBooks($_SESSION['persistent']['etudiant'], $_SESSION['persistent']['etudiant_nom']);
+//          $this->logLostBooks($_SESSION['persistent']['etudiant'], $_SESSION['persistent']['etudiant_nom']);
                 
           // 2x 'suivant' overrides warnings
-          @$this->models['livre']->findBySql("UPDATE livres SET codebar = 0 WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} ");
+          @$this->models['livre']->findBySql("UPDATE livres SET prevcodebar = codebar, codebar = 0 WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} ");
 
           $this->models['evetudiant']->logEvent(351,$commis,
               "r�cup: paiement de perdus pour ".
@@ -671,11 +671,12 @@ class LivresbenController extends LivresbenHelper
         
         $etudiant = $this->models['etudiant']->find("id = {$_SESSION['persistent']['etudiant']}");
         
-        $this->log($input. " {$_SESSION['persistent']['remettre']['argent']}$ pour {$_SESSION['persistent']['etudiant_nom']} / ".$sqlBooks);
+        //$this->log($input. " {$_SESSION['persistent']['remettre']['argent']}$ pour {$_SESSION['persistent']['etudiant_nom']} / ".$sqlBooks);
         $this->courrielLivresVendus($etudiant['courriel'], $bookList, 0, $_SESSION['persistent']['remettre']['argent']);
         
         // move sold books to owner 0
-        @$this->models['livre']->findBySql("UPDATE livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id SET codebar = 0 WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} AND NOT ISNULL(livre_id) ");
+        // alter table livres add prevcodebar bigint(20) unsigned not null default 0;
+        @$this->models['livre']->findBySql("UPDATE livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id SET prevcodebar = codebar, codebar = 0, en_consigne=0 WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} AND NOT ISNULL(livre_id) ");
 
         $this->models['evetudiant']->logEvent(302,$commis,"r�cup: paiement($input) de {$_SESSION['persistent']['remettre']['argent']}$ � {$_SESSION['persistent']['etudiant']} ($commis_n)");
 
