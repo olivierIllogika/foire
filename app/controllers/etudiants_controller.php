@@ -438,6 +438,8 @@ die();
 
   function mass_mailer($action=null)
   {
+  	global $gDevErrorEmail;
+  	
     $this->sessionCheck(SECURITY_LEVEL_MANAGMENT);
     
     $sender = 'Foire aux Livres <foire-noreply@step.polymtl.ca>';

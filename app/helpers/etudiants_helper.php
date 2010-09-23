@@ -75,10 +75,10 @@ class EtudiantsHelper extends AppController
   {
 
     $body =
-    "Vous recevez ce courriel car vous avez de l'argent ou des livres à récupérer à la Foire aux Livres de l'AEP.".
+    "Vous recevez ce courriel car vous avez de l'argent ou des livres à récupérer à la Foire aux Livres.".
     "\n\n".
 
-    "Vous devez vous présenter à la journée de récupération pour prendre livres et/ou argent. Consultez foire.aep.polymtl.ca pour l'horaire.\n\n".
+    "Vous devez vous présenter à la journée de récupération pour prendre livres et/ou argent. Consultez http://{$_SERVER['HTTP_HOST']} pour l'horaire.\n\n".
 
     "Assurez-vous d'avoir en main une des pièces d'identification suivante :\n\n".
     
