@@ -9,7 +9,7 @@ class IsbnsController extends IsbnsHelper
 
   function outil_insertion()
   {
-    $this->sessionCheck(SECURITY_LEVEL_HIGHER_USER);
+    //$this->sessionCheck(SECURITY_LEVEL_HIGHER_USER);
 
     if (empty($this->params['data']))
     {
