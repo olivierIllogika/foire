@@ -6,7 +6,7 @@ class Evetudiant extends AppModel
 *
 *   401 enregistrement_
 *   402 confirmation_
-*   403 désinscription_
+*   403 dï¿½sinscription_
 *   404 conflit %type%_
 *   405 demande de mot de passe_
 *   406 login etudiant_
@@ -28,22 +28,22 @@ class Evetudiant extends AppModel
 *
 *   471 kicked!
 *
-*   301 récup: affichage du dossier ..
-*   302 récup: paiement de x$ à ..
-*   303 récup: .. sauté [cmd passe]
-*   304 récup: pseudo terminé
-*   305 récup: chèque #
-*   306 récup: correction chèque #
-*   307 récup: réimpression - nouveau cheque #
+*   301 rï¿½cup: affichage du dossier ..
+*   302 rï¿½cup: paiement de x$ ï¿½ ..
+*   303 rï¿½cup: .. sautï¿½ [cmd passe]
+*   304 rï¿½cup: pseudo terminï¿½
+*   305 rï¿½cup: chï¿½que #
+*   306 rï¿½cup: correction chï¿½que #
+*   307 rï¿½cup: rï¿½impression - nouveau cheque #
 *
-*   351 récup: livres remboursés
+*   351 rï¿½cup: livres remboursï¿½s
 */
 
   function logEvent($event_id, $codebar, $data)
   {
     $data = $this->db->prepare($data);
     
-		$sql = "INSERT IGNORE INTO {$this->table} (id,evenement,data) VALUES ($codebar,$event_id,$data)";
+		$sql = "INSERT REPLACE INTO {$this->table} (id,evenement,data) VALUES ($codebar,$event_id,$data)";
 
 		$this->db->query($sql);
 
