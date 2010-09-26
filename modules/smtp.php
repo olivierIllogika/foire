@@ -28,14 +28,14 @@ function parseAddrs($text) {
     if (trim($text) == '')
         return array();
     $text = str_replace(' ', '', $text);
-    $text = ereg_replace('"[^"]*"', '', $text);
-    $text = ereg_replace('\\([^\\)]*\\)', '', $text);
+    $text = preg_replace('/"[^"]*"/', '', $text);
+    $text = preg_replace('/\\([^\\)]*\\)/', '', $text);
     $text = str_replace(',', ';', $text);
     $array = explode(';', $text);
 
     foreach($array as $part) {
-        $part = eregi_replace ('^.*[<]', '', $part);
-        $part = eregi_replace ('[>].*$', '', $part);
+        $part = preg_replace ('/^.*[<]/', '', $part);
+        $part = preg_replace ('/[>].*$/', '', $part);
 
         if($part != '')
             $new_array[] = $part;
@@ -456,7 +456,7 @@ function errorCheck($line, $smtpConnection, $verbose = false) {
     
     /* Read new lines on a multiline response */
     $lines = $line;
-    while(ereg("^[0-9]+-", $line)) {
+    while(preg_match("/^[0-9]+-/", $line)) {
         $line = fgets($smtpConnection, 1024);
         $lines .= $line;
     }
