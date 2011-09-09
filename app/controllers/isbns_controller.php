@@ -11,6 +11,9 @@ class IsbnsController extends IsbnsHelper
   {
     //$this->sessionCheck(SECURITY_LEVEL_HIGHER_USER);
 
+    $engines = $this->models['isbn']->getEngines($force=true);
+    $this->set('engines', $engines);
+
     if (empty($this->params['data']))
     {
       $this->render();
@@ -26,7 +29,8 @@ class IsbnsController extends IsbnsHelper
       }
       else
       {
-          $info = $this->models['isbn']->getInfo($isbn, $force=true);
+	  $engine = empty($this->params['data']['engine']) ? '' : $engines[$this->params['data']['engine']];
+          $info = $this->models['isbn']->getInfo($isbn, $force=true, $engine);
           $this->set('info', $info);
           $this->render();
       }//valid isbn

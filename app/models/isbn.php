@@ -352,13 +352,10 @@ echo '</pre>';
     return (10 - ($checkdigit % 10));
 
   }
-////////////////////////////////////////////
-////////////////////////////////////////////
-  function getInfo($isbnWrap, $force=false)
-  {
 
-    // test at http://localhost/foire-work/isbns/outil_insertion
-    $try_array = array(
+  function getEngines($force=false)
+  {
+    return array(
                         $force ? '' : 'local_db_fetch',
                         'coop_ets',
                         'coop_poly',
@@ -366,10 +363,21 @@ echo '</pre>';
                         'amazon_ca',
                         'amazon_com',
                       );
+  }
+
+////////////////////////////////////////////
+////////////////////////////////////////////
+  function getInfo($isbnWrap, $force=false, $engine='')
+  {
+    $info = array();
+    $info['engine'] = $engine;
+
+    // test at http://localhost/foire-work/isbns/outil_insertion
+    $try_array = $this->getEngines($force);
 
     foreach($try_array as $try)
     {
-      if ($try != '')
+      if (($try != '' && $engine == '') || ($engine != '' && $try == $engine))
       {
 
         $info['titre'] = $info['auteur'] = '';
@@ -415,7 +423,7 @@ echo '</pre>';
       }//if $try
     }//foreach
 
-    return ($info['titre'] ? $info : null);
+    return (!empty($info['titre']) ? $info : null);
   }
 
   function log_miss($msg)
@@ -546,7 +554,7 @@ echo '</pre>';
     
   function coop_poly(&$info, $isbnWrap, $link='')
   {
-    $info['source'] = 'coopets.ca';
+    $info['source'] = 'coopoly.ca';
     $info['link'] = "http://www.coopoly.ca/recherche.php?isbn={$isbnWrap->getIsbn13()}&action=chercher";
 
     $contents = $this->getWebContent($info['link'], '</'.'body');
@@ -570,7 +578,7 @@ echo '</pre>';
   function coop_ets(&$info, $isbnWrap, $link='')
   {
     $info['source'] = 'coopets.ca';
-    $info['link'] = "http://www.coopets.ca/webconcepteur/web/Coopsco/fr/ets/service.prt?advancedSearch=true&svcid=CO_CATALOG18&page=productsList.jsp&producttype=librairie&isbn13={$isbnWrap->getIsbn13()}";
+    $info['link'] = "http://www.coopets.ca/webconcepteur/web/Coopsco/fr/ets/service.prt?advancedSearch=true&svcid=CO_CATALOG18&page=productsList.jsp&producttype=librairie&isbn={$isbnWrap->getIsbn10()}";
 
     $contents = $this->getWebContent($info['link'], '</'.'body');
     
