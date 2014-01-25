@@ -1,0 +1,62 @@
+  <h2 id="etProfile">Modification de votre profil</h2>
+
+  <?=($this->etudiant->validationErrors ? '<span class="error_message">** Vérifiez le formulaire et corrigez les erreurs **</span>' :'')?>
+
+  <div id="etProfilFormulaire">
+
+    <?php $email_help = 'Entrez une adresse de courrier électronique valide';
+          $option1 = " J'ai une carte d'identité de Polytechnique ";
+          $option2 = " Je veux utiliser mon permis de conduire ";
+          $option3 = " Donnez-moi un numéro que je mémoriserai et mentionnerai aux bénévoles ";
+     ?>
+
+    <?php echo $html->formTag('/etudiants/profil') ?>
+            
+            <p id="etProfilId">
+              <label for="ProfilChampId" title="Numéro d'identification">Numéro d'identification: </label>
+              
+            <?php
+
+               echo $html->inputTag('etudiant/id', 15, array('id'=>'ProfilChampId','maxlength'=>'17', 'title'=>"Numéro d'identification"))
+               ?>&nbsp;(avec ou sans espaces)<?php
+
+               echo $html->tagErrorMsg('etudiant/id', "Un conflit existe entre le numéro entré et un numéro existant. Si vous n'avez pas fait d'erreur, continuer d'utiliser votre numéro actuel jusqu'à ce vous puissiez résoudre la situation avec l'aide d'un bénévole lors d'un événement prochain.")
+            ?>
+            
+            </p>
+
+            <p id="etRegPold"><label for="RegChampPold" title="Ancien mot de passe">Ancien mot de passe: </label><?php
+
+                echo $html->passwordTag('ancienmotpasse', 30, array('id'=>'RegChampPold','maxlength'=>'20', 'title'=>'Ancien mot de passe'))
+            ?><?php
+
+                echo $html->tagErrorMsg('etudiant/ancienmotpasse', 'Mot de passe invalide')
+            ?></p>
+
+            <p id="etRegP1"><label for="RegChampP1" title="Nouveau mot de passe">Nouveau mot de passe: </label><?php
+
+                echo $html->passwordTag('motpasse', 30, array('id'=>'RegChampP1','maxlength'=>'20', 'title'=>'Nouveau mot de passe'))
+            ?><?php
+
+                echo $html->tagErrorMsg('etudiant/motpasse', 'Un mot de passe est requis')
+            ?></p>
+
+            <p id="etRegP2"><label for="RegChampP2" title="Retappez le mot de passe">Répétez: </label><?php
+
+                echo $html->passwordTag('motpasse2', 30, array('id'=>'RegChampP2','maxlength'=>'20', 'title'=>'Retappez le mot de passe'))
+            ?><?php
+
+                echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent être identiques')
+            ?></p>
+            
+            <p id="AjSubmit"><?php
+            
+              echo $html->submitTag('Metttre mon profil à jour')
+              ?>&nbsp;<?php
+              
+              echo $html->linkTo('Annuler et revenir à la liste', '/livres', array('id' => 'AjAnnuler'))
+              ?></p>
+    </form>     
+
+  </div><!-- etRegFormulaire -->
+

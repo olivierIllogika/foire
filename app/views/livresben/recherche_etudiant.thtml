@@ -1,0 +1,54 @@
+  <h2 id="etTitre">Recherche de consignataire</h2>
+
+  <?=$html->tagErrorMsg('etudiant/id', array("Le code d'identification doit contenir des chiffres",
+                                             "Le code entré est inconnu; êtes-vous inscrit ?"))?>
+
+  <?=$html->tagErrorMsg('etudiant/motpasse', "Le mot de passe entré n'est pas valide")?>
+
+  <?=$html->tagErrorMsg('etudiant/confirme', "Votre inscription n'est pas confirmée; vous devez cliquer sur le lien dans le courriel envoyé")?>
+
+  <div id="etSearchForm">
+
+
+    <?=$html->formTag('/livresben/recherche_etudiant') ?>
+
+            <p id="etNom">
+              <label for="etChampNom" title="Nom de famille">Nom de famille commence par: </label>
+              <?=$html->inputTag('etudiant/nom', 15, array('id'=>'etChampNom','maxlength'=>'30', 'title'=>'Nom de famille'))?>
+
+            </p>
+
+            <p id="etPrenom"><label for="etChampPrenom" title="Prenom">Prenom: </label>
+            <?=$html->inputTag('etudiant/prenom', 15, array('id'=>'etChampPrenom','maxlength'=>'30', 'title'=>'Prenom'))?>
+            </p>
+
+            <p id="etSubmit"><?php
+
+              echo $html->submitTag('Recherche')
+              ?></p>
+    </form>
+    
+
+  </div><!-- etSearchForm -->
+
+<div id="etSearchResults">
+<table>
+<?php
+
+$data = empty($data) ? array() : $data;
+
+foreach($data as $etudiant):  ?>
+
+<tr>
+  <td><?=$etudiant['nom']?></td>
+  <td><?=$etudiant['prenom']?></td>
+  <td><?=$html->linkTo($etudiant['id'],"/livresben/recuperation/{$etudiant['id']}")?></td>
+</tr>
+
+<?php endforeach; ?>
+</table>
+</div>
+  
+
+
+

@@ -1,0 +1,29 @@
+<?php $this->pageTitle = "Foire aux Livres - Menu bénévole";
+?>
+
+<div id="menuBenDiv">
+<p><?=$html->linkOut('> Wiki de la Foire dans une nouvelle fenêtre < ', 'http://foire.aep.polymtl.ca/wiki/', array('target' => '_blank'))?></p>
+<h2>Gestion</h2>
+<!-- <p><?=$html->linkTo('Foire', '#')?></p> -->
+<p><?=$html->linkTo('Étudiants', '/etudiants/mod_etudiants')?></p>
+<p><?=$html->linkTo('Livres', '#')?></p>
+<p><?=$html->linkTo('Dates et heures', '#')?></p>
+<h2>Cueillette</h2>
+<p><?=$html->linkTo('Interface de cueillette', '/livresben/cueillette')?></p>
+<p><?=$html->linkTo("Comment imprimer automatiquement du web", '/pages/comment_impression_auto')?></p>
+<p><?=$html->linkTo("Poste d'impression public des étiquettes (auto logout)", '/livresben/etiquettes')?></p>
+<h2>Vente</h2>
+<p><?=$html->linkTo('Interface de vente', '/livresben/vente')?></p>
+<h2>Récupération</h2>
+<p><?=$html->linkTo('Interface de récupération', '/livresben/recuperation')?></p>
+<p><?=$html->linkTo('Page de projection automatique', '/livresben/pick_board')?></p>
+<p><?=$html->linkTo('Pseudo récupération', '/livresben/pseudo_recup')?></p>
+<h2>Post-récupération</h2>
+<p><?=$html->linkTo('Liste retardataires', '/livresben/liste_retard')?></p>
+<p><?=$html->linkTo('Liste livres', '/livresben/liste_livres')?></p>
+<p><?=$html->linkTo('Liste argent', '/livresben/liste_argent')?></p>
+<h2>Général</h2>
+<p><?=$html->linkTo('Préparation de la Foire', '/pages/check_list')?></p>
+
+</div> <!-- menuBenDiv -->
+

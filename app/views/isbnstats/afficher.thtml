@@ -1,0 +1,17 @@
+
+<div id="divStats">
+
+  <?php if ($data['count']): ?>
+    <p>Nombre d'exemplaire: <?=$data['count']?></p>
+    <p>Prix minimum: <?=$data['min']?>$</p>
+    <p>Prix maximum: <?=$data['max']?>$</p>
+    <p>(max-min): <?=$data['range']?></p>
+    <p>Prix moyen: <?=round($data['avg'],1)?></p>
+    <p>Dév. Std: <?=round($data['stddev'],1)?></p>
+    <p>Dernière mise à jour: <?=preg_replace('/.{11}(.{2}).(.{2}).{3}/','\1h\2',$data['created'])?></p>
+    
+  <?php else: ?>
+    <p>Aucune données disponibles pour ce livre</p>
+  <?php endif; ?>
+</div><!-- divStats -->
+

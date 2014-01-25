@@ -1,0 +1,9 @@
+<h2>Créer une entrée de FAQ</h2>
+<pre><?/*=print_r($sections, true)*/?></pre>
+  <?=$html->formTag('/faqs/creer') ?>
+
+  <?=$this->renderElement('faq_form_content')?>
+
+  </form>
+
+

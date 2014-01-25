@@ -1,0 +1,58 @@
+  <h2 id="livresTitre">Recherche</h2>
+
+  <div id="livresRechForm">
+    <span><span class="livresCueillis"><?=$total ?></span> livres cueillis</span>
+
+    <?php $isbn_help = 'ISBN non valide; '.School::Get()->PolycopIdSize().' ou 10 caractères (Le dernier caractère d\'un ISBN peut être "X")' ?>
+
+    <?php echo $html->formTag('/livres/recherche') ?>
+
+            <p><?php
+               echo '<label for="RechTitre">Titre: </label>'.
+                    $html->inputTag('livre/titre', 20, array('id'=>'RechTitre','maxlength'=>'50', 'title'=>'Mot clefs du titre du livre'));
+               ?></p>
+
+            <p><?php
+               echo '<label for="RechISBN">'.$this->livre->isbn10_code4_Html().': </label>'.
+                    $html->inputTag('livre/isbn', 12, array('id'=>'RechISBN','maxlength'=>'13', 'title'=>$isbn_help));
+                echo '&nbsp;&nbsp;(&nbsp;'.$html->linkTo('Comment trouver l\'ISBN ou '.School::Get()->PolycopIdName(School::ShortName).' d\'un livre ?', '/pages/isbn_code4').'&nbsp;)';
+               echo $html->tagErrorMsg('livre/isbn', $isbn_help);
+
+               ?></p>
+
+
+            <!--<p><?php
+               //echo '<label for="RechCours">Cours: </label>'.
+                    $html->inputTag('livre/cours', 10, array('id'=>'RechTitre','maxlength'=>'10', 'title'=>'Élément du code du cours'));
+               ?></p>-->
+
+            <?=$html->submitTag('Chercher')?>
+
+  </div>
+
+  <div id="livresRechDiv">
+   <?php if ($this->livre->countLastFind) { ?>
+    <table id="livresRech">
+
+      <tr id="livresHeadRow">
+        <th id="livresHTitre">Titre</th>
+        <th id="livresHCours">Cours</th>
+        <th id="livresHISBN"><?php echo $this->livre->isbn10_code4_Html() ?></th>
+      </tr>
+
+        <?=$this->livre->countLastFind?> résultat<?=$this->livre->countLastFind > 1 ? 's' :''?>
+        <?php foreach ($data as $livre): ?>
+        <tr>
+          <td class="livreTitre"><?=htmlspecialchars($livre['titre']) ?></td>
+          <td class="livreCours"><?=$livre['cours'] ?></td>
+          <td class="livreISBN"><?=$this->isbn->isbn2formated($livre['isbn']) ?></td>
+
+        </tr>
+        <?php endforeach; ?>
+    </table>
+    <?php } else { // countLastFind ?>
+    <p id="livresAucun">Aucun résultats à afficher</p>
+    <?php } //if countLastFind ?>
+  </div><!-- livresRechDiv -->
+
+

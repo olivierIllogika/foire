@@ -1,0 +1,41 @@
+  <h2 id="livresTitre">Impression d'étiquettes</h2>
+
+  <div id="livresEtiquetteDiv">
+
+    <div id="livresEtiquetteAnimatedGif">
+    <img src="../img/lasercodebaranim.gif" alt="gif animation code barre de la carte" />
+    </div>
+
+    <ol>
+    <li>Vos livres doivent déjà tous être inscrit sur le site de la Foire</li>
+    <li>Passez le code barre de votre carte sous le laser</li>
+    <li>N'endommagez pas les étiquette inutilisées ! Nous les réutilisons</li>
+    <li>S'il n'y a plus de papier, avisez un bénévole</li>
+    </ol>
+
+    <?=$html->formTag('/livresben/etiquettes') ?>
+<!-- <pre><?/*=print_r($this,true)*/?></pre> -->
+    <?php
+    
+    echo $html->tagErrorMsg('livre/inscription', "Vous n'êtes pas inscrit à la Foire aux Livres. Allez sur un AUTRE ordinateur et consultez le site {$_SERVER['SERVER_NAME']}");
+    echo $html->tagErrorMsg('livre/confirmation', "Votre inscription n'est pas confirmée. Allez lire votre courriel de confirmation et entrez ensuite vos livres (SUR UN AUTRE ORDINATEUR)");
+    echo $html->tagErrorMsg('livre/etiquettes', 'Aucune étiquettes à imprimer');
+
+    echo $html->tagErrorMsg('livre/id', 'Impression en cours...  prêt pour la carte suivante');
+    ?>
+
+      <p id="ettCodebar"><label for="ettInCodebar">Numéro d'identification: </label><?php
+
+          echo $html->inputTag('livre/codebar', 30, array('id'=>'ettInCodebar','maxlength'=>'17'));
+          echo $html->inputTag('livre/nb_etiquettes', 1, array('id'=>'nb_etiquettes', 'onclick'=>"document.getElementById('nb_etiquettes').select();"));
+          echo $html->submitTag('Imprimer'); // , array('onclick'=>"document.getElementById('ettInCodebar').value='';")
+      ?></p>
+      
+    </form>
+
+    <?=$html->javascriptTag("box = document.getElementById('ettInCodebar'); box.value=''; box.focus();")?>
+    
+
+  </div> <!-- livresEtiquetteDiv -->
+
+

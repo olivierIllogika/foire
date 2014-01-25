@@ -1,0 +1,18 @@
+<?php     $this->pageTitle = "Foire aux Livres - À propos...";
+?>
+<h2>À propos de la Foire aux Livres</h2>
+
+<div id="aboutDiv">
+<h3>Le concept</h3>
+<p id="aboutFoire">
+La Foire aux Livres est une activité de vente de livres usagés sous consigne initiée par des étudiants de Polytechnique.  Le service est offert à Poly par l'Association des Étudiants et à l'ETS grâce à TribuTerre.  Ce site permet aux consignataires d'enregistrer leurs livres, mais permet aussi aux bénévoles de gérer la cueillette, vendre les livres et procéder au retour de biens des consignataires.
+</p>
+
+
+<h3>Les bénévoles</h3>
+<p id="aboutTeam">
+Ce service est offert par les étudiants, pour les étudiants.  Les gens oeuvrant aux différentes activités de la Foire sont bénévoles, et donc non salariés.  Essayer de rester courtois, respectueux et compréhensif même si vous êtes pressé par le temps; car si vous croyez manquer le début d'un cours, considérez que certains bénévoles manquent peut-être plusieurs de leurs cours.  Si vous voulez participer et donner un coup de mains, vous êtes le bienvenue.
+</p>
+
+</div> <!-- aboutDiv -->
+

@@ -1,0 +1,282 @@
+  <?=$html->javascriptIncludeTag('/js/prototype.js')?>
+  <h2 id="livresTitre">Vente</h2>
+  <span><?=$_SESSION['etudiant']['prenom']?></span>
+
+  <div id="livresVenteDiv">
+
+<?php
+$total_price = (empty($total_price) ? '0' : $total_price);
+$total_livres = (empty($total_livres) ? '0' : $total_livres);
+?>
+
+  <?=$html->javascriptTag("
+
+  function cartes()
+  {
+    //alert('cartes');
+    window.location = '".$html->urlFor("/livresben/cartes")."';
+    return true;
+  }
+
+  function visa()
+  {
+    //alert('visa');
+    mode_paiement = 'visa';
+    return false;
+  }
+  function debit()
+  {
+    //alert('debit');
+    mode_paiement = 'debit';
+    return false;
+  }
+  function autre()
+  {
+    //alert('autre');
+    mode_paiement = 'autre carte';
+    return false;
+  }
+  function aucune(comptant)
+  {
+    //alert('aucune ' + comptant);
+    mode_paiement = 'comptant';
+    
+    try
+    {
+//      comptant = prompt('Montant donnÈ par le client :');
+      comptant_int = parseInt(comptant);
+
+      if (total_price == null) total_price = 0;
+
+      var remettre = parseInt( comptant_int - parseInt(total_price));
+      document.getElementById('totalRemis').value = remettre;
+      document.getElementById('totalComptant').value = comptant_int;
+
+//      alert('Remettre ' + remettre + ' $');
+    }
+    catch (e)
+    {
+      alert(e.name + ' : ' + e.message);
+    }
+
+    return false;
+  }
+
+  function localHook(input)
+  {
+    if (input == '') return true; // do nothing if input is empty
+    
+    var reg = /(\d*)(\w*)/i;
+    var r = reg.exec(input.toLowerCase());
+    //var r1 = reg.exec('20aucune');
+    //var r2 = reg.exec('12412');
+    
+    //alert(r.index + ' ' + r.input + ' ' + r[0] + ' ' + r[1]+ ' ' + r[2]);
+    //alert(r1.index + ' ' + r1.input + ' ' + r1[0] + ' ' + r1[1]+ ' ' + r1[2]);
+    //alert(r2.index + ' ' + r2.input + ' ' + r2[0] + ' ' + r2[1]+ ' ' + r2[2]);
+    
+    functionName = (r[2] || r[1]);
+    argumentValue = (parseInt(r[1][0]) == r[1][0] ? r[1] : 0);
+    if ('' + parseInt(functionName[0]) == functionName[0]) return false; // no local command if starts with number
+
+    if ( eval('window.'+functionName) )
+    {
+      return eval(functionName)(argumentValue); // true = no ajax sent ; false = ajax cmd
+    }
+    return false;
+  }
+
+  var last_row_added = null; 
+  function addRow(tableId, rowId, rowSpan)
+  {
+    if (document.getElementById('row'+rowId))
+    {
+      return true;
+    }
+
+    var row = document.createElement('tr');
+    row.id = 'row'+rowId;
+    row.setAttribute('class', 'rowLoading');
+
+    var content = document.createElement('td');
+    content.setAttribute('colspan', rowSpan);
+
+    content.appendChild (document.createTextNode(rowId));
+    row.appendChild(content);
+
+    var table = document.getElementById(tableId);
+
+    var tableContent = table.childNodes.item(1);
+/*
+    for (i=0; i < tableContent.childNodes.length; i++)
+    {
+      alert(tableContent.childNodes.item(i).innerHTML);
+    }
+*/
+//alert(tableContent.childNodes.length);
+    if (tableContent.childNodes.length == 2)
+    {
+      tableContent.appendChild(row);
+    }
+    else
+    {
+      tableContent.insertBefore(row,tableContent.childNodes.item(2));
+    }
+      
+    last_row_added = row;
+
+  }
+
+  function findPrice(rowText)
+  {
+//    re = /<!-- (\d+) -->/;
+    re = /(\d+)\\$/;
+    var matches = re.exec(rowText);
+    return parseInt(matches[1]);
+  }
+
+  var mode_paiement = ".(empty($mode_paiement) ? 'null' : $mode_paiement).";
+  var total_price = $total_price;
+  var total_livres = $total_livres;
+  var last_row_modified_id = null;
+  function post_process(tableId)
+  {
+    var table = document.getElementById(tableId);
+    var firstRow = last_row_added;
+
+    var latestRow = document.getElementById(last_row_modified_id);
+
+    var priceCount = document.getElementById('totalPrice');
+    var livresCount = document.getElementById('totalLivres');
+
+    var rowText = latestRow.innerHTML;
+
+    var re = /rowInvalid/;
+    if (re.test(rowText)) return;
+
+    re = /page_refresh/;
+    if (re.test(rowText))
+    {
+      window.location = '".$html->urlFor("/livresben/vente")."';
+      return;
+    }
+
+    // update price with rowVendu/rowNonVendu
+
+    re = /rowNonVendu/;
+    if (re.test(rowText))
+    {
+
+      total_price -= findPrice(rowText);
+      priceCount.value = total_price;
+      total_livres--;
+      livresCount.value = total_livres;
+      return;
+    }
+    
+    
+    re = /rowVendu/;
+    var validAdd = re.test(rowText);
+
+    // nettoyer si rowVendu et existe mode_paiement; garde la derniËre entrÈe valide
+    if (validAdd && mode_paiement)
+    {
+      priceCount.value = 0;
+      livresCount.value = 0;
+      total_livres = 0;
+      total_price = 0;
+      
+      document.getElementById('totalRemis').value = '';
+      document.getElementById('totalComptant').value = '';
+
+      var next = null;
+      while (next = firstRow.nextSibling)
+      {
+        table.childNodes.item(1).removeChild(next);
+      }
+    }//if
+
+    if (validAdd)
+    {
+
+      total_price += findPrice(rowText);
+      priceCount.value = total_price;
+      total_livres++;
+      livresCount.value = total_livres;
+      
+      mode_paiement = null;
+    }
+
+  }
+
+  ")?>
+
+
+
+  <?=$htmlajax->formRemoteTag(array(
+  'url'=>"/livresben/sale_scan",
+  
+  'loading'=>"var box = document.getElementById('pickup_scanbox');
+              last_row_modified_id = 'row'+box.value;
+              box.value='';
+              box.focus();",
+              
+  'update'=>"row'+document.getElementById('pickup_scanbox').value+'",
+  'complete'=>"post_process('factureListe');",
+  
+  'html'=>array('id'=>'pickup_form', 'name'=>'pickup_form'))) ?>
+
+    <?=$html->inputTag('livre/scan_box', 40, array('id' => 'pickup_scanbox')) ?>
+
+    <?=$html->submitTag('Ajouter/Retirer', array(
+      'onclick'=>"var box = document.getElementById('pickup_scanbox');
+                  if (localHook(box.value)) return false;
+                  addRow('factureListe', box.value, 3)"))
+                  
+    ?>Prix total: <?=$html->inputTag('livre/totalPrice', 2,
+                      array('id' => 'totalPrice',
+                            'class' => 'textNumberOutput',
+                            'value' => $total_price))
+                            
+    ?>$ / <?=$html->inputTag('livre/totalLivres', 2,
+                      array('id' => 'totalLivres',
+                            'class' => 'textNumberOutput',
+                            'value' => $total_livres)) ?> livres
+                            
+    <?=$html->javascriptTag("document.getElementById('pickup_scanbox').focus()")?>
+    
+    <?=$html->hiddenTag('comptant',null,array('id' => 'totalComptant'))?>
+    <?=$html->hiddenTag('remis',null,array('id' => 'totalRemis'))?>
+    </form>
+<div id ="receive" style="display:none">
+</div>
+
+    <table id="factureListe">
+
+      <tr id="livresHeadRow">
+        <th id="livresHID">id</th>
+        <th id="livresHTitre">Titre</th>
+        <th id="livresHPrix">Prix</th>
+<!--        <th id="livresHISBN"><?php echo $this->livre->isbn10_code4_Html() ?></th>  -->
+      </tr>
+
+      <?=empty($existing_rows) ? '' : $existing_rows?>
+
+    </table>
+
+  </div><!-- livresVenteDiv -->
+  <hr>
+  
+  <div id="cueilLegende">
+  L√©gende:
+  <table>
+    <tr>
+      <td class="rowLoading">Chargement</td>
+      <td class="rowVendu">Livre ajout√©</td>
+      <td class="rowNonVendu">Livre RETIR√â</td>
+      <td class="rowCommand">Commande</td>
+      <td class="rowInvalid">Entr√©e non valide</td>
+    </tr>
+  </table>
+  Pour une liste des modes de paiement, tapez "cartes"
+  </div>

@@ -1,0 +1,36 @@
+<h2>Foire aux Questions</h2>
+
+<div id="faqSections">
+  <ul><?php foreach ($sections as $section): 
+  ?><li><?=$section['section'] ?><ul>
+          <?php while(($qa = current($data)) && $qa['section']==$section['section']) { ?>
+
+            <li><a href="#qa<?=$qa['id']?>"><?=htmlspecialchars($qa['question'])?></a></li>
+
+            <?php next($data);
+                }?>
+        </ul>
+      <?php endforeach; ?>
+    </li>
+  </ul>
+</div>
+
+<div id="faqQA">
+
+    <?php $currentSection = ''; ?>
+    <?php foreach ($data as $qa): ?>
+
+      <?php if ($currentSection != $qa['section']) { ?>
+        <h3><?=$qa['section']?></h3>
+      <?php }
+      $currentSection = $qa['section'];
+      ?>
+
+      <a name="qa<?=htmlspecialchars($qa['id'])?>" id="qa<?=htmlspecialchars($qa['id'])?>"></a>
+      <span class="question"><?=htmlspecialchars($qa['question'])?></span>
+      <span class="reponse"><?=htmlspecialchars($qa['reponse'])?></span>
+
+
+    <?php endforeach; ?>
+</div> <!-- faqQA -->
+

@@ -1,0 +1,60 @@
+<?php
+
+$pdf=new PDF_Label3of9('5162');
+
+$pdf->SetAutoPageBreak(true);
+
+$pdf->Open();
+$pdf->SetMargins(15, 20);
+
+$pdf->AddPage();
+
+$pdf->SetFontSize(12);
+
+$commandes = array(
+"aucune",
+"visa",
+"autre",
+"debit",
+);
+
+foreach($commandes as $commande)
+{
+  if ($commande)
+  {
+    $dim = $pdf->Code39($pdf->GetX(), $pdf->GetY(), $commande,false,1,6);
+    $pdf->Ln(10);
+    $pdf->Cell(0,0,($commande == 'aucune' ? '$':'').$commande,'',0,'L');
+    $pdf->Ln(20);
+  }
+}
+
+$details = array(
+
+"1. Pour retirer un livre d'une facture, il suffit de le scanner une seconde fois",
+"2. La facture courante disparaîtra au prochain livre, à la suite d'un mode de paiement",
+"3. Le mode de paiement peut être changé autant de fois que nécessaire",
+"4. Lorsque '\$aucune' carte est utilisé, inscrivez le montant donné avant de scanner le mot clef '\$aucune'",
+"5. Le retour d'un livre peu se faire à tout moment, même pendant qu'une facture non reliée est en cours",
+"6. Le commis peu changer sans quitter l'interface; scanner la carte étudiante du nouveau commis",
+"7. Un étudiant est promu bénévole/vendeur en scannant la carte d'un gestionnaire et celle de l'étudiant.",
+
+);
+
+$pdf->Ln(40);
+
+foreach($details as $line)
+{
+  if ($line)
+  {
+	$pdf->Cell(0,0,iconv("UTF-8", "ISO-8859-1",$line),'',0,'L');
+	$pdf->Ln(10);
+  }
+}
+
+
+echo $pdf->Output($filename,'S');
+chmod($filename, 0755);
+
+?>
+

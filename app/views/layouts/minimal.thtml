@@ -1,0 +1,22 @@
+<?php
+if (!empty($refresh))
+{
+  header("Refresh: $refresh; url=".$_SERVER['REQUEST_URI']);
+}
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<head>
+	<title><?=$title_for_layout?></title>
+	<?=$html->charsetTag('iso-8859-1')?>
+  <?=$html->cssTag('mini')?>
+
+</head>
+<body >
+<div id="container">
+
+<?=$content_for_layout?>
+  
+</div> <!-- container -->
+</body>
+</html>

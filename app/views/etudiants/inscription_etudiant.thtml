@@ -1,0 +1,74 @@
+  <h2 id="etTitre">Inscription des étudiants</h2>
+
+  <?=(!empty($duplicate) ? 
+		"<span class=\"error_message\">$duplicate existe déjà parmis les consignataires. Si vous êtes déjà inscrit, essayer de ".$html->linkTo("récupérer vos informations","/etudiants/perdu_infos/$courriel").". Si non, vérifiez vos informations et écrivez à ".$html->linkEmail($GLOBALS['gFoireEmail']).'</span>' :'')?>
+  
+  <?=($this->etudiant->validationErrors ? '<span class="error_message">** Vérifiez le formulaire et corrigez les erreurs **</span>' :'')?>
+
+  <div id="etRegFormulaire">
+
+    <?php $email_help = 'Entrez votre adresse de courrier de '.School::Get()->Name(School::ShortName, true) ?>
+
+    <?=$html->formTag('/etudiants/inscription') ?>
+            <?=$html->hiddenTag('source','etudiant')?>
+
+            <div id="etRegImgCarte"><img src="../img/<?=School::Get()->GetBarCodeImg() ?>" alt="code barre de la carte" /></div>
+            <p id="etRegCode">
+              Complétez le numéro de votre carte étudiante :<br />
+              <label for="RegChampCode" title="<?=School::Get()->BarCodeTitle()?>">Code barre: </label>
+
+              <?php
+               echo $html->inputTag('etudiant/id', 15, array('id'=>'RegChampCode','maxlength'=>School::Get()->BarCodeFieldSize(), 'title'=>School::Get()->BarCodeTitle(), 'value'=>($html->tagValue('id') ? $html->tagValue('id') : School::Get()->BarCodePrefix() )));
+
+               echo $html->tagErrorMsg('etudiant/id', School::Get()->BarCodeError());
+			  ?>			               
+
+            <p id="etRegCourriel"><?php
+               echo '<label for="RegChampCourriel" title="'.$email_help.'">Courriel:&nbsp;</label>'.
+                    $html->inputTag('etudiant/courriel', 20, array('id'=>'RegChampCourriel','maxlength'=>'100', 'title'=>$email_help))."<b>@{$GLOBALS['gStudSufixEmail']}</b>";
+               echo $html->tagErrorMsg('etudiant/courriel', $email_help)
+               ?></p>
+
+            <p id="etRegPrenom"><label for="RegChampPrenom" title="Prénom">Prénom:&nbsp;</label><?php
+
+               echo $html->inputTag('etudiant/prenom', 30, array('id'=>'RegChampPrenom','maxlength'=>'70', 'title'=>'Prénom'))
+               ?><?php
+
+               echo $html->tagErrorMsg('etudiant/prenom', 'Un prénom est requis') ?></p>
+
+            <p id="etRegNom"><label for="RegChampNom" title="Nom de famille">Nom: </label><?php
+
+                echo $html->inputTag('etudiant/nom', 30, array('id'=>'RegChampNom','maxlength'=>'70', 'title'=>'Nom de famille'))
+            ?><?php
+
+                echo $html->tagErrorMsg('etudiant/nom', 'Un nom de famille est requis')
+            ?></p>
+
+            <p id="etRegP1"><label for="RegChampP1" title="Mot de passe">Mot de passe: </label><?php
+
+                echo $html->passwordTag('motpasse', 30, array('id'=>'RegChampP1','maxlength'=>'20', 'title'=>'Mot de passe'))
+            ?><?php
+
+                echo $html->tagErrorMsg('etudiant/motpasse', 'Un mot de passe est requis')
+            ?></p>
+
+            <p id="etRegP2"><label for="RegChampP2" title="Retappez le mot de passe">Répétez: </label><?php
+
+                echo $html->passwordTag('motpasse2', 30, array('id'=>'RegChampP2','maxlength'=>'20', 'title'=>'Retappez le mot de passe'))
+            ?><?php
+
+                echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent être identiques')
+            ?></p>
+
+            <p id="etSubmit"><?php
+
+              echo $html->submitTag('Terminer mon inscription')
+              ?></p>
+    </form>
+
+  </div><!-- etRegFormulaire -->
+  
+  <?php /* echo  $this->renderElement('choix_consignataire') */ ?>
+
+
+

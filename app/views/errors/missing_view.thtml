@@ -1,0 +1,7 @@
+<h2>Vu manquante</h2>
+
+
+<p class="error"><em><?=(!empty($this->missingView) ? 'Vu '.$this->missingView.' inconnue dans ' : '')?></em> <em><?=Inflector::camelize($this->name);?></em>
+</p>
+
+<br />

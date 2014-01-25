@@ -1,0 +1,38 @@
+<?php
+
+$pdf=new PDF_Label3of9('5162');
+
+$pdf->SetAutoPageBreak(true);
+
+$pdf->Open();
+$pdf->SetMargins(15, 20);
+
+$pdf->AddPage();
+
+$pdf->SetFontSize(12);
+
+$commandes = array(
+"recu",
+"vider",
+"argent",
+"cheque",
+"impcheque",
+"suivant",
+);
+
+foreach($commandes as $commande)
+{
+  if ($commande)
+  {
+    $dim = $pdf->Code39($pdf->GetX(), $pdf->GetY(), $commande,false,1,6);
+    $pdf->Ln(10);
+    $pdf->Cell(0,0,$commande,'',0,'L');
+    $pdf->Ln(20);
+  }
+}
+
+echo $pdf->Output($filename,'S');
+chmod($filename, 0755);
+
+?>
+

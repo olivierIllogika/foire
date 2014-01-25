@@ -1,0 +1,86 @@
+<?php
+
+$pdf=new PDF_Label3of9('5162');
+
+$pdf->Open();
+
+$saisons = array(1=>'H',2=>'E',3=>'A');
+$session = sprintf("Foire %s%d",
+                  $saisons[substr($foire['session'],-1)],
+                  substr($foire['session'],0,4));
+
+///***********//////
+$labels_loaded = $labels_loaded > 0 ? $labels_loaded : 14;
+///***********//////
+
+
+$labels_per_page = 14;
+$nb_blanks = $labels_per_page - $labels_loaded;
+
+for ($i=0; $i < $nb_blanks; $i++)
+{
+  $pdf->Add_PDF_Label('');
+}
+$label_count = $nb_blanks;
+
+foreach($data as $livre)
+{
+  $code = $livre['id']. sprintf("%03d",$livre['prix']);
+  $ref = substr($livre['id'],-4).'-'.$livre['genie'];
+  $prix = $livre['prix'].'$';
+  $titre = iconv("UTF-8", "ISO-8859-1", substr($livre['titre'],0,150));
+//  $titre = $livre['titre'].' '.strlen($livre['titre']);
+  $genie = $livre['genie'] == 0 ? '' : iconv("UTF-8", "ISO-8859-1", $_SESSION['genies_cache'][$livre['genie']]);
+
+  if ($label_count == 14)
+  {
+    for ($i=0; $i < $nb_blanks; $i++)
+    {
+      $pdf->Add_PDF_Label('');
+    }
+    $label_count = $nb_blanks;
+  }
+
+  list($x, $y, $lw, $lh) = $pdf->Add_PDF_Label('');
+  $label_count++;
+  
+
+  $margin = 3;
+
+  $x+=$margin;
+  $y+=$margin;
+//  $lw/=2;
+  $lw-=2*$margin;
+  $lh-=2*$margin;
+
+  $pdf->SetFontSize(8);
+  $pdf->Text($x+2,$y+1,$session);
+
+  $pdf->SetFontSize(10);
+  $pdf->SetXY($x,$y+5);
+  $pdf->MultiCell($lw, 3, $titre,0,'J');
+
+  $pdf->SetXY($x,$y+$lh-5);
+  $pdf->SetFontSize(13);
+  $pdf->Cell($lw/2, 0, $ref,0,0,'L');
+  $pdf->SetFontSize(12);
+  $pdf->Cell($lw/2, 0, $prix,0,0,'R');
+
+  $pdf->SetFontSize(10);
+  $pdf->SetXY($x,$y+$lh-12.5);
+  $pdf->Cell($lw/2, 0, $genie,0,0,'L');
+  $pdf->Cell($lw/2, 0, iconv("UTF-8", "ISO-8859-1", $livre['cours']),0,0,'R');
+
+  $dim = $pdf->Code39($x+18, $y+$lh-10, $code,false,0.8,6);
+  $pdf->SetXY($x,$y+$lh-2.5);
+  $pdf->SetFillColor(255,255,255);
+  $pdf->SetFontSize(9);
+  $pdf->Cell($lw, 0, $code,0,0,'C',1);
+  $pdf->SetFillColor(0);
+
+}
+
+echo $pdf->Output($filename,'F');
+chmod($filename, 0755);
+?>
+

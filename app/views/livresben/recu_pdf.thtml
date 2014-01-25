@@ -1,0 +1,93 @@
+<?php
+
+$pdf=new PDF_Label3of9('5162');
+
+$pdf->SetAutoPageBreak(true);
+$pdf->AliasNbPages();
+$pdf->Open();
+$pdf->SetMargins(15, 20);
+
+$pdf->AddPage();
+
+$saisons = array(1=>'H',2=>'E',3=>'A');
+$session = sprintf("Foire aux Livres %s%d",
+                  $saisons[substr($foire['session'],-1)],
+                  substr($foire['session'],0,4));
+
+$strDebut = strtotime($recuperation['debut']);
+$strFin = strtotime($recuperation['fin']);
+$strRecup1 = "Récupération: {$recuperation['date']} (".
+            date('G',$strDebut).'h'.(date('i',$strDebut) != '00' ? date('G',$strDebut): '').'@'.date('G',$strFin).'h'.(date('i',$strDebut) != '00' ? date('G',$strDebut): '').')';
+$strRecup2 = "au {$recuperation['lieu']}";
+
+//$code = $livre['id']. sprintf("%03d",$livre['prix']);
+
+
+$pdf->SetFontSize(14);
+$pdf->Cell(0,0,$session,'',0,'L');
+$pdf->Cell(0,0,"Reçu du consignataire",'',0,'R');
+
+$pdf->SetFontSize(12);
+$pdf->Ln(10);
+$dim = $pdf->Code39($pdf->GetX(), $pdf->GetY(), $codebar,false,0.8,6);
+//$pdf->Cell(0,0,$strRecup,'',0,'R');
+//$pdf->SetX(120);
+$pdf->Cell(0,0,$strRecup1,'',0,'R');
+$pdf->Ln(6);
+$pdf->Cell(0,0,$strRecup2,'',0,'R');
+$pdf->Ln(6);
+
+$pdf->Cell(0,0,$nb_livres.' livre'.($nb_livres > 1 ? 's':'').':','',0,'L');
+$pdf->Ln(3);
+
+
+$back_color = 245;
+$pdf->SetFillColor($back_color,$back_color,$back_color);
+$pdf->SetFont('Courier','',12);
+$fill=0;
+
+foreach($data as $livre)
+{
+  $ref = substr($livre['id'],-4).'-'.$livre['genie'];
+  $prix = $livre['prix'].'$';
+  $titre = substr($livre['titre'],0,50);
+//  $titre = $livre['titre'].' '.strlen($livre['titre']);
+
+
+
+    $pdf->Cell(20,6,$ref,'',0,'L',$fill);
+    $pdf->Cell(140,6,$titre,'',0,'L',$fill);
+    $pdf->Cell( 20,6,$prix,'',0,'R',$fill);
+    $pdf->Ln();
+    $fill = !$fill;
+
+/*
+  $pdf->SetFontSize(10);
+  $pdf->SetXY($x,$y+5);
+  $pdf->MultiCell($lw, 3, $titre,0,'J');
+
+  $pdf->SetXY($x,$y+$lh-5);
+  $pdf->SetFontSize(13);
+  $pdf->Cell($lw/2, 0, $ref,0,0,'L');
+  $pdf->SetFontSize(12);
+  $pdf->Cell($lw/2, 0, $prix,0,0,'R');
+
+  $pdf->SetFontSize(10);
+  $pdf->SetXY($x,$y+$lh-12.5);
+  $pdf->Cell($lw/2, 0, $genie,0,0,'L');
+  $pdf->Cell($lw/2, 0, $livre['cours'],0,0,'R');
+
+  $dim = $pdf->Code39($x+18, $y+$lh-10, $code,false,0.8,6);
+  $pdf->SetXY($x,$y+$lh-2.5);
+  $pdf->SetFillColor(255,255,255);
+  $pdf->SetFontSize(9);
+  $pdf->Cell($lw, 0, $code,0,0,'C',1);
+  $pdf->SetFillColor(0);
+*/
+
+}
+
+echo $pdf->Output($filename,'F');
+chmod($filename, 0755);
+?>
+

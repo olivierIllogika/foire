@@ -1,0 +1,14 @@
+<div id="ff_push">
+
+<div id="ff_push_right">
+<p>Pour en savoir plus: <?=$html->linkOut('Firefox en 5 minutes', 'http://lachy.id.au/dev/mozilla/firefox/campaign/5minute/challenge.fr.html')?></p>
+</div>
+
+<div id="ff_push_left">
+<p>La Foire recommande de naviguer avec Firefox</p>
+
+<p><a href="http://www.spreadfirefox.com/?q=affiliates&amp;id=129494&amp;t=56"><img border="0" alt="Get Firefox!" title="Get Firefox!" src="http://sfx-images.mozilla.org/affiliates/Buttons/180x60/take.gif"/></a></p>
+</div>
+
+
+</div>

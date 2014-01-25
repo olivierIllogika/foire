@@ -1,0 +1,30 @@
+<?php
+
+$pdf=new PDF_Cheque();
+
+$pdf->AliasNbPages();
+$pdf->SetAutoPageBreak(false);
+$pdf->Open();
+//$pdf->SetMargins(30, 20, 30);
+
+$pdf->SetFont('Courier','',12);
+$fill=0;
+
+if (empty($data))
+{
+  $pdf->AddPage();
+  $pdf->ChequePart( iconv("UTF-8", "ISO-8859-1",$_SESSION['persistent']['etudiant_nom']), $_SESSION['persistent']['remettre']['argent_back']);
+}
+else
+{
+  foreach($data as $etudiant)
+  {
+    $pdf->AddPage();
+    $pdf->ChequePart( iconv("UTF-8", "ISO-8859-1", $etudiant['nom']), $etudiant['montant']);
+  }
+}
+
+
+echo $pdf->Output($filename,'S');
+chmod($filename, 0755);
+?>

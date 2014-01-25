@@ -1,0 +1,69 @@
+  <h2 id="etTitre">Entrée des consignataires</h2>
+
+  <?=$html->tagErrorMsg('etudiant/id', array("Le code d'identification doit contenir des chiffres",
+                                             "Le code entré est inconnu; êtes-vous inscrit ?"))?>
+
+  <?=$html->tagErrorMsg('etudiant/motpasse', "Le mot de passe entré n'est pas valide")?>
+
+  <?=$html->tagErrorMsg('etudiant/confirme', "Votre inscription n'est pas confirmée; vous devez cliquer sur le lien dans le courriel envoyé")?>
+
+  <?=($this->etudiant->validationErrors ? '<span>Êtes-vous déjà inscrit ? Si non, passez à '.$html->linkTo("l'inscrition","/etudiants/inscription_choix")."<br /> Si oui, l'avez-vous <b>confirmée</b> en cliquant sur le lien du courriel ? ".$html->linkTo('pourquoi ?',"/faqs#qa25").'</span>' :'')?>
+
+  <div id="etLoginForm">
+
+    <div id="etLoginSupport">
+      <ul>
+        <li>code barre de la carte d'identité de <?=School::Get()->Name(School::ShortName, true)?></li>
+        <li># permis de conduire (sans lettre)</li>
+        <li>ou # personnel (voir courriel d'inscription)</li>
+      </ul>
+        <p><?=$html->linkTo('Pas encore inscrit ?',"/etudiants/inscription_choix")?></p>
+        <p><?=$html->linkTo('Perdu mes infos !',"/etudiants/perdu_infos")?></p>
+    </div>
+
+
+    <?=$html->formTag('/etudiants/login') ?>
+
+            <p id="etLoginCode">
+              <label for="LogChampCode" title="Code d'entrée">Code d'identification: </label><?php
+
+                echo $html->inputTag('etudiant/id', 15, array('id'=>'LogChampCode','maxlength'=>'17', 'title'=>'Code barre de '.School::Get()->Name(School::ShortName, true).', permis de conduire ou numéro personnel (voir courriel d\'inscription)'));
+            ?>
+
+              <div id="LogChoix"><?php /*
+               $radioOptions = array(
+                  'carte' => "Carte de Poly: ".$html->inputTag('etudiant/id_carte', 15, array('id'=>'LogChampPoly','maxlength'=>'17', 'title'=>'Code de la carte de Poly', 'value'=>'2 9334 ')).'(avec ou sans espaces)',
+                  'permis' => "Permis de conduire: M".$html->inputTag('etudiant/id_permis', 15, array('id'=>'LogChampPermis','maxlength'=>'14', 'title'=>'Numéro de permis de conduire', 'value'=>'')),
+                  'perso' => "Autre: ".$html->inputTag('etudiant/id_perso', 15, array('id'=>'LogChampPerso','maxlength'=>'8', 'title'=>'Code personnel (voir courriel d\'inscription)', 'value'=>''))
+                                    );
+               echo $html->radioTags('etudiant/choix', $radioOptions, '<br />', array('title'=>'', 'id'=>'LogChampChoix'));*/
+               ?> </div>
+
+            </p>
+
+            <p id="etLogPasse"><label for="LogPasse" title="Mot de passe">Mot de passe: </label><?php
+
+                echo $html->passwordTag('motpasse', 20, array('id'=>'LogPasse','maxlength'=>'20', 'title'=>'Mot de passe'))
+            ?></p>
+
+
+
+            <p id="etSubmit"><?=$html->submitTag('Entrer') ?></p>
+    </form>
+
+  </div><!-- etLoginForm -->
+
+<div id="coopPub">
+ <span>Pour vos livres neufs,</span>
+ <br />
+ <?php
+ 	$altText = '';
+ 	$coopLink = '';
+ 	$coopImg = School::Get()->CoopImg($altText, $coopLink);
+ ?>
+ <a href="<?=$coopLink?>" title="<?=$altText ?>" ><img src="../img/<?=$coopImg ?>" alt="<?=$altText ?>" border="0" /></a>
+</div>
+  
+
+
+

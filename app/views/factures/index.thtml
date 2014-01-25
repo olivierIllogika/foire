@@ -1,0 +1,48 @@
+<h2>Factures</h2>
+
+<div id="factures">
+<p>De cette section, vous pouvez récupérer un reçu correspondant à vos achats.  Puisque chaque livre acheté est unique, il est possible de retracer chaque transaction grâce aux informations contenues sur les étiquettes des livres.</p>
+
+
+<h3>Ce que vous devez entrer</h3>
+<p>Vous devez entrer des références de livre achetés. Le format attendu d'une référence est xxxx-x où chaque 'x' représente un chiffre.  Vous pouvez trouver cette séquence sur chaque étiquette de livre acheté, à gauche du code barre.</p>
+<p>
+<dl>
+<dt>Vous avez acheté deux livres ou plus</dt>
+<dd>Entrez deux références, séparées par une virgule. Ex.: "1234-5, 6789-0"</dd>
+<dt>Vous avez acheté un seul livre</dt>
+<dd>Entrez l'unique référence du livre. Ex.: "1234-5"</dd>
+<dt>Vous avez acheté plus d'une fois à la Foire</dt>
+<dd>Les achats ne sont pas combinés; vous devez traiter chaque transaction comme une facture différente</dd>
+</dl>
+</p>
+
+<div id="FactureForm">
+<?=$html->formTag('/factures/facture') ?>
+
+  <?=$html->tagErrorMsg('facture/references', array("Vous devez entrer au moins une référence",
+                                                   "Vous avez mal entré vos références, respectez le format \"xxxx-x, xxxx-x\"",
+                                                   "Aucune facture contenant ces références n'a été trouvée"))?>
+
+  <p id="FactureRef">
+    <label for="FactureChampRef" title="Numéro(s) de référence">Numéro(s) de référence: </label>
+    <?=$html->inputTag('facture/references', 15, array('id'=>'FactureChampRef','title'=>'Numéro(s) de référence')).
+
+    $html->submitTag('Afficher la facture')
+      ?></p>
+</form>
+</div>
+
+<h3>Erreurs possibles</h3>
+<p>
+<dl>
+<?php $writeAt="à <a href=\"mailto:{$GLOBALS['gFoireEmail']}\">{$GLOBALS['gFoireEmail']}</a> avec un maximum de détails pour nous permettre d'identifier le problème et d'y remédier."; ?>
+<dt>Aucune facture n'a été trouvée</dt>
+<dd>Vérifiez bien vos références.  Si vous avez besoin d'assistance, écrivez <?=$writeAt ?></dd>
+</dl>
+<dt>Ma facture est incorrecte</dt>
+<dd>Écrivez <?=$writeAt ?></dd>
+</p>
+
+</div> <!-- factures -->
+

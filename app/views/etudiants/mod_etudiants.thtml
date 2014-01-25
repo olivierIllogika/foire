@@ -1,0 +1,105 @@
+  <h2 id="etRecherche">Recherche étudiant</h2>
+
+  <?=($this->etudiant->validationErrors ? '<span class="error_message">** Vérifiez le formulaire et corrigez les erreurs **</span>' :'')?>
+
+  <div id="etRechFormulaire">
+
+    <?php echo $html->formTag('/etudiants/mod_etudiants', 'post', array('name' => 'etRechForm')) ?>
+            
+            <p id="etPolySet">
+              <?=$html->tagErrorMsg('etudiant/id', 'Ce numéro est déjà en utilisation') ?>
+              <label for="RechChampId" title="Numéro d'identification">ID: </label>
+            <?php
+
+               echo $html->inputTag('etudiant/id', 15, array('id'=>'RechChampId','maxlength'=>'20', 'title'=>'Numéro d\'identification'))
+               ?>
+						</p>
+
+            <p id="etRechPrenom"><label for="RechChampPrenom" title="Prénom">Prénom:&nbsp;</label><?php
+
+               echo $html->inputTag('etudiant/prenom', 30, array('id'=>'RechChampPrenom','maxlength'=>'70', 'title'=>'Prénom'))
+               ?></p>
+               
+            <p id="etRechNom"><label for="RechChampNom" title="Nom de famille">Nom: </label><?php
+
+                echo $html->inputTag('etudiant/nom', 30, array('id'=>'RechChampNom','maxlength'=>'70', 'title'=>'Nom de famille'))
+            ?></p>
+            
+            <p id="etRechCourriel"><?php
+               echo '<label for="RechCourriel" title="Courrier électronique">Courriel:&nbsp;</label>'.
+                    $html->inputTag('etudiant/courriel', 50, array('id'=>'RechCourriel','maxlength'=>'150', 'title'=>'Courrier électronique'));
+               echo $html->tagErrorMsg('etudiant/courriel', 'Courrier électronique')
+               ?></p>
+
+            <p id="etRechConfirm"><!-- <label for="RechConfirm" title="Inscription confirmé">Confirmé: </label> --><?php
+
+                $confirmeHtmlArray = array('id'=>'RechConfirm', 'title'=>'Inscription confirmé');
+                if ($html->tagValue('confirme') == 1)
+                {
+                    $confirmeHtmlArray['checked'] = '"checked"';
+                }
+                echo $html->checkboxTag('confirme', 'Confirmé', $confirmeHtmlArray);
+            ?></p>
+<!--
+            <p id="etRechP1"><label for="RechChampP1" title="Mot de passe">Mot de passe: </label><?php
+
+                echo $html->passwordTag('motpasse1', 30, array('id'=>'RechChampP1','maxlength'=>'20', 'title'=>'Mot de passe'))
+            ?></p>
+
+            <p id="etRechP2"><label for="RechChampP2" title="Retappez le mot de passe">Répétez: </label><?php
+
+                echo $html->passwordTag('motpasse2', 30, array('id'=>'RechChampP2','maxlength'=>'20', 'title'=>'Retappez le mot de passe'))
+            ?><?php
+
+                echo $html->tagErrorMsg('etudiant/motpasse2', 'Les mots de passe doivent être identiques')
+            ?></p>
+    -->        
+            <p id="RechSubmit"><?php
+              echo $html->hiddenTag('modifId', $html->tagValue('id'));
+              echo $html->submitTag('Rechercher', array('name'=>'data[submit]'));
+              ?>
+<!--              <input type="button" id="cleanFormButton" name="cleanFormButton" value="Vider" onClick="javascript:document.forms['etRechForm'].reset();" />-->
+							</p>
+							
+			<?php if ($canModify): ?>
+			    <p id="ModifSubmit">
+			    <?=$html->submitTag('Modifier', array('name'=>'data[submit]')); ?>
+			    </p>
+			<?php endif; ?>
+    </form>
+
+  </div><!-- etRechFormulaire -->
+  
+  <div id="etudiantsListeDiv">
+   <?php if ($this->etudiant->countLastFind > 0) { ?>
+    <table id="etudiantsListe">
+
+      <tr id="etudiantsHeadRow">
+        <th id="etudiantsNom">Nom<?=($this->etudiant->countLastFind > 3 ? '&nbsp;&nbsp;('.$this->etudiant->countLastFind.' trouvés)' : '')?></th>
+        <th id="etudiantsPrenom">Prenom</th>
+        <th id="etudiantsCourriel">Courriel</th>
+        <th id="etudiantsConfirme">Confirmé</th>
+        <th id="etudiantsCreation">Création</th>
+        <th id="etudiantsLastLogin">Visite</th>
+      </tr>
+	
+	
+        <?php	
+        $rowClasses = array('rowOne','rowTwo');
+        foreach ($listeEtudiants as $etudiant): ?>
+    
+          <tr class="hoverPointer <?=$rowClasses[] = array_shift($rowClasses)?>" onclick="document.location.href='<?=$html->urlFor("/etudiants/mod_etudiants/".$etudiant['id'])?>';">
+            <td class="etudiantsNomRow"><?=$etudiant['nom']?></td>
+            <td class="etudiantsprenomRow"><?=$etudiant['prenom']?></td>
+            <td class="etudiantsCourrielRow"><?=$etudiant['courriel']?></td>
+            <td class="etudiantsConfirmeRow"><?=($etudiant['confirme'] ? 'X' : '')?></td>
+            <td class="etudiantsCreationRow"><?=$etudiant['created']?></td>
+            <td class="etudiantsLastLoginRow"><?=$etudiant['logdate'] ?></td>
+          </tr>
+
+        <?php endforeach; ?>
+    </table>
+    <?php } elseif ($this->etudiant->countLastFind == 0) { // countLastFind ?>
+    <p id="etudiantsAucun">Aucun étudiant à afficher</p>
+    <?php } //if countLastFind ?>
+  </div><!-- livresListeDiv -->

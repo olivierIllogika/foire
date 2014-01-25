@@ -1,0 +1,27 @@
+  <h2 id="etTitre">Récupération de vos informations</h2>
+
+  <?=$html->tagErrorMsg('etudiant/courriel', "L'adresse entrée est inconnue")?>
+  <?=$html->tagErrorMsg('etudiant/delay', "La récupération d'information est limitée à 1 fois par {$this->etudiant->validationErrors['delay']} minutes. Veuillez réessayer plus tard.")?>
+  <?=(!empty($this->etudiant->validationErrors['courriel']) ? '<p>Êtes-vous déjà inscrit ? Si non, passez à '.$html->linkTo('l\'inscription',"/etudiants/inscription_choix").'. Si oui, l\'avez-vous confirmée en lisant votre courriel ? </p>' :'')?>
+
+  <?=(!empty($email_sent) ? 'Courriel envoyé':'')?>
+
+  <div id="etInfoForm">
+
+
+    <?=$html->formTag('/etudiants/perdu_infos') ?>
+    
+            <p id="etInfoCourriel">
+              <label for="InfoChampCourriel">Courriel:&nbsp;</label>
+              <?=$html->inputTag('etudiant/courriel', 50, array('id'=>'InfoChampCourriel','maxlength'=>'150'))?></p>
+
+            <p id="etSubmit"><?=$html->submitTag('Obtenir mes informations')?></p>
+    </form>
+    
+
+  </div><!-- etInfoForm -->
+  <br />
+  
+
+
+

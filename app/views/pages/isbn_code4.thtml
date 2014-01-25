@@ -1,0 +1,73 @@
+<h2>Comment trouver l'ISBN ou le <?=School::Get()->PolycopIdName(School::ShortName)?> d'un livre</h2>
+
+<?php $polyc="polycopié"?>
+
+<ul><?=School::Get()->PolycopIdName(School::ShortName)?> (<?=School::Get()->PolycopIdName(School::MediumName)?>)
+
+<?php if (School::Get()->Id() == School::Poly): ?>
+	<li><a href="#code4_cover1">Couverture d'un vieux <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a></li>
+	<li><a href="#code4_cover2">Couverture intérieure d'un vieux <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a></li>
+	<li><a href="#code4-2_cover1">Couverture d'un nouveau <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a></li>
+	<li><a href="#code4-2_cover4">Couverture arrière d'un nouveau <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a></li>
+
+<?php else: ?>
+	
+	<li><a href="#nlocal_backcover">Couverture arrière - <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a></li>
+<?php endif; ?>
+</ul>
+<ul>ISBN (manuels)
+<?php if (School::Get()->Id() == School::Poly): ?>
+	<li><a href="#isbn_cover1">Couverture d'un livre banal</a></li>
+	<li><a href="#isbn_cover4">Couverture arrière d'un livre</a></li>
+	<li><a href="#isbn_cover2">Couverture intérieure d'un livre</a></li>
+
+<?php else: ?>
+	
+	<li><a href="#isbn_page">Couverture intérieure d'un livre</a></li>
+	<li><a href="#isbn_cover1">Couverture arrière - livre 1</a></li>
+	<li><a href="#isbn_cover2">Couverture arrière - livre 2</a></li>
+<?php endif; ?>
+</ul>
+<div id="trouvercode4">
+<h3>Trouver le <?=School::Get()->PolycopIdName(School::ShortName)?></h3>
+<?php if (School::Get()->Id() == School::Poly): ?>
+	<a name="code4_cover1">Couverture d'un vieux <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a>
+	<?=$html->imageTag('code4_cover1.jpg', '[couverture 1 - vieux polycopié]')?>
+	<a name="code4_cover2">Couverture intérieure d'un vieux <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a>
+	<?=$html->imageTag('code4_cover2.jpg', '[couverture 2 - vieux polycopié]')?>
+	<a name="code4-2_cover1">Couverture d'un nouveau <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a>
+	<?=$html->imageTag('code4-2_cover1.jpg', '[couverture 1 - nouveau polycopié]')?>
+	<a name="code4-2_cover4">Couverture arrière d'un nouveau <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a>
+	<?=$html->imageTag('code4-2_cover4.jpg', '[couverture 4 - nouveau polycopié]')?>
+
+<?php else: ?>
+
+	<a name="nlocal_backcover">Couverture arrière - <?=strtolower(School::Get()->PolycopIdName(School::MediumName))?></a>
+	<?=$html->imageTag('back_nlocal.jpg', '[Couverture arrière - '.strtolower(School::Get()->PolycopIdName(School::MediumName)).']')?>
+<?php endif; ?>
+
+</div><!-- trouvercode4 -->
+
+<div id="trouverISBN">
+<h3>Trouver l'ISBN</h3>
+<?php if (School::Get()->Id() == School::Poly): ?>
+	<a name="isbn_cover1">Couverture d'un livre banal</a>
+	<?=$html->imageTag('isbn_cover1.jpg', '[couverture 1 - livre banal]')?>
+	<a name="isbn_cover4">Couverture arrière d'un livre</a>
+	<?=$html->imageTag('isbn_cover4.jpg', '[couverture 4 - livre banal]')?>
+	<a name="isbn_cover2">Couverture intérieure d'un livre</a>
+	<?=$html->imageTag('isbn_cover2.jpg', '[couverture 2 - livre banal]')?>
+
+<?php else: ?>
+	
+	<a name="#isbn_page">Couverture intérieure d'un livre</a>
+	<?=$html->imageTag('page_isbn.jpg', '[Couverture intérieure livre]')?>
+	<a name="#isbn_cover1">Couverture arrière d'un livre</a>
+	<?=$html->imageTag('back_isbn.jpg', '[Couverture arrière livre]')?>
+	<a name="#isbn_cover2">Couverture arrière d'un livre</a>
+	<?=$html->imageTag('back_isbn2.jpg', '[Couverture arrière livre]')?>
+<?php endif; ?>
+</div><!-- trouverISBN -->
+
+
+

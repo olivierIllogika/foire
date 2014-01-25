@@ -1,0 +1,24 @@
+  <h2>Procédure à suivre pour la vente de livres</h2>
+
+  <div id="venteProcedure">
+
+    <ol>
+      <li><?=$html->linkTo('Inscrivez-vous', "/etudiants/inscription_choix") ?> en tant que consignataire
+      <ol>
+        <li>Remplissez le formulaire</li>
+        <li>Attendez le courriel de confirmation</li>
+        <li>Cliquez sur le lien du courriel</li>
+      </ol></li>
+      <li>Inscrivez vos livres
+      <ol>
+        <li>Entrez par la section &lt;&lt;<?=$html->linkTo('Mes livres', "/livres") ?>&gt;&gt;</li>
+        <li>Ajoutez vos livres en fixant votre prix de vente</li>
+      </ol></li>
+      <li>Présentez-vous à la cueillette
+      <ol>
+        <li>Imprimez et collez vos étiquettes au poste d'impression</li>
+        <li>Faites valider vos livres identifiés par un bénévole</li>
+      </ol></li>
+    </ol>
+  </div><!-- venteProcedure -->
+  <br />

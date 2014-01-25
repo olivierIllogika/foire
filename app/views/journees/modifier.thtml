@@ -1,0 +1,44 @@
+<h2>Horaire <?="$sess_literal $annee"?></h2>
+
+<div id="divHoraire">
+
+  <table id="tbHoraire">
+    <tr>
+      <th id="headAct">Activité</th>
+      <th id="headDate">Date</th>
+      <th id="headHeure">Heures*</th>
+      <th id="headLieu">Emplacement</th>
+    </tr>
+	<?php
+		$lastDate = '';
+		$lastAct = '';
+	?>
+    <?php foreach ($data as $journee): ?>
+    <?php if ($lastAct != '' && $lastAct != $journee['activite']) {
+      
+      // assuming all events are consecutive, a change in the event type will write a blank line
+      $lastAct = $journee['activite'];
+      ?>
+
+      <tr>
+        <td colspan="4" class="horBlank"></td>
+      </tr>
+
+    <?php }
+      if ($journee['activite'] != 'Retard') { ?>
+
+      <tr>
+        <td class="horAct"><?=$lastAct = $journee['activite']?></td>
+        <td class="horDate"><?=date('j',strtotime($journee['date'])).' '.$month_fr[date('n',strtotime($journee['date']))-1]?></td>
+        <td class="horHeure"><?=date('G:i',strtotime($journee['debut']))?>@<?=date('G:i',strtotime($journee['fin']))?></td>
+        <td class="horLieu"><?=$journee['lieu']?></td>
+      </tr>
+    <?php } /*elseif ($journee['date'] > $lastDate) { */?>
+
+    <?php endforeach; ?>
+  </table>
+  <span id="avisHeures">* Les heures des activités peuvent varier sans préavis</span>
+</div><!-- horaire -->
+
+<?=$this->renderElement('procedure_vente') ?>
+

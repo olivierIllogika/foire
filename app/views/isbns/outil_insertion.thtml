@@ -1,0 +1,49 @@
+  <h2 id="isbnTitre">Ajouter un nouvel ISBN</h2>
+
+
+  <div id="isbnAjFormulaire">
+
+    <?php echo $html->formTag('/isbns/outil_insertion') ?>
+    
+            <label>Search engine:</label><?=$html->selectTag('engine', $engines, $html->tagValue('engine'))?>
+            <?=$html->tagErrorMsg('isbn/id', "ISBN non valide")?>
+            <p id="AjISBN"><?php
+               echo '<label for="AjChampISBN">ISBN (ou GTIN/EAN/UPC): [format libre]</label>'.
+//               '<input type="text" name="data[id]" id="AjChampISBN" maxlength="14" size="15" value="'.$html->tagValue('id').'"  />';
+               '<input type="text" name="data[id]" id="AjChampISBN" maxlength="14" size="15" value="'.$html->tagValue('id').'"  />';
+
+                    $html->inputTag('isbn/id', 15, array('id'=>'AjChampISBN','maxlength'=>'14'));
+               
+               echo $html->submitTag('Chercher');
+
+               ?></p>
+               <br />
+    </form>
+    
+    <?php if (!empty($info)): ?>
+    <table>
+    <tr><td>link</td><td><a href="<?=$info['link']?>"><?=$info['link']?></a></td></tr>
+    <tr><td>titre</td><td><?=$info['titre']?></td></tr>
+    <tr><td>auteur</td><td><?=$info['auteur']?></td></tr>
+<?php
+unset($info['link']);
+unset($info['titre']);
+unset($info['auteur']);
+?>
+    <?php if (!empty($info['metadescription'])): ?>
+      <tr><td>meta description</td><td><pre><?=$info['metadescription']?></pre></td></tr>
+      <tr><td>body</td><td><pre><?=$info['body']?></pre></td></tr>
+    <?php endif; ?>
+
+    </table>
+<?php
+unset($info['link']);
+unset($info['titre']);
+unset($info['auteur']);
+unset($info['metadescription']);
+unset($info['body']);
+echo '<pre>'.print_r($info, true).'</pre>'
+?>
+    <?php endif; ?>
+  </div><!-- isbnAjFormulaire -->
+

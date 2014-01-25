@@ -1,0 +1,6 @@
+<h2>Contrôleur manquant</h2>
+
+<p class="error">Contrôleur <em><?=(!empty($this->missingController) ? $this->missingController : 'nul')?></em> manquant
+</p> 
+
+<br />

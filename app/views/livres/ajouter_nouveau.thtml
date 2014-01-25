@@ -1,0 +1,91 @@
+  <h2 id="livresAjTitre">Ajouter un nouveau livre</h2>
+
+<pre><?/*=(!empty($sugg) ? print_r($sugg,true) : '')*/?></pre>
+<?php $info = !empty($info) ? $info : (!empty($sugg) ? $sugg : null) ?>
+
+  <div id="livresAjFormulaire">
+
+    <?php $isbn_help = School::Get()->PolycopIdSize()." ou 10 caractères (Le dernier caractère d'un ISBN peut être \"X\")" ?>
+    <?php $prix_help = 'Le prix auquel VOUS estimez la valeur de revente du livre' ?>
+
+    <?php echo $html->formTag('/livres/rech_isbn') ?>
+            <p>Entrez un ISBN/<?=School::Get()->PolycopIdName(School::ShortName)?> et cliquez sur le bouton 'Trouver le titre'.  Si l'information est disponible, quelques champs pourront être remplis pour vous!</p>
+            
+            <p id="AjISBN"><?php
+               echo $html->tagErrorMsg('livre/isbn_rech', 'ISBN/'.School::Get()->PolycopIdName(School::ShortName).' non valide; '.$isbn_help);
+               echo '<label for="AjChampISBN">'.$this->livre->isbn10_code4_Html().': </label>'.
+                    '<input type="text" name="data[isbn_rech]" id="AjChampISBN" maxlength="14" title="'.$isbn_help.'" size="10" value="'.$html->tagValue('isbn_rech').'"  />';
+
+               echo (!empty($info) || $html->tagValue('titre') || $html->tagValue('isbntitre') ? '&nbsp;&nbsp;&nbsp;' : '<blink>&gt;&gt;</blink>');
+               echo $html->submitTag('Trouver le titre');
+               ?> (&nbsp;<?=$html->linkTo('Comment trouver l\'ISBN ou '.School::Get()->PolycopIdName(School::ShortName).' ?', '/pages/isbn_code4')?>&nbsp;)</p>
+    </form>
+    
+    <?php echo $html->formTag('/livres/ajouter_nouveau') ?>
+
+            <?php echo $html->hiddenTag('isbn', (!empty($info) ? $html->tagValue('isbn_rech') : $html->tagValue('isbn') )) ?>
+
+            <?=(!empty($info) ? '<span class="isbnInfo">De l\'information est disponible pour ce livre <span class="isbnWarn">(N\'oubliez pas d\'ajouter un prix!)</span>:</span>' : '')?>
+
+            <?=($html->tagValue('isbn_rech') && empty($info) && !$html->tagErrorMsg('livre/isbn_rech','blank') ? '<span class="isbnWarn">Aucune information disponible pour ce livre</span>'.(strlen($html->tagValue('isbn_rech')) == 4 ? '<span class="isbnWarn">; il est probable que ce polycopié ne soit pas utilisé dans les cours de cette session</span>':'') : '')?>
+
+
+            <p id="AjPrix"><label for="AjChampPrix">Prix: </label><?php
+
+                echo $html->inputTag('livre/prix', 3, array('id'=>'AjChampPrix','maxlength'=>'3', 'title'=>$prix_help))
+            ?>&nbsp;$<?php
+
+                echo $html->tagErrorMsg('livre/prix', 'Le prix est requis (sans décimales)');
+
+                $statsClick = "window.open('".$html->urlFor("/isbnstats/afficher/".$html->tagValue('isbn_rech'))."','Statistiques de livre','width=300,height=350,screenX=300,screenY=300,top=300,left=300'); return false;";
+
+            ?>
+            <?=( !empty($info['count'])  ? $html->linkTo("Statistiques disponibles","/isbnstats/afficher/".$html->tagValue('isbn_rech'),array('class'=>'isbnStats','target'=>'stats','onclick'=>$statsClick)):'')?>
+            </p>
+            
+            
+            <p id="AjTitre"><label for="AjChampTitre">Titre: </label><?php
+
+               echo empty($info) && empty($this->params['data']['isbntitre']) ?
+                                  /* entrée manuelle */
+                                  $html->inputTag('livre/titre', 50, array('id'=>'AjChampTitre','maxlength'=>'250'))
+
+                                  /* entrée automatique */
+                                 : $html->hiddenTag('isbntitre', '1').(empty($this->params['data']['isbntitre']) ?
+
+                                  /* première entrée automatique */
+                                    $html->hiddenTag('titre', $info['titre']).
+                                      "<span class=\"isbnInfo\">{$info['titre']}</span>"
+
+                                  /* entrée automatique subséquente */
+                                      : $html->hiddenTag('titre', $this->params['data']['titre']).
+                                      "<span class=\"isbnInfo\">{$this->params['data']['titre']}")."</span>"
+               ?><?php
+
+               echo $html->tagErrorMsg('livre/titre', 'Le titre est requis.') ?></p>
+            <p id="AjCours"><label for="AjChampCours">Cours: </label><?php
+
+
+              $cours_array = array('id'=>'AjChampCours','maxlength'=>'10');
+              if (!empty($info['cours'])) $cours_array['value'] = $info['cours'];
+              
+              echo $html->inputTag('livre/cours', 10, $cours_array)
+                              
+               ?></p>
+            <p id="AjGenie"><label for="AjChampGenie">Génie: </label><?php
+
+              $sel_genie = empty($info['cours']) ? $html->tagValue('genie') : $this->livre->cours2genie($genie, $info['cours']);
+
+               echo $html->selectTag('genie', $genie, $sel_genie, array('id'=>'AjChampGenie'))
+               ?></p>
+            <p id="AjSubmit"><?php
+            
+              echo $html->submitTag('Ajouter')
+              ?>&nbsp;<?php
+              
+              echo $html->linkTo('Annuler et revenir à la liste', '/livres', array('id' => 'AjAnnuler'), 'Voulez-vous vraiment annuler et retourner à la liste de livre ?')
+              ?></p>
+    </form>
+
+  </div><!-- livresAjFormulaire -->
+

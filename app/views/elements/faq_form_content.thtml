@@ -1,0 +1,42 @@
+
+    <fieldset><legend> Section: </legend>
+    <p id="faqInSectionExistante">
+      <label for="faqSectionEx">Existante: </label>
+      <?=$html->selectTag('e_section', $sections, $html->tagValue('e_section'), array('id' => 'faqSectionEx')) ?>
+
+    </p>
+    ou
+    <p id="faqInSectionNouvelle">
+
+      <label for="faqSectionN">Nouvelle: </label>
+      <?=$html->inputTag('faq/n_section', 15, array('id'=>'faqSectionN','maxlength'=>'29')) ?>
+      (et choisissez la section qui la précèdera dans la liste)
+      </p>
+    </fieldset>
+
+
+    <p id="faqInQuestion">
+
+      <label for="faqQuestion">Question: </label>
+      <?=$html->inputTag('faq/question', 60, array('id'=>'faqQuestion','maxlength'=>'255')) ?>
+    </p>
+
+    <p id="faqInReponse">
+
+      <label for="faqReponse">Réponse: </label><br />
+      <?=$html->areaTag('reponse') ?>
+    </p>
+
+    <p id="faqInAfficher">
+
+    <?php $check_array = array('id' => 'faqAfficher', 'value' => '1');
+          if ($html->tagValue('afficher') == '1') $check_array['checked'] = 'checked';
+    ?>
+
+     <!-- <label for="faqAfficher">Afficher: </label> -->
+      <?=$html->checkboxTag('afficher', null, $check_array) ?>
+    </p>
+    
+    <p>
+      <?=$html->submitTag('Enregistrer').' '.$html->linkTo('Annuler', '/faqs'.($html->tagValue('id') ? '/#qa'.$html->tagValue('id'):'')) ?>
+    </p>

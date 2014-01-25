@@ -1,0 +1,10 @@
+<h2>Modifier une entrée de FAQ</h2>
+<pre><?/*=print_r($data, true)*/?></pre>
+  <?=$html->formTag('/faqs/modifier/'.$html->tagValue('id')) ?>
+
+  <?=$this->renderElement('faq_form_content')?>
+
+  </form>
+
+  <?=$html->linkTo('Supprimer', '/faqs/supprimer/'.$html->tagValue('id'), null, "Voulez-vous vraiment supprimer cette entrée ?")?>
+
