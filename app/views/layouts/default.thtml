@@ -5,8 +5,9 @@
   <?=$html->charsetTag('utf-8')?>
 
   <meta name="author" content="Olivier-2.Martin" />
-  <meta name="keywords" content="<?=School::Get()->MetaKeywords()?>" />
-  <meta name="description" content="<?=School::Get()->MetaDesc()?>" />
+  <meta name="google-site-verification" content="bK8VkXnXrcQ9H07W4Wj1xKp-oHHmkBWI_xR9p2sHmVY" />
+  <meta name="keywords" content="foire livres usage consigne aep association etudiants polytechnique" />
+  <meta name="description" content="Vente de livres sous consigne, un service de l'AEP (Association des Etudiants de Polytechnique)" />
   <meta name="robots" content="all" />
 
   <?=$html->cssTag('foire')?>

@@ -196,14 +196,9 @@ class LivresbenController extends LivresbenHelper
 
       
       
-      if (strlen($input) != 13)
+      if (strlen($input) > 13)
       {
-      	$inLetters = strtoupper($modePaiement);
-    	$letterCount = 0;
-    	$codebar = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $inLetters, -1, $letterCount);
-    	$codebar.= $input;
-      	
-    	$etudiant = $this->models['etudiant']->find("id = $codebar", array('id','nom','prenom','niveau'));
+        $etudiant = $this->models['etudiant']->find("id = $input", array('id','nom','prenom','niveau'));
         
         if ($etudiant)
         {
@@ -218,7 +213,7 @@ class LivresbenController extends LivresbenHelper
             if ($etudiant['niveau'] < 3 && $_SESSION['persistent']['godspawn'])
             {
               // niveau de s�curit� mis � jour
-              $etudiant['niveau'] = 4;
+              $etudiant['niveau'] = 3;
               $this->models['etudiant']->save($etudiant,false);
             }
             
@@ -265,11 +260,11 @@ class LivresbenController extends LivresbenHelper
           // hijacked !!  || ou pas
           if ($livre['prix'] != $prix )
           {
-            $msg = "prix modifié !! scanné:$prix ; actuel:{$livre['prix']}";
+            $msg = "prix modifi� !! scann�:$prix ; actuel:{$livre['prix']}";
           }
           else
           {
-            $msg = "non consigné !! (bd ajusté)";
+            $msg = "non consign� !!";
           }
 
           $this->models['evlivre']->logEvent(252,$livre['id'],$codebar,"$msg ({$_SESSION['etudiant']['prenom']})");
@@ -546,10 +541,10 @@ class LivresbenController extends LivresbenHelper
         if ($_SESSION['persistent']['suivant'] > 1)
         {
           // write log line with lost book data
-//          $this->logLostBooks($_SESSION['persistent']['etudiant'], $_SESSION['persistent']['etudiant_nom']);
+          $this->logLostBooks($_SESSION['persistent']['etudiant'], $_SESSION['persistent']['etudiant_nom']);
                 
           // 2x 'suivant' overrides warnings
-          @$this->models['livre']->findBySql("UPDATE livres SET prevcodebar = codebar, codebar = 0 WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} ");
+          @$this->models['livre']->findBySql("UPDATE livres SET codebar = 0 WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} ");
 
           $this->models['evetudiant']->logEvent(351,$commis,
               "r�cup: paiement de perdus pour ".
@@ -671,12 +666,11 @@ class LivresbenController extends LivresbenHelper
         
         $etudiant = $this->models['etudiant']->find("id = {$_SESSION['persistent']['etudiant']}");
         
-        //$this->log($input. " {$_SESSION['persistent']['remettre']['argent']}$ pour {$_SESSION['persistent']['etudiant_nom']} / ".$sqlBooks);
+        $this->log($input. " {$_SESSION['persistent']['remettre']['argent']}$ pour {$_SESSION['persistent']['etudiant_nom']} / ".$sqlBooks);
         $this->courrielLivresVendus($etudiant['courriel'], $bookList, 0, $_SESSION['persistent']['remettre']['argent']);
         
         // move sold books to owner 0
-        // alter table livres add prevcodebar bigint(20) unsigned not null default 0;
-        @$this->models['livre']->findBySql("UPDATE livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id SET prevcodebar = codebar, codebar = 0, en_consigne=0 WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} AND NOT ISNULL(livre_id) ");
+        @$this->models['livre']->findBySql("UPDATE livres AS l LEFT JOIN facture_lignes AS fl ON fl.livre_id=l.id SET codebar = 0 WHERE en_consigne=1 AND codebar={$_SESSION['persistent']['etudiant']} AND NOT ISNULL(livre_id) ");
 
         $this->models['evetudiant']->logEvent(302,$commis,"r�cup: paiement($input) de {$_SESSION['persistent']['remettre']['argent']}$ � {$_SESSION['persistent']['etudiant']} ($commis_n)");
 
@@ -703,11 +697,8 @@ class LivresbenController extends LivresbenHelper
 
 
     /// default INPUT is a BOOK ID, a STUDENT ID or a CHEQUE #
-    //$input = preg_replace('/[^0-9]/', '', $this->params['data']['scan_box']);
-    $codebar = preg_replace('/[^A-Z0-9]/', '', strtoupper($this->params['data']['scan_box']));
-    $letterCount = 0;
-    $input = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $codebar, -1, $letterCount);
-    
+    $input = preg_replace('/[^0-9]/', '', $this->params['data']['scan_box']);
+
     if ($input)
     {
       if (!empty($_SESSION['persistent']['remettre']) && 
@@ -795,7 +786,7 @@ class LivresbenController extends LivresbenHelper
   
   function etiquettes_flash()
   {
-    $this->flash('Impression en cours... veuillez patienter','/livresben/etiquettes',10);
+    $this->flash('Impression en cours... veuillez patienter','/livresben/etiquettes',1);
   }
 
   function etiquettes($codebar=null)
@@ -822,11 +813,8 @@ class LivresbenController extends LivresbenHelper
 
     $codebar = !empty($this->params['data']['codebar']) ? $this->params['data']['codebar'] : $codebar;
 
-//    $codebar = preg_replace('/[^0-9]/', '', $codebar);
-    $codebar = preg_replace('/[^A-Z0-9]/', '', strtoupper($codebar));
-    $letterCount = 0;
-    $codebar = preg_replace_callback('/[A-Z]/', create_function('$m', 'return ord($m[0]);'), $codebar, -1, $letterCount);
-    
+    $codebar = preg_replace('/[^0-9]/', '', $codebar);
+
 		// nothing entered
     if (!$codebar)
     {
@@ -885,9 +873,10 @@ class LivresbenController extends LivresbenHelper
 
     $file = "Impressions/etiquettes_$codebar.pdf";
     $absPath = ROOT.$file;
-    $relPath = "$rel_root/$file";
+    $relPath = "../../$rel_root/$file";
     
     $this->set('filename', $absPath);
+//echo $_SERVER['SCRIPT_NAME'];
     $this->set('downloadfile', $relPath);
     $this->set('redirect', "{$this->base}/livresben/etiquettes_flash");
     $this->render('etiquettes_pdf','back_download');
@@ -1037,7 +1026,8 @@ class LivresbenController extends LivresbenHelper
 
     $abs_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_FILENAME']);
     $rel_root = preg_replace('/\/public.*/', '', $_SERVER['SCRIPT_NAME']);
-
+print $abs_root;
+print $_SERVER['SCRIPT_FILENAME'];
     $this->set('filename', "$abs_root/Impressions/recu_$codebar.pdf");
     $this->set('downloadfile', "$rel_root/Impressions/recu_$codebar.pdf");
 

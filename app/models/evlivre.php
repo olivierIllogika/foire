@@ -12,32 +12,32 @@ class Evlivre extends AppModel
 *   421 impression etiquettes
 *   451 etiquette; non-inscrit
 *   452 etiquette; non-confirme
-*   453 etiquette; pas d'ï¿½tiquettes
+*   453 etiquette; pas d'étiquettes
 
 *   101 livre en consigne
-*   102 livre dï¿½consigne
+*   102 livre déconsigne
 *   103 impression recu
 *   104 recu par courriel
 *
 *   151 echec cueillette $input
-*   152 mï¿½thode de recu nulle
-*   153 aucun ï¿½tudiant dï¿½fini pour le recu
-*   154 aucun livres ï¿½ imprimer sur le reï¿½u de $codebar
-*   155 mï¿½thode de recu inconnue
+*   152 méthode de recu nulle
+*   153 aucun étudiant défini pour le recu
+*   154 aucun livres à imprimer sur le reçu de $codebar
+*   155 méthode de recu inconnue
 
-*   201 livre ajoutï¿½ ï¿½ la facture
-*   202 livre retirï¿½ de la facture
+*   201 livre ajouté à la facture
+*   202 livre retiré de la facture
 *   203 mode de paiement
 *   204 remboursement du livre
 *
 *   251 echec vente $input
-*   252 modification illegale ou non consignï¿½
+*   252 modification illegale ou non consigné
 *
-*   304 rï¿½cup: remise du livre au consignataire
+*   304 récup: remise du livre au consignataire
 *
 *   601 facture
-*   651 echec rï¿½fï¿½rences
-*   652 echec entrï¿½es
+*   651 echec références
+*   652 echec entrées
  */
  
 
@@ -45,7 +45,7 @@ class Evlivre extends AppModel
   {
     $data = $this->db->prepare($data);
 
-		$sql = "INSERT REPLACE INTO {$this->table} (id,evenement,codebar,data) VALUES ($livre_id,$event_id,$codebar,$data)";
+		$sql = "INSERT IGNORE INTO {$this->table} (id,evenement,codebar,data) VALUES ($livre_id,$event_id,$codebar,$data)";
 
 		$this->db->query($sql);
 

@@ -89,7 +89,7 @@ if (class_exists('DATABASE_CONFIG'))
     $host = $_SERVER["HTTP_HOST"];
     if (strpos($host, 'poly') !== false)
     {
-        $DB = DboFactory::getInstance('localhost');
+        $DB = DboFactory::getInstance('poly');
         School::$instance = new SchoolPoly();
     }
     elseif (strpos($host, 'ets') !== false)

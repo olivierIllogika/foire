@@ -29,30 +29,6 @@ foreach($commandes as $commande)
   }
 }
 
-$details = array(
-
-"1. Pour retirer un livre d'une facture, il suffit de le scanner une seconde fois",
-"2. La facture courante disparaîtra au prochain livre, à la suite d'un mode de paiement",
-"3. Le mode de paiement peut être changé autant de fois que nécessaire",
-"4. Lorsque '\$aucune' carte est utilisé, inscrivez le montant donné avant de scanner le mot clef '\$aucune'",
-"5. Le retour d'un livre peu se faire à tout moment, même pendant qu'une facture non reliée est en cours",
-"6. Le commis peu changer sans quitter l'interface; scanner la carte étudiante du nouveau commis",
-"7. Un étudiant est promu bénévole/vendeur en scannant la carte d'un gestionnaire et celle de l'étudiant.",
-
-);
-
-$pdf->Ln(40);
-
-foreach($details as $line)
-{
-  if ($line)
-  {
-	$pdf->Cell(0,0,iconv("UTF-8", "ISO-8859-1",$line),'',0,'L');
-	$pdf->Ln(10);
-  }
-}
-
-
 echo $pdf->Output($filename,'S');
 chmod($filename, 0755);
 

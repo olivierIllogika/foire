@@ -19,8 +19,6 @@ abstract class School
     
 
     abstract public function Name($size, $article=false);
-    abstract public function MetaDesc();
-    abstract public function MetaKeywords();
     abstract public function GetBarCodeImg();
     abstract public function CoopImg(&$alt, &$link);
     abstract public function TagLine($html, $kiosk);
@@ -53,14 +51,6 @@ class SchoolPoly extends School
         $names = array('Poly', 'Polytechnique', 'École Polytechnique de Montréal');
         return ($article ? $articles[$size] : '').$names[$size];
     }
-    public function MetaDesc()
-    {
-        return "Vente de livres sous consigne, un service de l'AEP (Association des Etudiants de Polytechnique)";   
-    }
-    public function MetaKeywords()
-    {
-        return "foire aux livres,vente usage consigne,aep,association etudiants polytechnique,poly,polytechnique";   
-    }    
     public function GetBarCodeImg()
     {
         return 'code-barre.gif';
@@ -105,7 +95,7 @@ class SchoolETS extends School
     {
         $TribuTerre = (empty($kiosk) || !$kiosk ? $html->linkOut("TribuTerre", "http://tributerre.aeets.com", array('title'=>'TribuTerre')) : 'TribuTerre' );
         $Coop = (empty($kiosk) || !$kiosk ? $html->linkOut("Coop ETS", "http://www.coopets.ca", array('title'=>'Librairie Coop ETS')) : 'Coop ETS' );
-        $AEP = (empty($kiosk) || !$kiosk ? $html->linkOut("Poly", "http://aep.polymtl.ca", array('title'=>'Association des Étudiants de Polytechnique')) : 'Poly' );
+        $AEP = (empty($kiosk) || !$kiosk ? $html->linkOut("Poly", "http://www.aep.polymtl.ca/servicesEnLigne.php", array('title'=>'Association des Étudiants de Polytechnique')) : 'Poly' );
         return "Une collaboration de $TribuTerre, $AEP et la $Coop";
     }
 
@@ -115,14 +105,6 @@ class SchoolETS extends School
         $names = array("ETS", "ETS", "École de technologie supérieure");
         return ($article ? $articles[$size] : '').$names[$size];
     }
-    public function MetaDesc()
-    {
-        return "Vente de livres sous consigne; Une collaboration de TribuTerre, l'Association des Étudiants de Polytechnique et la Coop ÉTS";   
-    }
-    public function MetaKeywords()
-    {
-        return "foire aux livres,vente usage consigne,aep,association etudiants polytechnique,poly,tributerre,coopets,coop,ets";   
-    }    
     public function GetBarCodeImg()
     {
         return 'carte-ets.jpg';

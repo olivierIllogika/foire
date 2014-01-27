@@ -171,7 +171,7 @@ class EtudiantsController extends EtudiantsHelper
           // UPDATING profile
           $this->db->query("UPDATE etudiants SET $modifiedFields WHERE id=$id");
 
-          $this->flash('Mise à jour terminée...','/livres');
+          $this->flash('Mise à  jour terminée...','/livres');
         }
         else {
           $this->flash('Aucun changement...','/livres');
@@ -254,7 +254,7 @@ class EtudiantsController extends EtudiantsHelper
     $this->pageTitle .= " - Inscription des consignataires";
 
     $this->params['data']['courriel'] = strtolower($this->params['data']['courriel']);
-    /* pre-processing de donn�es */
+    /* pre-processing de données */
     if ($this->params['data']['source'] == 'etudiant')
     {
       $this->params['data']['courriel'] = preg_replace('/@.+/', '', $this->params['data']['courriel']).'@'.$GLOBALS['gStudSufixEmail'];
@@ -352,7 +352,7 @@ echo '</pre>';
     }
     else
     {
-      if ($this->params['data']['id']) // id sugg�r� (carte/permis)
+      if ($this->params['data']['id']) // id suggéré (carte/permis)
       {
         $id = $convertedId;
         
@@ -415,7 +415,7 @@ die();
       if ($row['confirme'] == 1)
       {
         $this->models['evetudiant']->logEvent(452,$convertedId,"reconfirmation!");
-        $this->flash('Inscription déjà confirmée','/livres/');
+        $this->flash('Inscription déjà confirmée','/livres/');
       }
       else
       {
@@ -438,21 +438,21 @@ die();
 
   function mass_mailer($action=null)
   {
-  	global $gDevErrorEmail;
-  	
     $this->sessionCheck(SECURITY_LEVEL_MANAGMENT);
     
     $sender = 'Foire aux Livres <foire-noreply@step.polymtl.ca>';
 
-    $mail_title = "Récupération des livres";
-    $body = $this->courrielRecuperation(); // $date, $heure
+    $mail_title = "Récupération Foire aux Livres : retardataires";
+//    $mail_title = "Récupération des livres";
+    $body = $this->courrielRecup20123(); // $date, $heure
+//    $body = $this->courrielRecuperation(); // $date, $heure
 //    $body = $this->courrielRecuperationTardive(); // $date, $heure
 
     $operation = ($action == 'envoyer' ? '[envoi]' : '[test]');
     $this->set('body', $body);
 
     sendSMTP($sender,'',
-            $gDevErrorEmail,
+            $GLOBALS['gDevErrorEmail'],
             '[Foire] '.$operation.' '.$mail_title,
             $body, false,$sender);
 

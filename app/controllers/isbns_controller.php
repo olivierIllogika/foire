@@ -9,10 +9,7 @@ class IsbnsController extends IsbnsHelper
 
   function outil_insertion()
   {
-    //$this->sessionCheck(SECURITY_LEVEL_HIGHER_USER);
-
-    $engines = $this->models['isbn']->getEngines($force=true);
-    $this->set('engines', $engines);
+    $this->sessionCheck(SECURITY_LEVEL_HIGHER_USER);
 
     if (empty($this->params['data']))
     {
@@ -29,8 +26,7 @@ class IsbnsController extends IsbnsHelper
       }
       else
       {
-	  $engine = empty($this->params['data']['engine']) ? '' : $engines[$this->params['data']['engine']];
-          $info = $this->models['isbn']->getInfo($isbn, $force=true, $engine);
+          $info = $this->models['isbn']->getInfo($isbn, $force=true);
           $this->set('info', $info);
           $this->render();
       }//valid isbn
