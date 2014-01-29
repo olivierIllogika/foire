@@ -1,0 +1,4 @@
+<?php
+$gDevErrorEmail = 'error@mail.com';
+define("ESTMP_PASSWORD", 'estmp_password');
+?>
